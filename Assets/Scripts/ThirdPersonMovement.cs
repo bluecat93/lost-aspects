@@ -71,16 +71,10 @@ public class ThirdPersonMovement : MonoBehaviour
             if (isMoving)
             {
                 isSprinting = Input.GetKey(SprintKey);
+
                 float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
 
-                // Add this to strafe instead of walk to the side i guess
-                // if (Input.GetKey(KeyCode.W))
-                // {
-                //     transform.rotation = Quaternion.Euler(0f, angle, 0f);
-                // }
-
-                // Remove this when activating the If above
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
                 Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * (isClimbable || !isJumping ? Vector3.forward : Vector3.back);
