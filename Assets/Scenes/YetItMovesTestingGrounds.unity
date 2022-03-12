@@ -1272,11 +1272,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7427276006112233578, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
   m_PrefabInstance: {fileID: 7427276007534749035}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &478414104 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7427276006112466314, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
-  m_PrefabInstance: {fileID: 7427276007534749035}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &482714604
 GameObject:
   m_ObjectHideFlags: 0
@@ -1768,8 +1763,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 478414104}
-  m_Follow: {fileID: 478414104}
+  m_LookAt: {fileID: 24113748}
+  m_Follow: {fileID: 24113748}
   m_CommonLens: 1
   m_Lens:
     FieldOfView: 40
@@ -2329,7 +2324,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1368497664}
-  m_LocalRotation: {x: 0.2873207, y: 1e-45, z: -0, w: 0.9578345}
+  m_LocalRotation: {x: 0.2873207, y: -3e-45, z: 1e-45, w: 0.9578345}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
