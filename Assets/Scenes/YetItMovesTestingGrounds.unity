@@ -1058,6 +1058,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7192a0c014ca6dc478982d37b9dde382, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 100
+  invulnerabilityFrameAmount: 0.5
   attackTimeIntervals: 1
   attackDamage: 5
   maxFollowDistance: 20
@@ -2301,7 +2303,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1368497664}
-  m_LocalRotation: {x: 0.2873207, y: -3e-45, z: 1e-45, w: 0.9578345}
+  m_LocalRotation: {x: 0.2873207, y: 1e-45, z: -0, w: 0.9578345}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3955,7 +3957,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2031249551}
-  m_LocalRotation: {x: 0.26985064, y: -4.406689e-16, z: 5.368859e-16, w: 0.9629022}
+  m_LocalRotation: {x: 0.26985067, y: 0.00000004058329, z: -0.000000011373355, w: 0.9629022}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5143,6 +5145,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7427276007512217404, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
+      propertyPath: SprintSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7427276007512217405, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
       propertyPath: healthBar
       value: 
@@ -5225,15 +5231,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7427276007654349005, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.26985064
+      value: 0.2698507
       objectReference: {fileID: 0}
     - target: {fileID: 7427276007654349005, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -6.8022876e-10
+      value: 0.000000040585075
       objectReference: {fileID: 0}
     - target: {fileID: 7427276007654349005, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -1.9063134e-10
+      value: -0.000000011371679
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
