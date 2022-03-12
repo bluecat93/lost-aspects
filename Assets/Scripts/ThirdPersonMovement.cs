@@ -10,6 +10,7 @@ public class ThirdPersonMovement : MonoBehaviour
     public float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
     private bool isMoving = false;
+    private bool isSprinting = false;
 
     // TODO: Move to options when created
     private const KeyCode SprintKey = KeyCode.LeftShift;
@@ -61,7 +62,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
             if (isMoving)
             {
-                bool isSprinting = Input.GetKey(SprintKey);
+                isSprinting = Input.GetKey(SprintKey);
                 float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
 
@@ -90,13 +91,18 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         if (isMoving)
         {
-            playerAnim.SetFloat("Speed", 0.6f);
-            Debug.Log("speed is: " + playerAnim.GetFloat("Speed"));
+            if (isSprinting)
+            {
+                playerAnim.SetFloat("Speed", 1f, 0.2f, Time.deltaTime);
+            }
+            else
+            {
+                playerAnim.SetFloat("Speed", 0.6f, 0.2f, Time.deltaTime);
+            }
         }
         else
         {
-            playerAnim.SetFloat("Speed", 0f);
+            playerAnim.SetFloat("Speed", 0f, 0.2f, Time.deltaTime);
         }
-        //waaaaaaaaa
     }
 }
