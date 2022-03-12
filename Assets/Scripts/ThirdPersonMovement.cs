@@ -33,14 +33,11 @@ public class ThirdPersonMovement : MonoBehaviour
         playerAnim = GetComponentInChildren<Animator>();
         originalStepOffset = controller.stepOffset;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
-        // velocity.y = jumpHeight;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Debug.Log(controller.isGrounded);
-
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
             bool isJumping = Input.GetAxis("Jump") > 0;
@@ -54,8 +51,9 @@ public class ThirdPersonMovement : MonoBehaviour
             else
             {
                 controller.stepOffset = originalStepOffset;
-                velocity.y = 0f;
+                velocity.y = -0.1f;
             }
+
             if (isJumping && controller.isGrounded) //TODO need to check more stuff for double jumping or other kinds of jumps.
             {
                 velocity.y = jumpHeight;
@@ -77,20 +75,11 @@ public class ThirdPersonMovement : MonoBehaviour
 
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-                Vector3 directionMod = Vector3.forward;
+                Vector3 directionMod = !isClimbable && controller.isGrounded && isJumping ? Vector3.back : Vector3.forward;
 
-                if (!isClimbable)
-                {
-                    directionMod = Vector3.back;
-
-                    if (isJumping)
-                        directionMod = Vector3.zero;
-                }
-
-                // Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * (!isClimbable && !isJumping ? Vector3.back : Vector3.forward);
                 Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
 
-                controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 1f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
+                controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
 
             }
 
@@ -104,7 +93,6 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         var currClimbAngle = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up));
 
-        isClimbable = currClimbAngle <= maxClimbAngle || currClimbAngle >= 90;
-        Debug.Log("angle : " + currClimbAngle + ", isClimbable " + isClimbable);
+        isClimbable = currClimbAngle <= maxClimbAngle;
     }
 }
