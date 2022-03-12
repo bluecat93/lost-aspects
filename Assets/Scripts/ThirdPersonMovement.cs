@@ -24,6 +24,9 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private Animator playerAnim;
 
+    private bool isClimbable = true;
+    private float maxClimbAngle = 60f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +39,8 @@ public class ThirdPersonMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Debug.Log(controller.isGrounded);
+
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
             // keyboard input (jump)
@@ -47,7 +52,7 @@ public class ThirdPersonMovement : MonoBehaviour
             else
             {
                 controller.stepOffset = originalStepOffset;
-                velocity.y = 0.0f;
+                velocity.y = 0f;
             }
             if (Input.GetAxis("Jump") > 0 && controller.isGrounded) //TODO need to check more stuff for double jumping or other kinds of jumps.
             {
@@ -76,7 +81,7 @@ public class ThirdPersonMovement : MonoBehaviour
                 // Remove this when activating the If above
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-                Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+                Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * (isClimbable ? Vector3.forward : Vector3.back);
 
                 controller.Move(moveDir.normalized * movementSpeed * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
 
@@ -86,35 +91,10 @@ public class ThirdPersonMovement : MonoBehaviour
             controller.Move(velocity);
         }
 
-        //PlayerAnimation();
     }
 
-    // void PlayerAnimation()
-    // {
-    //     if (isMoving)
-    //     {
-    //         if (isSprinting)
-    //             Dash();
-    //         else
-    //             Run();
-    //     }
-    //     else
-    //         Idle();
-
-    // }
-
-    // private void Idle()
-    // {
-    //     playerAnim.SetFloat(animParamSpeed, 0f, 0.2f, Time.deltaTime);
-    // }
-
-    // private void Run()
-    // {
-    //     playerAnim.SetFloat(animParamSpeed, 0.6f, 0.2f, Time.deltaTime);
-    // }
-
-    // private void Dash()
-    // {
-    //     playerAnim.SetFloat(animParamSpeed, 1f, 0.2f, Time.deltaTime);
-    // }
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        isClimbable = Vector3.Angle(hit.normal, Vector3.up) <= maxClimbAngle;
+    }
 }
