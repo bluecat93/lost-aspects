@@ -11,6 +11,7 @@ public class ThirdPersonMovement : MonoBehaviour
     float turnSmoothVelocity;
     private bool isMoving = false;
     private bool isSprinting = false;
+    private string animParamSpeed = "Speed";
 
     // TODO: Move to options when created
     private const KeyCode SprintKey = KeyCode.LeftShift;
@@ -92,17 +93,11 @@ public class ThirdPersonMovement : MonoBehaviour
         if (isMoving)
         {
             if (isSprinting)
-            {
-                playerAnim.SetFloat("Speed", 1f, 0.2f, Time.deltaTime);
-            }
+                playerAnim.SetFloat(animParamSpeed, 1f, 0.2f, Time.deltaTime);
             else
-            {
-                playerAnim.SetFloat("Speed", 0.6f, 0.2f, Time.deltaTime);
-            }
+                playerAnim.SetFloat(animParamSpeed, 0.6f, 0.2f, Time.deltaTime);
         }
         else
-        {
-            playerAnim.SetFloat("Speed", 0f, 0.2f, Time.deltaTime);
-        }
+            playerAnim.SetFloat(animParamSpeed, 0f, 0.2f, Time.deltaTime);
     }
 }
