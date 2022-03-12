@@ -77,7 +77,18 @@ public class ThirdPersonMovement : MonoBehaviour
 
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-                Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * (isClimbable || !isJumping ? Vector3.forward : Vector3.back);
+                Vector3 directionMod = Vector3.forward;
+
+                if (!isClimbable)
+                {
+                    directionMod = Vector3.back;
+
+                    if (isJumping)
+                        directionMod = Vector3.zero;
+                }
+
+                // Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * (!isClimbable && !isJumping ? Vector3.back : Vector3.forward);
+                Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
 
                 controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 1f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
 
@@ -91,6 +102,9 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        isClimbable = Vector3.Angle(hit.normal, Vector3.up) <= maxClimbAngle;
+        var currClimbAngle = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up));
+
+        isClimbable = currClimbAngle <= maxClimbAngle || currClimbAngle >= 90;
+        Debug.Log("angle : " + currClimbAngle + ", isClimbable " + isClimbable);
     }
 }
