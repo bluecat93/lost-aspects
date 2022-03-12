@@ -47,7 +47,7 @@ public class ThirdPersonMovement : MonoBehaviour
             else
             {
                 controller.stepOffset = originalStepOffset;
-                velocity.y = -0.0f;
+                velocity.y = 0.0f;
             }
             if (Input.GetAxis("Jump") > 0 && controller.isGrounded) //TODO need to check more stuff for double jumping or other kinds of jumps.
             {
@@ -85,6 +85,7 @@ public class ThirdPersonMovement : MonoBehaviour
             // This must be last and as close as possible to other movements so it will allways go down.
             controller.Move(velocity);
         }
+
         PlayerAnimation();
     }
 
@@ -93,11 +94,27 @@ public class ThirdPersonMovement : MonoBehaviour
         if (isMoving)
         {
             if (isSprinting)
-                playerAnim.SetFloat(animParamSpeed, 1f, 0.2f, Time.deltaTime);
+                Dash();
             else
-                playerAnim.SetFloat(animParamSpeed, 0.6f, 0.2f, Time.deltaTime);
+                Run();
         }
         else
-            playerAnim.SetFloat(animParamSpeed, 0f, 0.2f, Time.deltaTime);
+            Idle();
+
+    }
+
+    private void Idle()
+    {
+        playerAnim.SetFloat(animParamSpeed, 0f, 0.2f, Time.deltaTime);
+    }
+
+    private void Run()
+    {
+        playerAnim.SetFloat(animParamSpeed, 0.6f, 0.2f, Time.deltaTime);
+    }
+
+    private void Dash()
+    {
+        playerAnim.SetFloat(animParamSpeed, 1f, 0.2f, Time.deltaTime);
     }
 }
