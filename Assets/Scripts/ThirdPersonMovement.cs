@@ -43,6 +43,8 @@ public class ThirdPersonMovement : MonoBehaviour
 
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
+            bool isJumping = Input.GetAxis("Jump") > 0;
+
             // keyboard input (jump)
             if (!controller.isGrounded)
             {
@@ -54,7 +56,7 @@ public class ThirdPersonMovement : MonoBehaviour
                 controller.stepOffset = originalStepOffset;
                 velocity.y = 0f;
             }
-            if (Input.GetAxis("Jump") > 0 && controller.isGrounded) //TODO need to check more stuff for double jumping or other kinds of jumps.
+            if (isJumping && controller.isGrounded) //TODO need to check more stuff for double jumping or other kinds of jumps.
             {
                 velocity.y = jumpHeight;
             }
@@ -81,7 +83,7 @@ public class ThirdPersonMovement : MonoBehaviour
                 // Remove this when activating the If above
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-                Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * (isClimbable ? Vector3.forward : Vector3.back);
+                Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * (isClimbable || !isJumping ? Vector3.forward : Vector3.back);
 
                 controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 1f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
 
