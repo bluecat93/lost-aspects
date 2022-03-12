@@ -267,7 +267,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7427276007512217405, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
   m_PrefabInstance: {fileID: 7427276007534749035}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 639114199}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03d51f7b1ed1aa045a99e2f38c6d2840, type: 3}
@@ -1272,6 +1272,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7427276006112233578, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
   m_PrefabInstance: {fileID: 7427276007534749035}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &478414104 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7427276006112466314, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
+  m_PrefabInstance: {fileID: 7427276007534749035}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &482714604
 GameObject:
   m_ObjectHideFlags: 0
@@ -1533,6 +1538,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 545798035}
   m_CullTransparentMesh: 1
+--- !u!1 &639114199 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7427276007512217400, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
+  m_PrefabInstance: {fileID: 7427276007534749035}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &639114202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 639114199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ee9df374c357504c8cfb81e9a837b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  acceleration: 2
+  deceleration: 2
+  maxRunVelocity: 0.5
+  maxDashVelocity: 2
 --- !u!1 &781654694
 GameObject:
   m_ObjectHideFlags: 0
@@ -1742,8 +1768,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 24113748}
-  m_Follow: {fileID: 24113748}
+  m_LookAt: {fileID: 478414104}
+  m_Follow: {fileID: 478414104}
   m_CommonLens: 1
   m_Lens:
     FieldOfView: 40
@@ -5041,7 +5067,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -11.0000305, y: 142}
+  m_AnchoredPosition: {x: -11, y: 142}
   m_SizeDelta: {x: -482.5518, y: -579.2272}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3176413114272959815
@@ -5150,6 +5176,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7427276007512217404, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7427276007512217404, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
       propertyPath: SprintSpeed
       value: 3
       objectReference: {fileID: 0}
@@ -5162,6 +5192,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1395137356}
     - target: {fileID: 7427276007512217405, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7427276007512217405, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
       propertyPath: gameOverUI
       value: 
       objectReference: {fileID: 781654694}
@@ -5169,6 +5203,10 @@ PrefabInstance:
       propertyPath: thirdPersonCamera
       value: 
       objectReference: {fileID: 806057426}
+    - target: {fileID: 7427276007512217406, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7427276007512217406, guid: 6f0528188c86e394cb327bcb489792b6, type: 3}
       propertyPath: m_Center.y
       value: 1.05

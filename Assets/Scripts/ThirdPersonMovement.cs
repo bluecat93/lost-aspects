@@ -86,35 +86,35 @@ public class ThirdPersonMovement : MonoBehaviour
             controller.Move(velocity);
         }
 
-        PlayerAnimation();
+        //PlayerAnimation();
     }
 
-    void PlayerAnimation()
-    {
-        if (isMoving)
-        {
-            if (isSprinting)
-                Dash();
-            else
-                Run();
-        }
-        else
-            Idle();
+    // void PlayerAnimation()
+    // {
+    //     if (isMoving)
+    //     {
+    //         if (isSprinting)
+    //             Dash();
+    //         else
+    //             Run();
+    //     }
+    //     else
+    //         Idle();
 
-    }
+    // }
 
-    private void Idle()
-    {
-        playerAnim.SetFloat(animParamSpeed, 0f, 0.2f, Time.deltaTime);
-    }
+    // private void Idle()
+    // {
+    //     playerAnim.SetFloat(animParamSpeed, 0f, 0.2f, Time.deltaTime);
+    // }
 
-    private void Run()
-    {
-        playerAnim.SetFloat(animParamSpeed, 0.6f, 0.2f, Time.deltaTime);
-    }
+    // private void Run()
+    // {
+    //     playerAnim.SetFloat(animParamSpeed, 0.6f, 0.2f, Time.deltaTime);
+    // }
 
-    private void Dash()
-    {
-        playerAnim.SetFloat(animParamSpeed, 1f, 0.2f, Time.deltaTime);
-    }
+    // private void Dash()
+    // {
+    //     playerAnim.SetFloat(animParamSpeed, 1f, 0.2f, Time.deltaTime);
+    // }
 }
