@@ -97,5 +97,6 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             playerAnim.SetFloat("Speed", 0f);
         }
+        //waaaaaaaaa
     }
 }
