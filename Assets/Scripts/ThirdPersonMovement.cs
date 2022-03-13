@@ -75,24 +75,24 @@ public class ThirdPersonMovement : MonoBehaviour
 
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-                Vector3 directionMod = !isClimbable && controller.isGrounded && isJumping ? Vector3.back : Vector3.forward;
+                Vector3 directionMod = (isClimbable || isJumping || (!controller.isGrounded && !isJumping) ? Vector3.forward : Vector3.back);
 
                 Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
 
                 controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
 
             }
-            
+
             // This must be last and as close as possible to other movements so it will allways go down.
             controller.Move(velocity);
 
 
-            if(Input.GetAxisRaw("Camera Unlocked") == 0)
+            if (Input.GetAxisRaw("Camera Unlocked") == 0)
             {
                 // This rotates the character according to where he looks.
                 GameObject mainCamera = GameObject.Find("Player/Main Camera");
                 transform.eulerAngles = new Vector3(transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, transform.eulerAngles.z);
-            }   
+            }
         }
 
     }
@@ -101,6 +101,6 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         var currClimbAngle = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up));
 
-        isClimbable = currClimbAngle <= maxClimbAngle;
+        isClimbable = currClimbAngle <= maxClimbAngle || hit.moveDirection.y <= 0;
     }
 }
