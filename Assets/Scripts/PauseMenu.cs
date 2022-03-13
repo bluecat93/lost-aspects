@@ -13,15 +13,15 @@ public class PauseMenu : MonoBehaviour
     string quitButton = "MainMenu";
 
     // Update is called once per frame
-    void Start() 
+    void Start()
     {
         Time.timeScale = 1f;
     }
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(GameIsPaused)
+            if (GameIsPaused)
             {
                 Resume();
             }
@@ -36,7 +36,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(false);
         optionsMenuUI.SetActive(false);
         Time.timeScale = 1f;
-        Debug.Log("time is now:"+Time.deltaTime);
+        Debug.Log("time is now:" + Time.deltaTime);
         GameIsPaused = false;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
     }
@@ -46,7 +46,7 @@ public class PauseMenu : MonoBehaviour
         optionsMenuUI.SetActive(false);
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
-        Debug.Log("time is now:"+Time.deltaTime);
+        // Debug.Log("time is now:"+Time.deltaTime);
         GameIsPaused = true;
         Cursor.lockState = CursorLockMode.None;
     }
