@@ -18,6 +18,8 @@ public class PlayerStats : MonoBehaviour
     public int currentHealth;
     public int maxHunger = 100;
     public int currentHunger;
+    public int damage = 10;
+
 
     public BarScript healthBar;
     public BarScript hungerBar;

@@ -52,6 +52,7 @@ MonoBehaviour:
   movementSpeed: 5
   turnSmoothTime: 0.1
   jumpHeight: 0.05
+  SprintSpeed: 1.5
 --- !u!114 &7427276007512217405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,7 +86,7 @@ CharacterController:
   serializedVersion: 2
   m_Height: 2
   m_Radius: 0.5
-  m_SlopeLimit: 45
+  m_SlopeLimit: 6.8
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
@@ -116,8 +117,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7427276007654349006}
-  m_LocalRotation: {x: 0.25164476, y: 0.34768862, z: -0.09743877, w: 0.8979384}
-  m_LocalPosition: {x: -5.4549108, y: 5.34, z: -5.987817}
+  m_LocalRotation: {x: 0.04347988, y: 0.86149395, z: -0.07486545, w: 0.5003328}
+  m_LocalPosition: {x: -5.4419374, y: 2.0864763, z: 2.8336143}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7427276007512217407}
