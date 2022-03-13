@@ -42,19 +42,21 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             bool isJumping = Input.GetAxis("Jump") > 0;
 
-            // keyboard input (jump)
+            // Keyboard input (jump)
             if (!controller.isGrounded)
             {
+                // Prevents some wierd jumping bugs while moving across stairs.
+                controller.stepOffset = 0;
                 velocity.y += (Physics.gravity.y * Time.deltaTime * Time.deltaTime);
-                controller.stepOffset = 0; // prevents some wierd jumping bugs while moving across stairs.
             }
             else
             {
                 controller.stepOffset = originalStepOffset;
-                velocity.y = -0.1f;
+                velocity.y = 0f;
             }
 
-            if (isJumping && controller.isGrounded) //TODO need to check more stuff for double jumping or other kinds of jumps.
+            // TODO: need to check more stuff for double jumping or other kinds of jumps.
+            if (isJumping && controller.isGrounded)
             {
                 velocity.y = jumpHeight;
             }
@@ -75,8 +77,10 @@ public class ThirdPersonMovement : MonoBehaviour
 
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-                Vector3 directionMod = (isClimbable || isJumping || (!controller.isGrounded && !isJumping) ? Vector3.forward : Vector3.back);
+                // TODO: Since isGrounded is not reliable, need to research raycasts and understand how to use it instead to fix throwback bug
+                Vector3 directionMod = (isClimbable || isJumping ? Vector3.forward : Vector3.back);
 
+                // Vector3 directionMod = (isClimbable || isJumping || (!controller.isGrounded && !isJumping) ? Vector3.forward : Vector3.back);
                 Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
 
                 controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
@@ -85,7 +89,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
             // This must be last and as close as possible to other movements so it will allways go down.
             controller.Move(velocity);
-
 
             if (Input.GetAxisRaw("Camera Unlocked") == 0)
             {
@@ -101,6 +104,7 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         var currClimbAngle = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up));
 
-        isClimbable = currClimbAngle <= maxClimbAngle || hit.moveDirection.y <= 0;
+        isClimbable = currClimbAngle <= maxClimbAngle;// || hit.moveDirection.y <= 0;
+        // Debug.Log("isClimbable " + isClimbable + ", currClimbAngle " + currClimbAngle + ", maxClimbAngle " + maxClimbAngle + ", hit.moveDirection.y" + hit.moveDirection.y);
     }
 }
