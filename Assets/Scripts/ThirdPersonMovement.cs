@@ -74,6 +74,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
                 float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+                // Debug.Log("Angle: " + angle + " targetAngle: " + targetAngle + " turnSmoothVelocity: " + turnSmoothTime + " turnSmoothTime: " + turnSmoothTime + " eulerAngles: " + transform.eulerAngles.y);
 
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
