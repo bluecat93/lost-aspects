@@ -53,8 +53,8 @@ public class PlayerAnimationTwoDimensional : MonoBehaviour
             velocityX -= Time.deltaTime * acceleration;
         if (rightPressed && velocityX < currentMaxVelocity)
             velocityX += Time.deltaTime * acceleration;
-        Debug.Log("Velocity Z: " + velocityZHash);
-        Debug.Log("VelocityX: " + velocityXHash);
+        // Debug.Log("Velocity Z: " + velocityZHash);
+        // Debug.Log("VelocityX: " + velocityXHash);
     }
     private void MovementDeceleration(float currentMaxVelocity)
     {
