@@ -38,7 +38,7 @@ public class PlayerAbilities : MonoBehaviour
         foreach (Transform enemy in EnemiesList.getEnemies())
         {
             float distance = Vector3.Distance(transform.position, enemy.position);
-            if(closestViableEnemyDistance >= distance)
+            if (closestViableEnemyDistance >= distance)
             {
                 closestViableEnemyDistance = distance;
                 closestViableEnemy = enemy;
