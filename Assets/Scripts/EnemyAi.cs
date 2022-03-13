@@ -20,6 +20,8 @@ public class EnemyAi : MonoBehaviour
     private State state;
     private float nextAttackTime;
 
+    public EnemiesList enemiesList;
+
     public int maxHealth = 100;
     private int currentHealth;
     private float invulnerabilityFrame;
@@ -49,6 +51,7 @@ public class EnemyAi : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        enemiesList.addEnemy(transform);
         startingPosition = transform.position;
         roamPosition = GetRoamingPosition();
         currentHealth = maxHealth;
@@ -76,6 +79,7 @@ public class EnemyAi : MonoBehaviour
                 StopChasing();
                 break;
             case State.Dead:
+                enemiesList.removeEnemy(transform);
                 transform.gameObject.SetActive(false);
                 break;
             case State.Attacking:
