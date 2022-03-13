@@ -82,9 +82,17 @@ public class ThirdPersonMovement : MonoBehaviour
                 controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
 
             }
-
+            
             // This must be last and as close as possible to other movements so it will allways go down.
             controller.Move(velocity);
+
+
+            if(Input.GetAxisRaw("Camera Unlocked") == 0)
+            {
+                // This rotates the character according to where he looks.
+                GameObject mainCamera = GameObject.Find("Player/Main Camera");
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, transform.eulerAngles.z);
+            }   
         }
 
     }
