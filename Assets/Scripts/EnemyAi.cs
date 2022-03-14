@@ -6,6 +6,7 @@ public class EnemyAi : MonoBehaviour
 {
     private enum State
     {
+        Idle,
         Roaming,
         Chasing,
         Dead,
@@ -34,18 +35,24 @@ public class EnemyAi : MonoBehaviour
     public float sightDistance = 10f;
     public float attackDistance = 5f;
 
+    public float deathTimer = 5f;
+    private float currentDeathTimer;
+    private bool deadOnlyOnce = false;
+
+
     //TODO: might want to have a script that gives me all of the things i need like position and stats.
     //Player stuff 
     public GameObject player;
     public PlayerStats playerStats;
+    private Animator animator;
 
 
 
     private void Awake()
     {
-        //attackAnimations = GetComponent<AttackAnimations>();
         aiMovement = GetComponent<AiMovement>();
         state = State.Roaming;
+        animator = GetComponentInChildren<Animator>();
     }
 
     // Start is called before the first frame update
@@ -60,8 +67,16 @@ public class EnemyAi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        animator.SetInteger("State", (int)state);
         if (currentHealth <= 0)
+        {
             state = State.Dead;
+            if(!deadOnlyOnce)
+            {
+                currentDeathTimer = Time.time + deathTimer;
+            }
+            deadOnlyOnce = true;
+        }
         switch (state)
         {
             case State.Roaming:  
@@ -73,17 +88,24 @@ public class EnemyAi : MonoBehaviour
                 }
                 FindTarget();
                 break;
+
             case State.Chasing:
                 aiMovement.MoveTo(player.transform.position);
                 AttackTarget();
                 StopChasing();
                 break;
+
             case State.Dead:
                 enemiesList.removeEnemy(transform);
-                transform.gameObject.SetActive(false);
+                if (currentDeathTimer <= Time.time)
+                {
+                    transform.gameObject.SetActive(false);
+                }
                 break;
+
             case State.Attacking:
                 break;
+
             case State.Reseting:
                 aiMovement.MoveTo(startingPosition);
                 if (aiMovement.ReachedPosition())
@@ -91,8 +113,9 @@ public class EnemyAi : MonoBehaviour
                     state = State.Roaming;
                 }
                 break;
-        }
 
+        }
+        
     }
 
     private Vector3 GetRoamingPosition()
@@ -111,6 +134,8 @@ public class EnemyAi : MonoBehaviour
 
     private void AttackTarget()
     {
+        // rotate towords player
+        LookAtObject(player);
         if (Vector3.Distance(transform.position, player.transform.position) <= attackDistance)
         {
             aiMovement.StopMoving();
@@ -119,7 +144,8 @@ public class EnemyAi : MonoBehaviour
                 nextAttackTime = Time.time + attackTimeIntervals;
                 playerStats.TakeDamage(attackDamage);
                 state = State.Attacking;
-                //do animation
+                // do animation
+                animator.SetInteger("State", (int)state);
                 state = State.Chasing;
             }
         }
@@ -140,6 +166,11 @@ public class EnemyAi : MonoBehaviour
             invulnerabilityFrame = Time.time + invulnerabilityFrameAmount;
             currentHealth -= damage;
         }
+    }
+
+    public void LookAtObject(GameObject gameObject)
+    {
+        transform.LookAt(gameObject.transform);
     }
 
 }
