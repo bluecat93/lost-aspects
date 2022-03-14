@@ -14,7 +14,7 @@ public class PlayerAnimationTwoDimensional : MonoBehaviour
     bool dashPressed = false;
     public float acceleration = 2.0f;
     public float deceleration = 2.0f;
-    public float maxRunVelocity = 0.5f;
+    public float maxRunVelocity = 1f;
     public float maxBackWalkVelocity = -1f;
     public float maxDashVelocity = 2.0f;
     int velocityZHash;
@@ -52,22 +52,20 @@ public class PlayerAnimationTwoDimensional : MonoBehaviour
     {
         if (forwardPressed && velocityZ < currentMaxVelocity)
             velocityZ += Time.deltaTime * acceleration;
-        if (backPressed && velocityZ > -currentMaxVelocity)
-            velocityZ = -1f;
+        if (backPressed && velocityZ > -1f)
+            velocityZ -= Time.deltaTime * acceleration;
         if (leftPressed && velocityX > -currentMaxVelocity)
             velocityX -= Time.deltaTime * acceleration;
         if (rightPressed && velocityX < currentMaxVelocity)
             velocityX += Time.deltaTime * acceleration;
-        Debug.Log("Velocity Z: " + velocityZ);
+        // Debug.Log("Velocity Z: " + velocityZ);
     }
     private void MovementDeceleration(float currentMaxVelocity)
     {
         if (!forwardPressed && velocityZ > 0.0f)
             velocityZ -= Time.deltaTime * deceleration;
-        if (!forwardPressed && velocityZ < 0.0f)
-            velocityZ = 0.0f;
         if (!backPressed && velocityZ < 0.0f)
-            velocityZ += Time.deltaTime * deceleration;
+            velocityZ = 0.0f;
         if (!backPressed && !forwardPressed && velocityZ != 0.0f && (velocityZ > -0.05f && velocityZ < 0.05))
             velocityZ = 0.0f;
         if (!leftPressed && velocityX < 0.0f)
