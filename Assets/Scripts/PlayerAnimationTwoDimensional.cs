@@ -15,6 +15,7 @@ public class PlayerAnimationTwoDimensional : MonoBehaviour
     public float acceleration = 2.0f;
     public float deceleration = 2.0f;
     public float maxRunVelocity = 0.5f;
+    public float maxBackWalkVelocity = -1f;
     public float maxDashVelocity = 2.0f;
     int velocityZHash;
     int velocityXHash;
@@ -44,24 +45,30 @@ public class PlayerAnimationTwoDimensional : MonoBehaviour
         forwardPressed = Input.GetKey(KeyCode.W);
         leftPressed = Input.GetKey(KeyCode.A);
         rightPressed = Input.GetKey(KeyCode.D);
-        backPressed = Input.GetKey("S");
+        backPressed = Input.GetKey(KeyCode.S);
         dashPressed = Input.GetKey(KeyCode.LeftShift);
     }
     private void MovementChecks(float currentMaxVelocity)
     {
         if (forwardPressed && velocityZ < currentMaxVelocity)
             velocityZ += Time.deltaTime * acceleration;
+        if (backPressed && velocityZ > -currentMaxVelocity)
+            velocityZ = -1f;
         if (leftPressed && velocityX > -currentMaxVelocity)
             velocityX -= Time.deltaTime * acceleration;
         if (rightPressed && velocityX < currentMaxVelocity)
             velocityX += Time.deltaTime * acceleration;
-        // Debug.Log("Velocity X: " + velocityX);
+        Debug.Log("Velocity Z: " + velocityZ);
     }
     private void MovementDeceleration(float currentMaxVelocity)
     {
         if (!forwardPressed && velocityZ > 0.0f)
             velocityZ -= Time.deltaTime * deceleration;
         if (!forwardPressed && velocityZ < 0.0f)
+            velocityZ = 0.0f;
+        if (!backPressed && velocityZ < 0.0f)
+            velocityZ += Time.deltaTime * deceleration;
+        if (!backPressed && !forwardPressed && velocityZ != 0.0f && (velocityZ > -0.05f && velocityZ < 0.05))
             velocityZ = 0.0f;
         if (!leftPressed && velocityX < 0.0f)
             velocityX += Time.deltaTime * deceleration;
