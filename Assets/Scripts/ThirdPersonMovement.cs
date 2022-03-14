@@ -11,16 +11,19 @@ public class ThirdPersonMovement : MonoBehaviour
     float turnSmoothVelocity;
     private bool isMoving = false;
     private bool isSprinting = false;
+    private bool isCrouching = false;
     private string animParamSpeed = "Speed";
 
     // TODO: Move to options when created
     private const KeyCode SprintKey = KeyCode.LeftShift;
+    private const KeyCode CrouchKey = KeyCode.C;
 
     // y movement paramaters
     Vector3 velocity;
     public float jumpHeight = 0.05f;
     public float SprintSpeed = 1.5f;
     private float originalStepOffset;
+    private float playerStartHeight;
 
     private Animator playerAnim;
 
@@ -33,11 +36,13 @@ public class ThirdPersonMovement : MonoBehaviour
         playerAnim = GetComponentInChildren<Animator>();
         originalStepOffset = controller.stepOffset;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
+        playerStartHeight = controller.height;
     }
 
     // Update is called once per frame
     void Update()
     {
+        Crouching();
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
             bool isJumping = Input.GetAxis("Jump") > 0;
@@ -107,5 +112,20 @@ public class ThirdPersonMovement : MonoBehaviour
 
         isClimbable = currClimbAngle <= maxClimbAngle;// || hit.moveDirection.y <= 0;
         // Debug.Log("isClimbable " + isClimbable + ", currClimbAngle " + currClimbAngle + ", maxClimbAngle " + maxClimbAngle + ", hit.moveDirection.y" + hit.moveDirection.y);
+    }
+    private void Crouching()
+    {
+        if (Input.GetKeyDown(CrouchKey) && !isCrouching)
+        {
+            playerAnim.SetBool("Crouching", true);
+            isCrouching = true;
+            controller.height = playerStartHeight * 0.5f;
+        }
+        else if (Input.GetKeyDown(CrouchKey) && isCrouching)
+        {
+            playerAnim.SetBool("Crouching", false);
+            isCrouching = false;
+            controller.height = playerStartHeight;
+        }
     }
 }
