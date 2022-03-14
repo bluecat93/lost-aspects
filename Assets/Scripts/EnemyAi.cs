@@ -138,6 +138,7 @@ public class EnemyAi : MonoBehaviour
         LookAtObject(player);
         if (Vector3.Distance(transform.position, player.transform.position) <= attackDistance)
         {
+            animator.SetBool("InAttackRange", true);
             aiMovement.StopMoving();
             if(Time.time > nextAttackTime)
             {
@@ -148,6 +149,10 @@ public class EnemyAi : MonoBehaviour
                 animator.SetInteger("State", (int)state);
                 state = State.Chasing;
             }
+        }
+        else
+        {
+            animator.SetBool("InAttackRange", false);
         }
     }
 
