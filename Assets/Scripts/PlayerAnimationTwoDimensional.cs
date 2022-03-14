@@ -10,6 +10,7 @@ public class PlayerAnimationTwoDimensional : MonoBehaviour
     bool forwardPressed = false;
     bool leftPressed = false;
     bool rightPressed = false;
+    bool backPressed = false;
     bool dashPressed = false;
     public float acceleration = 2.0f;
     public float deceleration = 2.0f;
@@ -43,6 +44,7 @@ public class PlayerAnimationTwoDimensional : MonoBehaviour
         forwardPressed = Input.GetKey(KeyCode.W);
         leftPressed = Input.GetKey(KeyCode.A);
         rightPressed = Input.GetKey(KeyCode.D);
+        backPressed = Input.GetKey("S");
         dashPressed = Input.GetKey(KeyCode.LeftShift);
     }
     private void MovementChecks(float currentMaxVelocity)
