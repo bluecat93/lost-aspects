@@ -23,10 +23,12 @@ public class ThirdPersonMovement : MonoBehaviour
     public float jumpHeight = 0.05f;
     public float SprintSpeed = 1.5f;
     private float originalStepOffset;
+    // Crouching variables, player height at start and collider position
     private float playerStartHeight;
-
+    private float colliderStartHeight;
+    public float crouchColliderPositionY = 0.05f;
+    public float heightChange = 0.5f;
     private Animator playerAnim;
-
     private bool isClimbable = true;
     private float maxClimbAngle = 60f;
 
@@ -37,6 +39,7 @@ public class ThirdPersonMovement : MonoBehaviour
         originalStepOffset = controller.stepOffset;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
         playerStartHeight = controller.height;
+        colliderStartHeight = controller.center.y;
     }
 
     // Update is called once per frame
@@ -120,12 +123,14 @@ public class ThirdPersonMovement : MonoBehaviour
             playerAnim.SetBool("Crouching", true);
             isCrouching = true;
             controller.height = playerStartHeight * 0.5f;
+            controller.center = new Vector3(controller.center.x, heightChange, controller.center.z);
         }
         else if (Input.GetKeyDown(CrouchKey) && isCrouching)
         {
             playerAnim.SetBool("Crouching", false);
             isCrouching = false;
             controller.height = playerStartHeight;
+            controller.center = new Vector3(controller.center.x, colliderStartHeight, controller.center.z);
         }
     }
 }
