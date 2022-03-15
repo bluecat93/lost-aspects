@@ -7,7 +7,7 @@ public class ThirdPersonMovement : MonoBehaviour
     public CharacterController controller;
     public Transform playerCamera;
     private Rigidbody rgbody;
-    public float movementSpeed = 33.0f;
+    public float movementSpeed = 5.0f;
     public float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
     private bool isMoving = false;
@@ -23,11 +23,9 @@ public class ThirdPersonMovement : MonoBehaviour
 
     // y movement paramaters
     Vector3 velocity;
-    public float jumpHeight = 0.05f;
+    public float jumpHeight = 5f;
     public float SprintSpeed = 1.5f;
     private float originalStepOffset;
-    public float minimumFallRange = 50f;
-    private bool isFirstTimeNoFallDamage;
 
     // Crouching variables, player height at start and collider position
     private float playerStartHeight;
@@ -48,14 +46,28 @@ public class ThirdPersonMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isFirstTimeNoFallDamage = true;
-        velocity = Vector3.zero;
         playerAnim = GetComponentInChildren<Animator>();
         originalStepOffset = controller.stepOffset;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
         playerStartHeight = controller.height;
         colliderStartHeight = controller.center.y;
         rgbody = GetComponent<Rigidbody>();
+    }
+
+    private void FixedUpdate()
+    {
+        if (controller.isGrounded)
+        {
+            controller.stepOffset = originalStepOffset;
+            velocity.y = -0.1f;
+        }
+        else
+        {
+            velocity.y +=  (Physics.gravity.y * Time.deltaTime);
+
+            // Prevents some wierd jumping bugs while moving across stairs.
+            controller.stepOffset = 0;
+        }
     }
 
     // Update is called once per frame
@@ -65,14 +77,8 @@ public class ThirdPersonMovement : MonoBehaviour
         HandleDodgeInput();
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
-            bool isJumping = Input.GetAxis("Jump") > 0;
-
             // Keyboard input (jump)
-
-            // Prevents some wierd jumping bugs while moving across stairs.
-            controller.stepOffset = 0;
-            velocity.y += (Physics.gravity.y * Time.deltaTime);
-
+            bool isJumping = Input.GetAxis("Jump") > 0;
 
             // TODO: need to check more stuff for double jumping or other kinds of jumps.
             if (isJumping && controller.isGrounded)
@@ -86,6 +92,8 @@ public class ThirdPersonMovement : MonoBehaviour
             Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
             isMoving = direction.magnitude >= 0.1f;
+
+            Vector3 finalMoving = Vector3.zero;
 
             if (isMoving)
             {
@@ -103,12 +111,16 @@ public class ThirdPersonMovement : MonoBehaviour
                 // Vector3 directionMod = (isClimbable || isJumping || (!controller.isGrounded && !isJumping) ? Vector3.forward : Vector3.back);
                 Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
 
-                controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
+                finalMoving = moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1);
+               
+                //controller.Move(finalMoving);
 
             }
+            finalMoving += velocity * Time.deltaTime;
+            controller.Move(finalMoving);
 
             // This must be last and as close as possible to other movements so it will allways go down.
-            controller.Move((velocity * Time.deltatime) / 2);
+            //controller.Move(velocity * Time.deltaTime);
 
             if (Input.GetAxisRaw("Camera Unlocked") == 0)
             {
@@ -120,27 +132,8 @@ public class ThirdPersonMovement : MonoBehaviour
 
     }
 
-
-
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        float fallDamageMod = -velocity.y;
-
-        if (fallDamageMod > minimumFallRange)
-        {
-            if (!isFirstTimeNoFallDamage)
-            {
-                // fall damage.
-                Debug.Log("fallDamageMod: " + fallDamageMod);
-                PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
-                playerStats.TakeDamage((int)(fallDamageMod - minimumFallRange));
-            }
-            isFirstTimeNoFallDamage = false;
-        }
-        controller.stepOffset = originalStepOffset;
-        velocity.y = 0f;
-
-
         var currClimbAngle = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up));
 
         isClimbable = currClimbAngle <= maxClimbAngle;// || hit.moveDirection.y <= 0;
