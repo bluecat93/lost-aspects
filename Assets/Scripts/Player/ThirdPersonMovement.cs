@@ -6,17 +6,20 @@ public class ThirdPersonMovement : MonoBehaviour
 {
     public CharacterController controller;
     public Transform playerCamera;
+    private Rigidbody rgbody;
     public float movementSpeed = 5.0f;
     public float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
     private bool isMoving = false;
     private bool isSprinting = false;
     private bool isCrouching = false;
+    private bool isRolling = false;
     private string animParamSpeed = "Speed";
 
     // TODO: Move to options when created
     private const KeyCode SprintKey = KeyCode.LeftShift;
     private const KeyCode CrouchKey = KeyCode.C;
+    private const KeyCode DodgeKey = KeyCode.V;
 
     // y movement paramaters
     Vector3 velocity;
@@ -33,7 +36,8 @@ public class ThirdPersonMovement : MonoBehaviour
     public float dodgeInvinsibleDuration = 0.5f;
     public float delayBeforeInvinsible = 0.2f;
     public float dodgePushAmt = 3f;
-    private float actCoolDown;
+    private float actCoolDown = 1f;
+
     private Animator playerAnim;
     private bool isClimbable = true;
     private float maxClimbAngle = 60f;
@@ -46,13 +50,14 @@ public class ThirdPersonMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
         playerStartHeight = controller.height;
         colliderStartHeight = controller.center.y;
+        rgbody = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Crouching();
-        DodgeRoll();
+        HandleCrouchInput();
+        HandleDodgeInput();
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
             bool isJumping = Input.GetAxis("Jump") > 0;
@@ -123,7 +128,7 @@ public class ThirdPersonMovement : MonoBehaviour
         isClimbable = currClimbAngle <= maxClimbAngle;// || hit.moveDirection.y <= 0;
         // Debug.Log("isClimbable " + isClimbable + ", currClimbAngle " + currClimbAngle + ", maxClimbAngle " + maxClimbAngle + ", hit.moveDirection.y" + hit.moveDirection.y);
     }
-    private void Crouching()
+    private void HandleCrouchInput()
     {
         if (Input.GetKeyDown(CrouchKey) && !isCrouching)
         {
@@ -140,8 +145,11 @@ public class ThirdPersonMovement : MonoBehaviour
             controller.center = new Vector3(controller.center.x, colliderStartHeight, controller.center.z);
         }
     }
-    private void DodgeRoll()
+    private void HandleDodgeInput()
     {
-
+        if (Input.GetKeyDown(DodgeKey))
+        {
+            isRolling = true;
+        }
     }
 }
