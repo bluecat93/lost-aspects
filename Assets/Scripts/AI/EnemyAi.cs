@@ -97,6 +97,7 @@ public class EnemyAi : MonoBehaviour
                 break;
 
             case State.Dead:
+                aiMovement.MoveTo(transform.position);
                 enemiesList.removeEnemy(transform);
                 if (currentDeathTimer <= Time.time)
                 {
