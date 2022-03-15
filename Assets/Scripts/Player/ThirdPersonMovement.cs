@@ -57,7 +57,7 @@ public class ThirdPersonMovement : MonoBehaviour
     void Update()
     {
         HandleCrouchInput();
-        HandleDodgeInput();
+        // HandleDodgeInput();
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
             bool isJumping = Input.GetAxis("Jump") > 0;
@@ -145,11 +145,14 @@ public class ThirdPersonMovement : MonoBehaviour
             controller.center = new Vector3(controller.center.x, colliderStartHeight, controller.center.z);
         }
     }
-    private void HandleDodgeInput()
-    {
-        if (Input.GetKeyDown(DodgeKey))
-        {
-            isRolling = true;
-        }
-    }
+    // private void HandleDodgeInput()
+    // {
+    //     if (Input.GetKeyDown(DodgeKey))
+    //     {
+    //         isRolling = true;
+    //         Vector3 rollDir = new Vector3(Input.GetAxis("Horizontal") * dodgePushAmt, 0f, Input.GetAxis("Vertical") * dodgePushAmt);
+    //         controller.Move(rollDir * Time.deltaTime * movementSpeed);
+
+    //     }
+    // }
 }
