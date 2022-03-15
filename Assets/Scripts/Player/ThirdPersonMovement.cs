@@ -28,6 +28,12 @@ public class ThirdPersonMovement : MonoBehaviour
     private float colliderStartHeight;
     public float crouchColliderPositionY = 0.05f;
     public float heightChange = 0.5f;
+    // Dodging Variables
+    public float dodgeCoolDown = 1f;
+    public float dodgeInvinsibleDuration = 0.5f;
+    public float delayBeforeInvinsible = 0.2f;
+    public float dodgePushAmt = 3f;
+    private float actCoolDown;
     private Animator playerAnim;
     private bool isClimbable = true;
     private float maxClimbAngle = 60f;
@@ -46,6 +52,7 @@ public class ThirdPersonMovement : MonoBehaviour
     void Update()
     {
         Crouching();
+        DodgeRoll();
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
             bool isJumping = Input.GetAxis("Jump") > 0;
@@ -132,5 +139,9 @@ public class ThirdPersonMovement : MonoBehaviour
             controller.height = playerStartHeight;
             controller.center = new Vector3(controller.center.x, colliderStartHeight, controller.center.z);
         }
+    }
+    private void DodgeRoll()
+    {
+
     }
 }
