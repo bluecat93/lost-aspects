@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyAi : MonoBehaviour
 {
@@ -120,8 +121,18 @@ public class EnemyAi : MonoBehaviour
 
     private Vector3 GetRoamingPosition()
     {
-        Vector3 randomDirection = new Vector3(UnityEngine.Random.Range(-1f, 1f),0 ,UnityEngine.Random.Range(-1f, 1f)).normalized;
-        return startingPosition + randomDirection * Random.Range(10f, 30f);
+        NavMeshHit navMeshHit;
+        float randomRange; 
+        Vector3 randomDirection;
+
+        randomRange = Random.Range(4f, 7f);
+        randomDirection = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f)).normalized;
+        if (NavMesh.SamplePosition(transform.position+(randomDirection*randomRange), out navMeshHit, randomRange, NavMesh.AllAreas))
+        {
+            // Debug.Log("navMesh position: " + navMeshHit.position + "\nrandom position: " + randomDirection*randomRange);
+            return navMeshHit.position;
+        }
+        return transform.position;
     }
 
     private void FindTarget()
