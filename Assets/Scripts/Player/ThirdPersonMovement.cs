@@ -7,7 +7,7 @@ public class ThirdPersonMovement : MonoBehaviour
     public CharacterController controller;
     public Transform playerCamera;
     private Rigidbody rgbody;
-    public float movementSpeed = 5.0f;
+    public float movementSpeed = 33.0f;
     public float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
     private bool isMoving = false;
@@ -26,6 +26,9 @@ public class ThirdPersonMovement : MonoBehaviour
     public float jumpHeight = 0.05f;
     public float SprintSpeed = 1.5f;
     private float originalStepOffset;
+    public float minimumFallRange = 50f;
+    private bool isFirstTimeNoFallDamage;
+
     // Crouching variables, player height at start and collider position
     private float playerStartHeight;
     private float colliderStartHeight;
@@ -45,6 +48,8 @@ public class ThirdPersonMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isFirstTimeNoFallDamage = true;
+        velocity = Vector3.zero;
         playerAnim = GetComponentInChildren<Animator>();
         originalStepOffset = controller.stepOffset;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
@@ -63,17 +68,11 @@ public class ThirdPersonMovement : MonoBehaviour
             bool isJumping = Input.GetAxis("Jump") > 0;
 
             // Keyboard input (jump)
-            if (!controller.isGrounded)
-            {
-                // Prevents some wierd jumping bugs while moving across stairs.
-                controller.stepOffset = 0;
-                velocity.y += (Physics.gravity.y * Time.deltaTime * Time.deltaTime);
-            }
-            else
-            {
-                controller.stepOffset = originalStepOffset;
-                velocity.y = 0f;
-            }
+
+            // Prevents some wierd jumping bugs while moving across stairs.
+            controller.stepOffset = 0;
+            velocity.y += (Physics.gravity.y * Time.deltaTime);
+
 
             // TODO: need to check more stuff for double jumping or other kinds of jumps.
             if (isJumping && controller.isGrounded)
@@ -109,7 +108,7 @@ public class ThirdPersonMovement : MonoBehaviour
             }
 
             // This must be last and as close as possible to other movements so it will allways go down.
-            controller.Move(velocity);
+            controller.Move((velocity * Time.deltatime) / 2);
 
             if (Input.GetAxisRaw("Camera Unlocked") == 0)
             {
@@ -121,8 +120,27 @@ public class ThirdPersonMovement : MonoBehaviour
 
     }
 
+
+
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        float fallDamageMod = -velocity.y;
+
+        if (fallDamageMod > minimumFallRange)
+        {
+            if (!isFirstTimeNoFallDamage)
+            {
+                // fall damage.
+                Debug.Log("fallDamageMod: " + fallDamageMod);
+                PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
+                playerStats.TakeDamage((int)(fallDamageMod - minimumFallRange));
+            }
+            isFirstTimeNoFallDamage = false;
+        }
+        controller.stepOffset = originalStepOffset;
+        velocity.y = 0f;
+
+
         var currClimbAngle = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up));
 
         isClimbable = currClimbAngle <= maxClimbAngle;// || hit.moveDirection.y <= 0;
