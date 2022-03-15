@@ -1287,6 +1287,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8165736442878897096, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: heightChange
+      value: 0.55
+      objectReference: {fileID: 0}
     - target: {fileID: 8165736442878897097, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: acceleration
       value: 2
