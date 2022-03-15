@@ -150,6 +150,7 @@ public class ThirdPersonMovement : MonoBehaviour
         if (Input.GetKey(DodgeKey))
         {
             playerAnim.SetTrigger("Roll");
+
         }
     }
 }

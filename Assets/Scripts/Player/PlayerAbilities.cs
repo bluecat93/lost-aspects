@@ -12,11 +12,14 @@ public class PlayerAbilities : MonoBehaviour
     private RaycastHit raycastHit;
     private Ray[] ray;
     public float playerMiddleHeight = 2;
+
+    private Animator playerAnim;
     // Start is called before the first frame update
     void Start()
     {
         playerStats = transform.gameObject.GetComponent<PlayerStats>();
         ray = new Ray[3];
+        playerAnim = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -25,22 +28,23 @@ public class PlayerAbilities : MonoBehaviour
         // TODO: add the content of this for loop to the for loop inside the raycast
         // when you no longer want to see the raycast at all times.
         // 3 rays that indicate the attack range.
-        for(int i=-1;i<=1;i++)
+        for (int i = -1; i <= 1; i++)
         {
             ray[i + 1] = new Ray(transform.position + Vector3.up * playerMiddleHeight,
-                (transform.forward + (i*transform.right)).normalized * maxAttackDistance);
-            Debug.DrawRay(ray[i+1].origin, ray[i+1].direction * maxAttackDistance);
+                (transform.forward + (i * transform.right)).normalized * maxAttackDistance);
+            Debug.DrawRay(ray[i + 1].origin, ray[i + 1].direction * maxAttackDistance);
         }
 
         float attacking = Input.GetAxisRaw("Swing");
         if (attacking != 0)
         {
-            for(int i = 0; i <= 2; i++)
+            playerAnim.SetTrigger("Attack");
+            for (int i = 0; i <= 2; i++)
             {
                 if (Physics.Raycast(ray[i], out raycastHit, maxAttackDistance))
                 {
                     Transform hit = checkHit();
-                    if( hit != null)
+                    if (hit != null)
                     {
                         // Enemy found.
                         EnemyAi enemyAi = hit.gameObject.GetComponent<EnemyAi>();
@@ -81,7 +85,7 @@ public class PlayerAbilities : MonoBehaviour
     private Transform checkHit()
     {
         Debug.Log("Raycast hit: " + raycastHit.collider.gameObject.name);
-        foreach(Transform enemy in EnemiesList.getEnemies())
+        foreach (Transform enemy in EnemiesList.getEnemies())
         {
             if (raycastHit.collider.gameObject == enemy.gameObject)
             {
