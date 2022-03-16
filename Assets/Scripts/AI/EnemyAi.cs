@@ -17,12 +17,12 @@ public class EnemyAi : MonoBehaviour
     }
     //private AttackAnimations attackAnimations;
     private AiMovement aiMovement;
+    private Animator animator;
     private Vector3 startingPosition;
     private Vector3 roamPosition;
     private State state;
     private float nextAttackTime;
-
-    public EnemiesList enemiesList;
+    public bool isAttacking;
 
     public int maxHealth = 100;
     private int currentHealth;
@@ -31,6 +31,7 @@ public class EnemyAi : MonoBehaviour
 
     public float attackTimeIntervals = 1f;
     public int attackDamage = 5;
+    public bool attackOnlyOnce = false;
 
     public float maxFollowDistance = 20f;
     public float sightDistance = 10f;
@@ -45,7 +46,8 @@ public class EnemyAi : MonoBehaviour
     //Player stuff 
     public GameObject player;
     public PlayerStats playerStats;
-    private Animator animator;
+
+
 
 
 
@@ -59,7 +61,6 @@ public class EnemyAi : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        enemiesList.addEnemy(transform);
         startingPosition = transform.position;
         roamPosition = GetRoamingPosition();
         currentHealth = maxHealth;
@@ -68,6 +69,8 @@ public class EnemyAi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
+
         animator.SetInteger("State", (int)state);
         if (currentHealth <= 0)
         {
@@ -98,7 +101,6 @@ public class EnemyAi : MonoBehaviour
 
             case State.Dead:
                 aiMovement.MoveTo(transform.position);
-                enemiesList.removeEnemy(transform);
                 if (currentDeathTimer <= Time.time)
                 {
                     transform.gameObject.SetActive(false);
@@ -119,6 +121,7 @@ public class EnemyAi : MonoBehaviour
         }
         
     }
+
 
     private Vector3 GetRoamingPosition()
     {
@@ -154,8 +157,8 @@ public class EnemyAi : MonoBehaviour
             aiMovement.StopMoving();
             if(Time.time > nextAttackTime)
             {
+                attackOnlyOnce = true;
                 nextAttackTime = Time.time + attackTimeIntervals;
-                playerStats.TakeDamage(attackDamage);
                 state = State.Attacking;
                 // do animation
                 animator.SetInteger("State", (int)state);

@@ -151,7 +151,6 @@ public class ThirdPersonMovement : MonoBehaviour
                 finalMoving = moveDir * -1 * 0.5f * Time.deltaTime;
                 //controller.Move(moveDir * -1 * 0.5f * Time.deltaTime);
             }
-
             finalMoving += velocity * Time.deltaTime;
             controller.Move(finalMoving);
 

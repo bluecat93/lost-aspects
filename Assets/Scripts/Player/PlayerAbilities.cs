@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class PlayerAbilities : MonoBehaviour
 {
-    public EnemiesList EnemiesList;
     public float maxAttackDistance = 1.0f;
     private PlayerStats playerStats;
 
-    private RaycastHit raycastHit;
     private Ray[] ray;
     public float playerMiddleHeight = 2;
+
+    public WeaponAttack weapon;
 
     private Animator playerAnim;
     // Start is called before the first frame update
@@ -39,29 +39,8 @@ public class PlayerAbilities : MonoBehaviour
         if (attacking != 0)
         {
             playerAnim.SetTrigger("Attack");
-            for (int i = 0; i <= 2; i++)
-            {
-                if (Physics.Raycast(ray[i], out raycastHit, maxAttackDistance))
-                {
-                    Transform hit = checkHit();
-                    if (hit != null)
-                    {
-                        // Enemy found.
-                        EnemyAi enemyAi = hit.gameObject.GetComponent<EnemyAi>();
-                        enemyAi.TakeDamage(playerStats.damage);
-                    }
-                }
-            }
-
-            // Player attacked
-            //Transform hit = checkHitDeprecated();
-            /*if (hit != null)
-            {
-                // Enemy found.
-                EnemyAi enemyAi = hit.gameObject.GetComponent<EnemyAi>();
-                enemyAi.TakeDamage(playerStats.damage);
-            }*/
         }
+        weapon.isAttacking = playerAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack");
     }
 
     // still saved this method. maybe someone will want to see how to find the closest object from a given list of objects.
@@ -70,7 +49,7 @@ public class PlayerAbilities : MonoBehaviour
     {
         Transform closestViableEnemy = null;
         float closestViableEnemyDistance = maxAttackDistance;
-        foreach (Transform enemy in EnemiesList.getEnemies())
+/*        foreach (Transform enemy in EnemiesList.getEnemies())
         {
             float distance = Vector3.Distance(transform.position, enemy.position);
             if (closestViableEnemyDistance >= distance)
@@ -78,20 +57,9 @@ public class PlayerAbilities : MonoBehaviour
                 closestViableEnemyDistance = distance;
                 closestViableEnemy = enemy;
             }
-        }
+        }*/
         return closestViableEnemy;
     }
 
-    private Transform checkHit()
-    {
-        Debug.Log("Raycast hit: " + raycastHit.collider.gameObject.name);
-        foreach (Transform enemy in EnemiesList.getEnemies())
-        {
-            if (raycastHit.collider.gameObject == enemy.gameObject)
-            {
-                return enemy;
-            }
-        }
-        return null;
-    }
+
 }
