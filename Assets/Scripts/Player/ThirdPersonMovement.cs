@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ThirdPersonMovement : MonoBehaviour
 {
+    private CapsuleCollider capsuleCollider;
+    private float capsuleColliderStartingHeight;
     public CharacterController controller;
     public Transform playerCamera;
     private Rigidbody rgbody;
@@ -47,6 +49,8 @@ public class ThirdPersonMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        capsuleCollider = GetComponent<CapsuleCollider>();
+        capsuleColliderStartingHeight = capsuleCollider.height;
         playerAnim = GetComponentInChildren<Animator>();
         originalStepOffset = controller.stepOffset;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
@@ -173,12 +177,15 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void HandleCrouchInput()
     {
+
         if (Input.GetKeyDown(CrouchKey) && !isCrouching)
         {
             playerAnim.SetBool("Crouching", true);
             isCrouching = true;
             controller.height = playerStartHeight * 0.5f;
             controller.center = new Vector3(controller.center.x, heightChange, controller.center.z);
+            capsuleCollider.height = capsuleColliderStartingHeight / 2;
+
         }
         else if (Input.GetKeyDown(CrouchKey) && isCrouching)
         {
@@ -186,6 +193,7 @@ public class ThirdPersonMovement : MonoBehaviour
             isCrouching = false;
             controller.height = playerStartHeight;
             controller.center = new Vector3(controller.center.x, colliderStartHeight, controller.center.z);
+            capsuleCollider.height = capsuleColliderStartingHeight;
         }
     }
     private void HandleDodgeInput()
