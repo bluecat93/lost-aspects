@@ -44,7 +44,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private Animator playerAnim;
     private bool isClimbable = true;
-    private float maxClimbAngle = 60f;
 
     // Start is called before the first frame update
     void Start()
@@ -119,6 +118,7 @@ public class ThirdPersonMovement : MonoBehaviour
                 velocity.y = jumpHeight;
             }
 
+
             float horizontal = Input.GetAxisRaw("Horizontal");
             float vertical = Input.GetAxisRaw("Vertical");
 
@@ -133,7 +133,6 @@ public class ThirdPersonMovement : MonoBehaviour
             Vector3 directionMod = (isClimbable || !CheckIsGrounded() ? Vector3.forward : Vector3.back);
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
 
-
             if (isMoving)
             {
                 isSprinting = Input.GetKey(SprintKey);
@@ -142,10 +141,10 @@ public class ThirdPersonMovement : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
                 finalMoving = moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1);
-               
+
                 //controller.Move(finalMoving);
 
-            
+
 
                 //controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
 
@@ -172,7 +171,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        isClimbable = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up)) <= maxClimbAngle;
+        isClimbable = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up)) <= controller.slopeLimit;
     }
 
     private void HandleCrouchInput()
