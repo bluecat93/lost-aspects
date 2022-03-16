@@ -27,6 +27,7 @@ public class ThirdPersonMovement : MonoBehaviour
     public float SprintSpeed = 1.5f;
     private float originalStepOffset;
 
+
     // Crouching variables, player height at start and collider position
     private float playerStartHeight;
     private float colliderStartHeight;
@@ -60,6 +61,11 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             controller.stepOffset = originalStepOffset;
             velocity.y = -0.1f;
+            if(velocity.y < -jumpHeight)
+            {
+                PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
+                playerStats.TakeDamage((int)(velocity.y)); //- jumpHeight - playerStats.fallDamageReduction));
+            }
         }
         else
         {
