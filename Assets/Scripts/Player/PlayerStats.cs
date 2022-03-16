@@ -42,7 +42,7 @@ public class PlayerStats : MonoBehaviour
         hungerBar.SetMax(maxHunger);
 
         InvokeRepeating("GettingHungry", 5.0f, 10.0f);
-        InvokeRepeating("CheckHungr", 0.5f, 0.5f);
+        InvokeRepeating("CheckHunger", 0.5f, 0.5f);
 
     }
 
@@ -83,6 +83,15 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    public void TakePercentileDamage(int damage)
+    {
+        if (currentHealth > 0)
+        {
+            currentHealth -= damage * 100 / maxHealth;
+            healthBar.SetCurrent(currentHealth);
+        }
+    }
+
     void GettingHungry()
     {
         if (currentHunger > 0)
@@ -92,7 +101,7 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    void CheckHungr()
+    void CheckHunger()
     {
         if (currentHunger == 0) // how we take damage.
         {

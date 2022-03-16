@@ -1400,6 +1400,10 @@ PrefabInstance:
       propertyPath: acceleration
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 8165736442878897098, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: m_MinMoveDistance
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8165736442878897099, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: EnemiesList
       value: 

@@ -57,34 +57,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (controller.isGrounded)
-        {
-            if(velocity.y < -jumpHeight)
-            {
-                PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
-                if (-velocity.y > 30)
-                {
-                    velocity.y *= 2.5f;
-                }
-                int fallDamage = (int)(-velocity.y + jumpHeight + playerStats.fallDamageReduction);
-                Debug.Log("Damage taken from fall damage: " + fallDamage);
-                playerStats.TakeDamage(fallDamage);
-            }
-            controller.stepOffset = originalStepOffset;
-            velocity.y = -0.1f;
-        }
-        else
-        { 
-            velocity.y +=  (Physics.gravity.y * Time.deltaTime);
 
-            // Prevents some wierd jumping bugs while moving across stairs.
-            controller.stepOffset = 0;
-        }
-
-        if(!PlayerStats.isAlive)
-        {
-            velocity = Vector3.zero;
-        }
     }
 
     // Update is called once per frame
@@ -94,6 +67,45 @@ public class ThirdPersonMovement : MonoBehaviour
         HandleDodgeInput();
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
+
+            if (controller.isGrounded)
+            {
+                if (velocity.y < -jumpHeight)
+                {
+                    Debug.Log("velocity.y = " + velocity.y);
+                    PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
+                    if (-velocity.y > 30)
+                    {
+                        velocity.y *= 3.5f;
+                    }
+                    else if (-velocity.y > 20)
+                    {
+                        velocity.y *= 2f;
+                    }
+                    int fallDamage = (int)(-velocity.y - jumpHeight - playerStats.fallDamageReduction);
+                    if (fallDamage < 0)
+                    {
+                        fallDamage = 0;
+                    }
+                    Debug.Log("Damage taken from fall damage: " + fallDamage);
+                    playerStats.TakePercentileDamage(fallDamage);
+                }
+                controller.stepOffset = originalStepOffset;
+                velocity.y = -0.1f;
+            }
+            else
+            {
+                velocity.y += (Physics.gravity.y * Time.deltaTime);
+
+                // Prevents some wierd jumping bugs while moving across stairs.
+                controller.stepOffset = 0;
+            }
+
+            if (!PlayerStats.isAlive)
+            {
+                velocity = Vector3.zero;
+            }
+
             // Keyboard input (jump)
             bool isJumping = Input.GetAxis("Jump") > 0;
 
