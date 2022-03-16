@@ -59,20 +59,31 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         if (controller.isGrounded)
         {
-            controller.stepOffset = originalStepOffset;
-            velocity.y = -0.1f;
             if(velocity.y < -jumpHeight)
             {
                 PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
-                playerStats.TakeDamage((int)(velocity.y)); //- jumpHeight - playerStats.fallDamageReduction));
+                if (-velocity.y > 30)
+                {
+                    velocity.y *= 2.5f;
+                }
+                int fallDamage = (int)(-velocity.y + jumpHeight + playerStats.fallDamageReduction);
+                Debug.Log("Damage taken from fall damage: " + fallDamage);
+                playerStats.TakeDamage(fallDamage);
             }
+            controller.stepOffset = originalStepOffset;
+            velocity.y = -0.1f;
         }
         else
-        {
+        { 
             velocity.y +=  (Physics.gravity.y * Time.deltaTime);
 
             // Prevents some wierd jumping bugs while moving across stairs.
             controller.stepOffset = 0;
+        }
+
+        if(!PlayerStats.isAlive)
+        {
+            velocity = Vector3.zero;
         }
     }
 
@@ -114,24 +125,19 @@ public class ThirdPersonMovement : MonoBehaviour
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-                // TODO: Since isGrounded is not reliable, need to research raycasts and understand how to use it instead to fix throwback bug
-                Vector3 directionMod = (isClimbable || isJumping ? Vector3.forward : Vector3.back);
-
-                // Vector3 directionMod = (isClimbable || isJumping || (!controller.isGrounded && !isJumping) ? Vector3.forward : Vector3.back);
-                Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
-
                 finalMoving = moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1);
                
                 //controller.Move(finalMoving);
 
             
 
-                controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
+                //controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
 
             }
             else if (!isClimbable)
             {
-                controller.Move(moveDir * -1 * 0.5f * Time.deltaTime);
+                finalMoving = moveDir * -1 * 0.5f * Time.deltaTime;
+                //controller.Move(moveDir * -1 * 0.5f * Time.deltaTime);
             }
 
             finalMoving += velocity * Time.deltaTime;
