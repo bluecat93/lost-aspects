@@ -95,7 +95,7 @@ public class ThirdPersonMovement : MonoBehaviour
                     playerStats.TakePercentileDamage(fallDamage);
                 }
                 controller.stepOffset = originalStepOffset;
-                velocity.y = -0.1f;
+                velocity.y = 0;
             }
             else
             {
