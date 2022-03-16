@@ -72,7 +72,7 @@ public class ThirdPersonMovement : MonoBehaviour
             {
                 if (velocity.y < -jumpHeight)
                 {
-                    Debug.Log("velocity.y = " + velocity.y);
+                    // Debug.Log("velocity.y = " + velocity.y);
                     PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
                     if (-velocity.y > 30)
                     {
@@ -87,7 +87,7 @@ public class ThirdPersonMovement : MonoBehaviour
                     {
                         fallDamage = 0;
                     }
-                    Debug.Log("Damage taken from fall damage: " + fallDamage);
+                    // Debug.Log("Damage taken from fall damage: " + fallDamage);
                     playerStats.TakePercentileDamage(fallDamage);
                 }
                 controller.stepOffset = originalStepOffset;
