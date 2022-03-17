@@ -1233,15 +1233,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482269542894, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.26985067
+      value: 0.26985064
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482269542894, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00000004058329
+      value: -4.406689e-16
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482269542894, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000011373355
+      value: 5.368859e-16
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482627739641, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_FollowOffset.y
@@ -1439,19 +1439,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8165736442487727050, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.2698507
+      value: 0.26985064
       objectReference: {fileID: 0}
     - target: {fileID: 8165736442487727050, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000040585075
+      value: -6.8022876e-10
       objectReference: {fileID: 0}
     - target: {fileID: 8165736442487727050, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000011371679
+      value: -1.9063134e-10
       objectReference: {fileID: 0}
     - target: {fileID: 8165736442878897092, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8165736442878897096, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: dashTime
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8165736442878897096, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: dashSpeed
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8165736442878897096, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: jumpHeight
