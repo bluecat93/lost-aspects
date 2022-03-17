@@ -18,11 +18,14 @@ public class PlayerStats : MonoBehaviour
     public int currentHealth;
     public int maxHunger = 100;
     public int currentHunger;
+    public int maxStamina = 100;
+    public int currentStamina;
     public int fallDamageReduction = 0;
 
 
     public BarScript healthBar;
     public BarScript hungerBar;
+    public BarScript staminaBar;
     public GameObject gameOverUI;
     public GameObject thirdPersonCamera;
     public static bool isAlive = true;
@@ -39,6 +42,9 @@ public class PlayerStats : MonoBehaviour
 
         currentHunger = maxHunger;
         hungerBar.SetMax(maxHunger);
+
+        currentStamina = maxStamina;
+        staminaBar.SetMax(maxStamina);
 
         InvokeRepeating("GettingHungry", 5.0f, 10.0f);
         InvokeRepeating("CheckHunger", 0.5f, 0.5f);
@@ -128,5 +134,12 @@ public class PlayerStats : MonoBehaviour
     {
         currentHunger = maxHunger;
         hungerBar.SetCurrent(maxHunger);
+    }
+
+    public void ChangingStamina(int amount)
+    {
+        currentStamina -= amount;
+        currentStamina = currentStamina > maxStamina ? maxStamina : currentStamina;
+        staminaBar.SetCurrent(currentStamina);
     }
 }

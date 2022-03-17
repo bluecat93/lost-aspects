@@ -18,6 +18,8 @@ public class ThirdPersonMovement : MonoBehaviour
     private bool isRolling = false;
     private Vector3 moveDir;
     private string animParamSpeed = "Speed";
+    private PlayerStats playerStats;
+    private bool isExhausted = false;
 
     // TODO: Move to options when created
     private const KeyCode SprintKey = KeyCode.LeftShift;
@@ -54,6 +56,7 @@ public class ThirdPersonMovement : MonoBehaviour
         playerStartHeight = controller.height;
         colliderStartHeight = controller.center.y;
         rgbody = GetComponent<Rigidbody>();
+        playerStats = GetComponent<PlayerStats>();
     }
 
     private void FixedUpdate()
@@ -133,10 +136,11 @@ public class ThirdPersonMovement : MonoBehaviour
 
             if (isMoving)
             {
-                isSprinting = Input.GetKey(SprintKey);
+                isSprinting = Input.GetKey(SprintKey) && !isExhausted;
 
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
+                
 
                 finalMoving = moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1);
 
@@ -152,6 +156,16 @@ public class ThirdPersonMovement : MonoBehaviour
                 finalMoving = moveDir * -1 * 0.5f * Time.deltaTime;
                 //controller.Move(moveDir * -1 * 0.5f * Time.deltaTime);
             }
+            if (playerStats.currentStamina >= 100)
+            {
+                isExhausted = false;
+            }
+            else if (playerStats.currentStamina <= 0)
+            {
+                isExhausted = true;
+            }
+            playerStats.ChangingStamina(isSprinting ? 1 : -2);
+
             finalMoving += velocity * Time.deltaTime;
             controller.Move(finalMoving);
 
