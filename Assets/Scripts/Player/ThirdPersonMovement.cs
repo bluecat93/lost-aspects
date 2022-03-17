@@ -16,6 +16,7 @@ public class ThirdPersonMovement : MonoBehaviour
     private bool isSprinting = false;
     private bool isCrouching = false;
     private bool isRolling = false;
+    private Vector3 moveDir;
     private string animParamSpeed = "Speed";
 
     // TODO: Move to options when created
@@ -36,11 +37,8 @@ public class ThirdPersonMovement : MonoBehaviour
     public float crouchColliderPositionY = 0.05f;
     public float heightChange = 0.5f;
     // Dodging Variables
-    public float dodgeCoolDown = 1f;
-    public float dodgeInvinsibleDuration = 0.5f;
-    public float delayBeforeInvinsible = 0.2f;
-    public float dodgePushAmt = 3f;
-    private float actCoolDown = 1f;
+    public float dashSpeed;
+    public float dashTime;
 
     private Animator playerAnim;
     private bool isClimbable = true;
@@ -131,7 +129,7 @@ public class ThirdPersonMovement : MonoBehaviour
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
 
             Vector3 directionMod = (isClimbable || !CheckIsGrounded() ? Vector3.forward : Vector3.back);
-            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
+            moveDir = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
 
             if (isMoving)
             {
@@ -197,10 +195,28 @@ public class ThirdPersonMovement : MonoBehaviour
     }
     private void HandleDodgeInput()
     {
-        if (Input.GetKey(DodgeKey))
+        if (Input.GetButtonDown("Dodge"))
         {
             playerAnim.SetTrigger("Roll");
+            StartCoroutine(DodgeCoroutine());
         }
+    }
+
+    IEnumerator DodgeCoroutine()
+    {
+        float startTime = Time.time;
+
+        // if (Time.time >= startTime + dashTime)
+        // {
+        //     playerAnim.ResetTrigger("Roll");
+        // }
+
+        while (Time.time < startTime + dashTime)
+        {
+            controller.Move(moveDir * dashSpeed * Time.deltaTime);
+            yield return null;
+        }
+
     }
 
     private bool CheckIsGrounded()

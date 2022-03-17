@@ -35,8 +35,8 @@ public class PlayerAbilities : MonoBehaviour
             Debug.DrawRay(ray[i + 1].origin, ray[i + 1].direction * maxAttackDistance);
         }
 
-        float attacking = Input.GetAxisRaw("Swing");
-        if (attacking != 0)
+        // float attacking = Input.GetAxisRaw("Swing");
+        if (Input.GetButtonDown("Swing"))
         {
             playerAnim.SetTrigger("Attack");
         }
@@ -49,15 +49,15 @@ public class PlayerAbilities : MonoBehaviour
     {
         Transform closestViableEnemy = null;
         float closestViableEnemyDistance = maxAttackDistance;
-/*        foreach (Transform enemy in EnemiesList.getEnemies())
-        {
-            float distance = Vector3.Distance(transform.position, enemy.position);
-            if (closestViableEnemyDistance >= distance)
-            {
-                closestViableEnemyDistance = distance;
-                closestViableEnemy = enemy;
-            }
-        }*/
+        /*        foreach (Transform enemy in EnemiesList.getEnemies())
+                {
+                    float distance = Vector3.Distance(transform.position, enemy.position);
+                    if (closestViableEnemyDistance >= distance)
+                    {
+                        closestViableEnemyDistance = distance;
+                        closestViableEnemy = enemy;
+                    }
+                }*/
         return closestViableEnemy;
     }
 
