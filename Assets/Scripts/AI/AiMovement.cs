@@ -7,10 +7,9 @@ public class AiMovement : MonoBehaviour
 {
     private Vector3 currentObjective;
     private NavMeshAgent agent;
-    public float timeToWaitInDestination;
-    public bool isAlive = true;
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
     }

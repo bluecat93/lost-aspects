@@ -171,6 +171,7 @@ GameObject:
   - component: {fileID: 3951530033131663866}
   - component: {fileID: 3951530033131663869}
   - component: {fileID: 3951530033131663868}
+  - component: {fileID: -7726686288756278651}
   m_Layer: 0
   m_Name: Basic Enemy
   m_TagString: Enemy
@@ -227,11 +228,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7192a0c014ca6dc478982d37b9dde382, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemiesList: {fileID: 0}
+  isAttacking: 0
   maxHealth: 10
   invulnerabilityFrameAmount: 0.5
   attackTimeIntervals: 1
   attackDamage: 5
+  attackOnlyOnce: 0
   maxFollowDistance: 20
   sightDistance: 10
   attackDistance: 1
@@ -282,6 +284,18 @@ CapsuleCollider:
   m_Height: 2.655739
   m_Direction: 1
   m_Center: {x: 0, y: 0.82786953, z: 0}
+--- !u!114 &-7726686288756278651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3951530033131663871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f28fd8a7e260b24469b258242696ae04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3951530033158089446
 GameObject:
   m_ObjectHideFlags: 0

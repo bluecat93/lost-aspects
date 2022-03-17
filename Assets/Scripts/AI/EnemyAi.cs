@@ -15,44 +15,31 @@ public class EnemyAi : MonoBehaviour
         Attacking,
         Reseting
     }
-    //private AttackAnimations attackAnimations;
+
     private AiMovement aiMovement;
     private Animator animator;
+    private EnemyStats stats;
+
     private Vector3 startingPosition;
     private Vector3 roamPosition;
     private State state;
+
     private float nextAttackTime;
-    public bool isAttacking;
-
-    public int maxHealth = 100;
-    private int currentHealth;
-    private float invulnerabilityFrame;
-    public float invulnerabilityFrameAmount = 0.5f;
-
-    public float attackTimeIntervals = 1f;
-    public int attackDamage = 5;
-    public bool attackOnlyOnce = false;
-
-    public float maxFollowDistance = 20f;
-    public float sightDistance = 10f;
-    public float attackDistance = 5f;
-
-    public float deathTimer = 5f;
+    private bool isAttacking;
+    private bool attackOnlyOnce = false;
     private float currentDeathTimer;
     private bool deadOnlyOnce = false;
 
 
-    //TODO: might want to have a script that gives me all of the things i need like position and stats.
+    //TODO: Will be refactored when we have multiplayer.
     //Player stuff 
     public GameObject player;
     public PlayerStats playerStats;
 
 
-
-
-
     private void Awake()
     {
+        stats = GetComponent<EnemyStats>();
         aiMovement = GetComponent<AiMovement>();
         state = State.Roaming;
         animator = GetComponentInChildren<Animator>();
@@ -63,7 +50,6 @@ public class EnemyAi : MonoBehaviour
     {
         startingPosition = transform.position;
         roamPosition = GetRoamingPosition();
-        currentHealth = maxHealth;
     }
 
     // Update is called once per frame
@@ -72,12 +58,12 @@ public class EnemyAi : MonoBehaviour
         isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
 
         animator.SetInteger("State", (int)state);
-        if (currentHealth <= 0)
+        if (!stats.isEnemyAlive())
         {
             state = State.Dead;
             if(!deadOnlyOnce)
             {
-                currentDeathTimer = Time.time + deathTimer;
+                currentDeathTimer = Time.time + stats.getDeathTimer();
             }
             deadOnlyOnce = true;
         }
@@ -141,7 +127,7 @@ public class EnemyAi : MonoBehaviour
 
     private void FindTarget()
     {
-        if (Vector3.Distance(transform.position, player.transform.position) <= sightDistance)
+        if (Vector3.Distance(transform.position, player.transform.position) <= stats.getSightDistance())
         {
             state = State.Chasing;
         }
@@ -151,14 +137,14 @@ public class EnemyAi : MonoBehaviour
     {
         // rotate towords player
         LookAtObject(player);
-        if (Vector3.Distance(transform.position, player.transform.position) <= attackDistance)
+        if (Vector3.Distance(transform.position, player.transform.position) <= stats.getAttackDistance())
         {
             animator.SetBool("InAttackRange", true);
             aiMovement.StopMoving();
             if(Time.time > nextAttackTime)
             {
                 attackOnlyOnce = true;
-                nextAttackTime = Time.time + attackTimeIntervals;
+                nextAttackTime = Time.time + stats.getAttackTimeIntervals();
                 state = State.Attacking;
                 // do animation
                 animator.SetInteger("State", (int)state);
@@ -173,24 +159,32 @@ public class EnemyAi : MonoBehaviour
 
     private void StopChasing()
     {
-        if (Vector3.Distance(transform.position, player.transform.position) > maxFollowDistance)
+        if (Vector3.Distance(transform.position, player.transform.position) > stats.getMaxFollowDistance())
         {
             state = State.Reseting;
         }
     }
 
-    public void TakeDamage(int damage)
-    {
-        if (invulnerabilityFrame < Time.time)
-        {
-            invulnerabilityFrame = Time.time + invulnerabilityFrameAmount;
-            currentHealth -= damage;
-        }
-    }
+
 
     public void LookAtObject(GameObject gameObject)
     {
         transform.LookAt(gameObject.transform);
+    }
+
+    public bool getIsAttacking()
+    {
+        return isAttacking;
+    }
+
+    public bool getAttackOnlyOnce()
+    {
+        return attackOnlyOnce;
+    }
+
+    public void setAttackOnlyOnce(bool attackOnlyOnce)
+    {
+        this.attackOnlyOnce = attackOnlyOnce;
     }
 
 }

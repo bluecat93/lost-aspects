@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyPunch : MonoBehaviour
-{
-    public EnemyAi enemyAi;
+{ 
+    private EnemyAi ai;
+    private EnemyStats stats;
+    private void Start()
+    {
+        ai = GetComponentInParent<EnemyAi>();
+        stats = GetComponentInParent<EnemyStats>();
+    }
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player" && enemyAi.isAttacking && enemyAi.attackOnlyOnce)
+        if (other.gameObject.tag == "Player" && ai.getIsAttacking() && ai.getAttackOnlyOnce())
         {
-            enemyAi.playerStats.TakeDamage(enemyAi.attackDamage);
-            enemyAi.attackOnlyOnce = false;
+            ai.playerStats.TakeDamage(stats.getAttackDamage());
+            ai.setAttackOnlyOnce(false);
         }
     }
 }
