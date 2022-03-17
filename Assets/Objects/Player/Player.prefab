@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8165736442487727051}
-  m_LocalRotation: {x: 0.2698507, y: 0.000000040585075, z: -0.000000011371679, w: 0.9629022}
+  m_LocalRotation: {x: 0.2698507, y: -0.000000040585075, z: 0.000000011371679, w: 0.9629022}
   m_LocalPosition: {x: 0, y: 5.34, z: -8.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -128,11 +128,12 @@ GameObject:
   m_Component:
   - component: {fileID: 8165736442223772231}
   - component: {fileID: 8165736442878897098}
-  - component: {fileID: 4583190074552323786}
   - component: {fileID: 8165736442878897096}
   - component: {fileID: 8165736442223772229}
   - component: {fileID: 8165736442878897099}
   - component: {fileID: 8165736442878897097}
+  - component: {fileID: 901472024}
+  - component: {fileID: 901472020}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -147,7 +148,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8165736442878897092}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 13, y: -0.02, z: 14.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -169,27 +170,11 @@ CharacterController:
   serializedVersion: 2
   m_Height: 2
   m_Radius: 0.5
-  m_SlopeLimit: 6.8
+  m_SlopeLimit: 60
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_MinMoveDistance: 0
   m_Center: {x: 0, y: 1.05, z: 0}
---- !u!54 &4583190074552323786
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8165736442878897092}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &8165736442878897096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,14 +191,12 @@ MonoBehaviour:
   playerCamera: {fileID: 8165736442487727050}
   movementSpeed: 5
   turnSmoothTime: 0.1
-  jumpHeight: 0.05
+  jumpHeight: 6
   SprintSpeed: 3
   crouchColliderPositionY: 0.05
   heightChange: 0.55
-  dodgeCoolDown: 1
-  dodgeInvinsibleDuration: 0.5
-  delayBeforeInvinsible: 0.2
-  dodgePushAmt: 3
+  dashSpeed: 20
+  dashTime: 0.25
 --- !u!114 &8165736442223772229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,7 +213,7 @@ MonoBehaviour:
   currentHealth: 0
   maxHunger: 10
   currentHunger: 0
-  damage: 10
+  fallDamageReduction: 0
   healthBar: {fileID: 0}
   hungerBar: {fileID: 0}
   gameOverUI: {fileID: 0}
@@ -247,8 +230,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83f41c0194bd1314e86162829c87c765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemiesList: {fileID: 0}
-  minAttackDistance: 1
+  maxAttackDistance: 2
+  playerMiddleHeight: 1
+  weapon: {fileID: 2791063557996229362}
 --- !u!114 &8165736442878897097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,11 +245,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ee9df374c357504c8cfb81e9a837b6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 4
+  acceleration: 5
   deceleration: 2
   maxRunVelocity: 1
   maxBackWalkVelocity: -1
   maxDashVelocity: 2
+--- !u!54 &901472024
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8165736442878897092}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!136 &901472020
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8165736442878897092}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.28672743
+  m_Height: 1.8667967
+  m_Direction: 1
+  m_Center: {x: -0.007931709, y: 0.91660154, z: 0.00000333786}
 --- !u!1001 &8165736441287841161
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -414,3 +428,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c2b564a5417dd74fa42a051195f435d, type: 3}
+--- !u!114 &2791063557996229362 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6334699367326770268, guid: 7c2b564a5417dd74fa42a051195f435d, type: 3}
+  m_PrefabInstance: {fileID: 8165736441742120622}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de89ff03049eb924887301b49e3201a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

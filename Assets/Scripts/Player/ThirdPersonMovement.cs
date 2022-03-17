@@ -195,7 +195,7 @@ public class ThirdPersonMovement : MonoBehaviour
     }
     private void HandleDodgeInput()
     {
-        if (Input.GetButtonDown("Dodge"))
+        if (Input.GetButtonDown("Dodge") && CheckIsGrounded())
         {
             playerAnim.SetTrigger("Roll");
             StartCoroutine(DodgeCoroutine());
@@ -205,11 +205,6 @@ public class ThirdPersonMovement : MonoBehaviour
     IEnumerator DodgeCoroutine()
     {
         float startTime = Time.time;
-
-        // if (Time.time >= startTime + dashTime)
-        // {
-        //     playerAnim.ResetTrigger("Roll");
-        // }
 
         while (Time.time < startTime + dashTime)
         {
