@@ -15,7 +15,7 @@ public class EnemyPunch : MonoBehaviour
     {
         if (other.gameObject.tag == "Player" && ai.getIsAttacking() && ai.getAttackOnlyOnce())
         {
-            ai.playerStats.TakeDamage(stats.getAttackDamage());
+            ai.getPlayerStats().TakeDamage(stats.getAttackDamage());
             ai.setAttackOnlyOnce(false);
         }
     }

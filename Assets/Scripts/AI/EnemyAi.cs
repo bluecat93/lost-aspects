@@ -34,7 +34,7 @@ public class EnemyAi : MonoBehaviour
     //TODO: Will be refactored when we have multiplayer.
     //Player stuff 
     public GameObject player;
-    public PlayerStats playerStats;
+    private PlayerStats playerStats;
 
 
     private void Awake()
@@ -43,6 +43,7 @@ public class EnemyAi : MonoBehaviour
         aiMovement = GetComponent<AiMovement>();
         state = State.Roaming;
         animator = GetComponentInChildren<Animator>();
+        playerStats = player.GetComponent<PlayerStats>();
     }
 
     // Start is called before the first frame update
@@ -187,4 +188,8 @@ public class EnemyAi : MonoBehaviour
         this.attackOnlyOnce = attackOnlyOnce;
     }
 
+    public PlayerStats getPlayerStats()
+    {
+        return this.playerStats;
+    }
 }
