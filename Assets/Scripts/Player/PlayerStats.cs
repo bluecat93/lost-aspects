@@ -119,24 +119,24 @@ public class PlayerStats : MonoBehaviour
         gameOverUI.SetActive(false);
         respawn = FindObjectOfType<RespawnScript>();
         respawn.RespawnPlayer();
-        Healing();
-        Eating();
+        Heal();
+        Eat();
         thirdPersonCamera.SetActive(true);
         isAlive = true;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
     }
-    public void Healing()
+    public void Heal()
     {
         currentHealth = maxHealth;
         healthBar.SetCurrent(maxHealth);
     }
-    public void Eating()
+    public void Eat()
     {
         currentHunger = maxHunger;
         hungerBar.SetCurrent(maxHunger);
     }
 
-    public void ChangingStamina(int amount)
+    public void ChangeStamina(int amount)
     {
         currentStamina -= amount;
         currentStamina = currentStamina > maxStamina ? maxStamina : currentStamina;

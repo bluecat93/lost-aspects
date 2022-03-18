@@ -4,59 +4,126 @@ using UnityEngine;
 
 public class ThirdPersonMovement : MonoBehaviour
 {
-    private CapsuleCollider capsuleCollider;
-    private float capsuleColliderStartingHeight;
+    // Eden ref: where do this 3 params get assigned?
     public CharacterController controller;
     public Transform playerCamera;
-    private Rigidbody rgbody;
-    public float movementSpeed = 5.0f;
-    public float turnSmoothTime = 0.1f;
+
     float turnSmoothVelocity;
-    private bool isMoving = false;
-    private bool isSprinting = false;
-    private bool isCrouching = false;
-    private bool isRolling = false;
-    private Vector3 moveDir;
-    private string animParamSpeed = "Speed";
-    private PlayerStats playerStats;
-    private bool isExhausted = false;
 
     // TODO: Move to options when created
-    private const KeyCode SprintKey = KeyCode.LeftShift;
     private const KeyCode CrouchKey = KeyCode.C;
     private const KeyCode DodgeKey = KeyCode.V;
 
     // y movement paramaters
     Vector3 velocity;
-    public float jumpHeight = 5f;
-    public float SprintSpeed = 1.5f;
-    private float originalStepOffset;
-
+    [SerializeField] private float jumpHeight = 5f;
+    [SerializeField] private float dashModifier = 1.5f;
 
     // Crouching variables, player height at start and collider position
-    private float playerStartHeight;
-    private float colliderStartHeight;
-    public float crouchColliderPositionY = 0.05f;
-    public float heightChange = 0.5f;
-    // Dodging Variables
-    public float dashSpeed;
-    public float dashTime;
+    [SerializeField] private float playerStartHeight;
+    [SerializeField] private float colliderStartHeight;
+    [SerializeField] private float crouchColliderPositionY = 0.05f;
+    [SerializeField] private float heightChange = 0.5f;
 
-    private Animator playerAnim;
-    private bool isClimbable = true;
+    [SerializeField] private float movementSpeed = 5.0f;
+    [SerializeField] private float turnSmoothTime = 0.1f;
+    #region properties
+
+    private Rigidbody rgbody;
+
+    private Rigidbody Rgbody
+    {
+        get
+        {
+            if (rgbody == null)
+                rgbody = GetComponent<Rigidbody>();
+            return rgbody;
+        }
+    }
+
+    private PlayerStats playerStats;
+
+    private PlayerStats PlayerStats
+    {
+        get
+        {
+            if (playerStats == null)
+                playerStats = GetComponent<PlayerStats>();
+
+            return playerStats;
+        }
+    }
+
+
+    private bool IsDashing
+    {
+        get
+        {
+            return Input.GetAxis("Dash") > 0 && !IsExhausted;
+        }
+    }
+
+    private bool IsExhausted
+    {
+        get
+        {
+            return playerStats.currentStamina <= 0;
+        }
+    }
+
+    public bool IsCrouching { get; set; }
+
+    public bool IsRolling { get; set; }
+
+    public bool IsGrounded
+    {
+        get
+        {
+            return Physics.Raycast(transform.position, Vector3.down, 0.1f);
+        }
+    }
+
+
+    private bool IsClimbable { get; set; }
+
+    private Vector3 MoveDirection { get; set; }
+
+    private CapsuleCollider CpslCollider { get; set; }
+
+    private float CapsuleColliderStartingHeight
+    {
+        get
+        {
+            return this.CpslCollider.height;
+        }
+    }
+
+    // Dodging Variables
+    public float DashSpeed { get; set; }
+    public float DashTime { get; set; }
+
+    private Animator PlayerAnim { get; set; }
+
+    private float OriginalStepOffset { get; set; }
+
+    #endregion
+
+
+    // private string animParamSpeed = "Speed";
+
 
     // Start is called before the first frame update
     void Start()
     {
-        capsuleCollider = GetComponent<CapsuleCollider>();
-        capsuleColliderStartingHeight = capsuleCollider.height;
-        playerAnim = GetComponentInChildren<Animator>();
-        originalStepOffset = controller.stepOffset;
+        this.CpslCollider = GetComponent<CapsuleCollider>();
+
+        this.PlayerAnim = GetComponentInChildren<Animator>();
+        this.OriginalStepOffset = controller.stepOffset;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
         playerStartHeight = controller.height;
         colliderStartHeight = controller.center.y;
-        rgbody = GetComponent<Rigidbody>();
-        playerStats = GetComponent<PlayerStats>();
+
+        this.IsClimbable = true;
     }
 
     private void FixedUpdate()
@@ -65,10 +132,11 @@ public class ThirdPersonMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    async void Update()
     {
         HandleCrouchInput();
         HandleDodgeInput();
+
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
 
@@ -94,7 +162,8 @@ public class ThirdPersonMovement : MonoBehaviour
                     // Debug.Log("Damage taken from fall damage: " + fallDamage);
                     playerStats.TakePercentileDamage(fallDamage);
                 }
-                controller.stepOffset = originalStepOffset;
+
+                controller.stepOffset = this.OriginalStepOffset;
                 velocity.y = 0;
             }
             else
@@ -125,56 +194,37 @@ public class ThirdPersonMovement : MonoBehaviour
 
             Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-            isMoving = direction.magnitude >= 0.1f;
+            bool isMoving = direction.magnitude >= 0.1f;
 
             Vector3 finalMoving = Vector3.zero;
 
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
 
-            Vector3 directionMod = (isClimbable || !CheckIsGrounded() ? Vector3.forward : Vector3.back);
-            moveDir = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
+            Vector3 directionMod = (this.IsClimbable || !this.IsGrounded ? Vector3.forward : Vector3.back);
+            this.MoveDirection = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
 
             if (isMoving)
             {
-                isSprinting = Input.GetKey(SprintKey) && !isExhausted;
-
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
-                
-
-                finalMoving = moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1);
-
-                //controller.Move(finalMoving);
 
 
-
-                //controller.Move(moveDir.normalized * (isClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (isSprinting ? SprintSpeed : 1));
-
+                finalMoving = this.MoveDirection.normalized * (this.IsClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (this.IsDashing && !this.IsExhausted ? dashModifier : 1);
+                Debug.Log(this.IsDashing && !this.IsExhausted ? dashModifier : 1);
             }
-            else if (!isClimbable)
+            else if (!this.IsClimbable)
             {
-                finalMoving = moveDir * -1 * 0.5f * Time.deltaTime;
-                //controller.Move(moveDir * -1 * 0.5f * Time.deltaTime);
+                finalMoving = this.MoveDirection * -1 * 0.5f * Time.deltaTime;
             }
-            if (playerStats.currentStamina >= 100)
-            {
-                isExhausted = false;
-            }
-            else if (playerStats.currentStamina <= 0)
-            {
-                isExhausted = true;
-            }
-            playerStats.ChangingStamina(isSprinting ? 1 : -2);
+
+            playerStats.ChangeStamina(this.IsDashing ? 1 : -1);
 
             finalMoving += velocity * Time.deltaTime;
             controller.Move(finalMoving);
 
-            // This must be last and as close as possible to other movements so it will allways go down.
-            //controller.Move(velocity * Time.deltaTime);
-
+            // Rotates the character according to where he looks.
             if (Input.GetAxisRaw("Camera Unlocked") == 0)
             {
-                // This rotates the character according to where he looks.
                 GameObject mainCamera = GameObject.Find("Player/Main Camera");
                 transform.eulerAngles = new Vector3(transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, transform.eulerAngles.z);
             }
@@ -183,35 +233,35 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        isClimbable = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up)) <= controller.slopeLimit;
+        this.IsClimbable = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up)) <= controller.slopeLimit;
     }
 
     private void HandleCrouchInput()
     {
 
-        if (Input.GetKeyDown(CrouchKey) && !isCrouching)
+        if (Input.GetKeyDown(CrouchKey) && !this.IsCrouching)
         {
-            playerAnim.SetBool("Crouching", true);
-            isCrouching = true;
+            this.PlayerAnim.SetBool("Crouching", true);
+            this.IsCrouching = true;
             controller.height = playerStartHeight * 0.5f;
             controller.center = new Vector3(controller.center.x, heightChange, controller.center.z);
-            capsuleCollider.height = capsuleColliderStartingHeight / 2;
+            this.CpslCollider.height = this.CapsuleColliderStartingHeight / 2;
 
         }
-        else if (Input.GetKeyDown(CrouchKey) && isCrouching)
+        else if (Input.GetKeyDown(CrouchKey) && this.IsCrouching)
         {
-            playerAnim.SetBool("Crouching", false);
-            isCrouching = false;
+            this.PlayerAnim.SetBool("Crouching", false);
+            this.IsCrouching = false;
             controller.height = playerStartHeight;
             controller.center = new Vector3(controller.center.x, colliderStartHeight, controller.center.z);
-            capsuleCollider.height = capsuleColliderStartingHeight;
+            this.CpslCollider.height = this.CapsuleColliderStartingHeight;
         }
     }
     private void HandleDodgeInput()
     {
         if (Input.GetButtonDown("Dodge"))
         {
-            playerAnim.SetTrigger("Roll");
+            this.PlayerAnim.SetTrigger("Roll");
             StartCoroutine(DodgeCoroutine());
         }
     }
@@ -225,16 +275,12 @@ public class ThirdPersonMovement : MonoBehaviour
         //     playerAnim.ResetTrigger("Roll");
         // }
 
-        while (Time.time < startTime + dashTime)
+        while (Time.time < startTime + this.DashTime)
         {
-            controller.Move(moveDir * dashSpeed * Time.deltaTime);
+            controller.Move(this.MoveDirection * this.DashSpeed * Time.deltaTime);
             yield return null;
         }
 
     }
 
-    private bool CheckIsGrounded()
-    {
-        return Physics.Raycast(transform.position, Vector3.down, 0.1f);
-    }
 }
