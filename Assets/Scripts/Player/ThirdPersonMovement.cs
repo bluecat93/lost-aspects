@@ -171,101 +171,122 @@ public class ThirdPersonMovement : MonoBehaviour
     // Update is called once per frame
     async void Update()
     {
-        HandleCrouchInput();
-        HandleDodgeInput();
-
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
+            this.HandleStopWhenDead();
+            this.HandleJump();
+            this.HandleMovement();
+            this.HandleCrouchInput();
+            this.HandleDodgeInput();
+            this.HandleCameraUnlock();
 
-            if (controller.isGrounded)
-            {
-                if (Velocity.y < -jumpHeight)
-                {
-                    // Debug.Log("velocity.y = " + velocity.y);
-                    PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
-                    if (-Velocity.y > 30)
-                    {
-                        _velocity.y *= 3.5f;
-                    }
-                    else if (-Velocity.y > 20)
-                    {
-                        _velocity.y *= 2f;
-                    }
-                    int fallDamage = (int)(-Velocity.y - jumpHeight - playerStats.fallDamageReduction);
-                    if (fallDamage < 0)
-                    {
-                        fallDamage = 0;
-                    }
-                    // Debug.Log("Damage taken from fall damage: " + fallDamage);
-                    playerStats.TakePercentileDamage(fallDamage);
-                }
-
-                controller.stepOffset = this.OriginalStepOffset;
-                _velocity.y = 0;
-            }
-            else
-            {
-                _velocity.y += (Physics.gravity.y * Time.deltaTime);
-
-                // Prevents some wierd jumping bugs while moving across stairs.
-                controller.stepOffset = 0;
-            }
-
-            if (!PlayerStats.isAlive)
-            {
-                Velocity = Vector3.zero;
-            }
-
-            // Keyboard input (jump)
-            bool isJumping = Input.GetAxis("Jump") > 0;
-
-            // TODO: need to check more stuff for double jumping or other kinds of jumps.
-            if (isJumping && controller.isGrounded)
-            {
-                _velocity.y = jumpHeight;
-            }
-
-
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");
-
-            Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
-            bool isMoving = direction.magnitude >= 0.1f;
-
-            Vector3 finalMoving = Vector3.zero;
-
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
-
-            Vector3 directionMod = (this.IsClimbable || !this.IsGrounded ? Vector3.forward : Vector3.back);
-            this.MoveDirection = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
-
-            if (isMoving)
-            {
-                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-                transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-
-                finalMoving = this.MoveDirection.normalized * (this.IsClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (this.IsDashing && !this.IsExhausted ? dashModifier : 1);
-                Debug.Log(this.IsDashing && !this.IsExhausted ? dashModifier : 1);
-            }
-            else if (!this.IsClimbable)
-            {
-                finalMoving = this.MoveDirection * -1 * 0.5f * Time.deltaTime;
-            }
-
-            PlayerStats.ChangeStamina(this.IsDashing ? 1 : -1);
-
-            finalMoving += Velocity * Time.deltaTime;
-            controller.Move(finalMoving);
-
-            // Rotates the character according to where he looks.
-            if (Input.GetAxisRaw("Camera Unlocked") == 0)
-            {
-                GameObject mainCamera = GameObject.Find("Player/Main Camera");
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, transform.eulerAngles.z);
-            }
         }
+    }
+
+    private void HandleMovement()
+    {
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+        bool isMoving = direction.magnitude >= 0.1f;
+
+        Vector3 finalMoving = Vector3.zero;
+
+        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
+
+        Vector3 directionMod = (this.IsClimbable || !this.IsGrounded ? Vector3.forward : Vector3.back);
+        this.MoveDirection = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
+
+        if (isMoving)
+        {
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+
+            finalMoving = this.MoveDirection.normalized * (this.IsClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (this.IsDashing && !this.IsExhausted ? dashModifier : 1);
+            Debug.Log(this.IsDashing && !this.IsExhausted ? dashModifier : 1);
+        }
+        else if (!this.IsClimbable)
+        {
+            finalMoving = this.MoveDirection * -1 * 0.5f * Time.deltaTime;
+        }
+
+        PlayerStats.ChangeStamina(this.IsDashing ? 1 : -1);
+
+        finalMoving += Velocity * Time.deltaTime;
+        controller.Move(finalMoving);
+
+
+    }
+
+    private void HandleJump()
+    {
+        if (controller.isGrounded)
+        {
+            if (Velocity.y < -jumpHeight)
+            {
+                // Debug.Log("velocity.y = " + velocity.y);
+                PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
+                if (-Velocity.y > 30)
+                {
+                    _velocity.y *= 3.5f;
+                }
+                else if (-Velocity.y > 20)
+                {
+                    _velocity.y *= 2f;
+                }
+                int fallDamage = (int)(-Velocity.y - jumpHeight - playerStats.fallDamageReduction);
+                if (fallDamage < 0)
+                {
+                    fallDamage = 0;
+                }
+                // Debug.Log("Damage taken from fall damage: " + fallDamage);
+                playerStats.TakePercentileDamage(fallDamage);
+            }
+
+            controller.stepOffset = this.OriginalStepOffset;
+            _velocity.y = 0;
+        }
+        else
+        {
+            _velocity.y += (Physics.gravity.y * Time.deltaTime);
+
+            // Prevents some wierd jumping bugs while moving across stairs.
+            controller.stepOffset = 0;
+        }
+
+        if (!PlayerStats.isAlive)
+        {
+            Velocity = Vector3.zero;
+        }
+
+        // Keyboard input (jump)
+        bool isJumping = Input.GetAxis("Jump") > 0;
+
+        // TODO: need to check more stuff for double jumping or other kinds of jumps.
+        if (isJumping && controller.isGrounded)
+        {
+            _velocity.y = jumpHeight;
+        }
+
+
+    }
+
+    private void HandleCameraUnlock()
+    {
+        // Rotates the character according to where he looks.
+        if (Input.GetAxisRaw("Camera Unlocked") == 0)
+        {
+            GameObject mainCamera = GameObject.Find("Player/Main Camera");
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, transform.eulerAngles.z);
+        }
+    }
+
+    private void HandleStopWhenDead()
+    {
+        Velocity = PlayerStats.isAlive ? Velocity : Vector3.zero;
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
