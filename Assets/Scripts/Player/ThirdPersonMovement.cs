@@ -166,11 +166,6 @@ public class ThirdPersonMovement : MonoBehaviour
     private void FixedUpdate()
     {
 
-    }
-
-    // Update is called once per frame
-    async void Update()
-    {
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
             this.HandleStopWhenDead();
@@ -179,8 +174,12 @@ public class ThirdPersonMovement : MonoBehaviour
             this.HandleCrouchInput();
             this.HandleDodgeInput();
             this.HandleCameraUnlock();
-
         }
+    }
+
+    // Update is called once per frame
+    async void Update()
+    {
     }
 
     private void HandleMovement()
