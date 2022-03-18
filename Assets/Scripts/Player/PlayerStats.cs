@@ -28,7 +28,7 @@ public class PlayerStats : MonoBehaviour
     public BarScript staminaBar;
     public GameObject gameOverUI;
     public GameObject thirdPersonCamera;
-    public static bool isAlive = true;
+    public bool isAlive = true;
 
     RespawnScript respawn;
 

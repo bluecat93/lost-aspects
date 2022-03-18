@@ -20,6 +20,8 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] private float jumpHeight = 5f;
     [SerializeField] private float dashModifier = 1.5f;
 
+
+    // Eden Ref: please check if those viarables need to be on class level or can we move them to the relevant functions
     // Crouching variables, player height at start and collider position
     [SerializeField] private float playerStartHeight;
     [SerializeField] private float colliderStartHeight;
@@ -76,7 +78,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private PlayerStats _playerStats;
 
-    private PlayerStats PlayerStats
+    private PlayerStats PlyrStats
     {
         get
         {
@@ -111,7 +113,7 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         get
         {
-            return PlayerStats.currentStamina <= 0;
+            return this.PlyrStats.currentStamina <= 0;
         }
     }
 
@@ -151,21 +153,20 @@ public class ThirdPersonMovement : MonoBehaviour
     // Eden ref: do we need this?
     // private string animParamSpeed = "Speed";
 
-
     // Start is called before the first frame update
     void Start()
     {
         this.OriginalStepOffset = controller.stepOffset;
-        Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
-        playerStartHeight = controller.height;
-        colliderStartHeight = controller.center.y;
+        this.playerStartHeight = controller.height;
+        this.colliderStartHeight = controller.center.y;
 
-        this.IsClimbable = true;
+        // Locking cursor to not show it while moving.
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void FixedUpdate()
     {
-        if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
+        if (!PauseMenu.GameIsPaused && this.PlyrStats.isAlive)
         {
             this.HandleStopWhenDead();
             this.HandleJump();
@@ -183,23 +184,29 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void HandleMovement()
     {
+        // Gets vertical and horizontal axises
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
+        // Calculates current direction
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
         bool isMoving = direction.magnitude >= 0.1f;
 
         Vector3 finalMoving = Vector3.zero;
 
+        // Calculates target angle according to mouse movement and keys
         float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
 
+        // Calculates if moving forward is possible
         Vector3 directionMod = (this.IsClimbable || !this.IsGrounded ? Vector3.forward : Vector3.back);
+
+        // Sets the diraction according to relevant parameters
         this.MoveDirection = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
 
         if (isMoving)
         {
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            this.transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             finalMoving = this.MoveDirection.normalized * (this.IsClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (this.IsDashing && !this.IsExhausted ? dashModifier : 1);
         }
@@ -209,53 +216,54 @@ public class ThirdPersonMovement : MonoBehaviour
             finalMoving = this.MoveDirection * -1 * 0.5f * Time.deltaTime;
         }
 
-        PlayerStats.ChangeStamina(this.IsDashing ? 1 : -1);
+        // Handles stamina
+        this.PlyrStats.ChangeStamina(this.IsDashing ? 1 : -1);
 
+        // Moves player
         finalMoving += Velocity * Time.deltaTime;
-
-        controller.Move(finalMoving);
+        this.controller.Move(finalMoving);
     }
 
     // Eden ref: please annotate this function
     private void HandleJump()
     {
-        if (controller.isGrounded)
+        if (this.controller.isGrounded)
         {
-            if (Velocity.y < -jumpHeight)
+            if (this.Velocity.y < -this.jumpHeight)
             {
                 // Debug.Log("velocity.y = " + velocity.y);
                 PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
-                if (-Velocity.y > 30)
+                if (-this.Velocity.y > 30)
                 {
-                    _velocity.y *= 3.5f;
+                    this._velocity.y *= 3.5f;
                 }
-                else if (-Velocity.y > 20)
+                else if (-this.Velocity.y > 20)
                 {
-                    _velocity.y *= 2f;
+                    this._velocity.y *= 2f;
                 }
 
-                int fallDamage = (int)(-Velocity.y - jumpHeight - playerStats.fallDamageReduction);
+                int fallDamage = (int)(-this.Velocity.y - this.jumpHeight - this.PlyrStats.fallDamageReduction);
 
                 if (fallDamage < 0)
                 {
                     fallDamage = 0;
                 }
                 // Debug.Log("Damage taken from fall damage: " + fallDamage);
-                playerStats.TakePercentileDamage(fallDamage);
+                this.PlyrStats.TakePercentileDamage(fallDamage);
             }
 
-            controller.stepOffset = this.OriginalStepOffset;
-            _velocity.y = 0;
+            this.controller.stepOffset = this.OriginalStepOffset;
+            this._velocity.y = 0;
         }
         else
         {
-            _velocity.y += (Physics.gravity.y * Time.deltaTime);
+            this._velocity.y += (Physics.gravity.y * Time.deltaTime);
 
             // Prevents some wierd jumping bugs while moving across stairs.
-            controller.stepOffset = 0;
+            this.controller.stepOffset = 0;
         }
 
-        if (!PlayerStats.isAlive)
+        if (!this.PlyrStats.isAlive)
         {
             Velocity = Vector3.zero;
         }
@@ -264,9 +272,9 @@ public class ThirdPersonMovement : MonoBehaviour
         bool isJumping = Input.GetAxis("Jump") > 0;
 
         // TODO: need to check more stuff for double jumping or other kinds of jumps.
-        if (isJumping && controller.isGrounded)
+        if (isJumping && this.controller.isGrounded)
         {
-            _velocity.y = jumpHeight;
+            this._velocity.y = this.jumpHeight;
         }
 
 
@@ -278,18 +286,18 @@ public class ThirdPersonMovement : MonoBehaviour
         if (Input.GetAxisRaw("Camera Unlocked") == 0)
         {
             GameObject mainCamera = GameObject.Find("Player/Main Camera");
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, transform.eulerAngles.z);
+            this.transform.eulerAngles = new Vector3(this.transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, this.transform.eulerAngles.z);
         }
     }
 
     private void HandleStopWhenDead()
     {
-        Velocity = PlayerStats.isAlive ? Velocity : Vector3.zero;
+        this.Velocity = this.PlyrStats.isAlive ? this.Velocity : Vector3.zero;
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        this.IsClimbable = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up)) <= controller.slopeLimit;
+        this.IsClimbable = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up)) <= this.controller.slopeLimit;
     }
 
     // Eden ref: please annotate this function
@@ -299,8 +307,8 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             this.PlayerAnim.SetBool("Crouching", true);
             this.IsCrouching = true;
-            controller.height = playerStartHeight * 0.5f;
-            controller.center = new Vector3(controller.center.x, heightChange, controller.center.z);
+            this.controller.height = this.playerStartHeight * 0.5f;
+            this.controller.center = new Vector3(this.controller.center.x, this.heightChange, this.controller.center.z);
             this.CpslCollider.height = this.CapsuleColliderStartingHeight / 2;
 
         }
@@ -308,8 +316,8 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             this.PlayerAnim.SetBool("Crouching", false);
             this.IsCrouching = false;
-            controller.height = playerStartHeight;
-            controller.center = new Vector3(controller.center.x, colliderStartHeight, controller.center.z);
+            this.controller.height = this.playerStartHeight;
+            this.controller.center = new Vector3(controller.center.x, this.colliderStartHeight, controller.center.z);
             this.CpslCollider.height = this.CapsuleColliderStartingHeight;
         }
     }
@@ -331,7 +339,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
         while (Time.time < startTime + this.DashTime)
         {
-            controller.Move(this.MoveDirection * this.DashSpeed * Time.deltaTime);
+            this.controller.Move(this.MoveDirection * this.DashSpeed * Time.deltaTime);
             yield return null;
         }
 
