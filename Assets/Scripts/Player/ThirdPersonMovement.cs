@@ -14,8 +14,9 @@ public class ThirdPersonMovement : MonoBehaviour
     private const KeyCode CrouchKey = KeyCode.C;
     private const KeyCode DodgeKey = KeyCode.V;
 
+    #region serializable fields
+
     // y movement paramaters
-    Vector3 velocity;
     [SerializeField] private float jumpHeight = 5f;
     [SerializeField] private float dashModifier = 1.5f;
 
@@ -27,33 +28,76 @@ public class ThirdPersonMovement : MonoBehaviour
 
     [SerializeField] private float movementSpeed = 5.0f;
     [SerializeField] private float turnSmoothTime = 0.1f;
+
+    #endregion
+
     #region properties
 
-    private Rigidbody rgbody;
+    private Vector3 _velocity;
+
+    private Vector3 Velocity
+    {
+        get
+        {
+            if (_velocity == null)
+                _velocity = Vector3.zero;
+            return _velocity;
+        }
+        set
+        {
+            _velocity = value;
+        }
+    }
+
+    private Rigidbody _rgbody;
 
     private Rigidbody Rgbody
     {
         get
         {
-            if (rgbody == null)
-                rgbody = GetComponent<Rigidbody>();
-            return rgbody;
+            if (this._rgbody == null)
+                this._rgbody = GetComponent<Rigidbody>();
+            return this._rgbody;
         }
     }
 
-    private PlayerStats playerStats;
+    private Animator _playerAnim;
+
+    private Animator PlayerAnim
+    {
+        get
+        {
+            if (this._playerAnim == null)
+                this._playerAnim = GetComponentInChildren<Animator>();
+
+            return this._playerAnim;
+        }
+    }
+
+    private PlayerStats _playerStats;
 
     private PlayerStats PlayerStats
     {
         get
         {
-            if (playerStats == null)
-                playerStats = GetComponent<PlayerStats>();
+            if (this._playerStats == null)
+                this._playerStats = GetComponent<PlayerStats>();
 
-            return playerStats;
+            return this._playerStats;
         }
     }
 
+    private CapsuleCollider _cpslCollider;
+
+    private CapsuleCollider CpslCollider
+    {
+        get
+        {
+            if (this._cpslCollider == null)
+                this._cpslCollider = GetComponent<CapsuleCollider>();
+            return this._cpslCollider;
+        }
+    }
 
     private bool IsDashing
     {
@@ -67,7 +111,7 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         get
         {
-            return playerStats.currentStamina <= 0;
+            return PlayerStats.currentStamina <= 0;
         }
     }
 
@@ -88,8 +132,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private Vector3 MoveDirection { get; set; }
 
-    private CapsuleCollider CpslCollider { get; set; }
-
     private float CapsuleColliderStartingHeight
     {
         get
@@ -102,22 +144,17 @@ public class ThirdPersonMovement : MonoBehaviour
     public float DashSpeed { get; set; }
     public float DashTime { get; set; }
 
-    private Animator PlayerAnim { get; set; }
-
     private float OriginalStepOffset { get; set; }
 
     #endregion
 
-
+    // Eden ref: do we need this?
     // private string animParamSpeed = "Speed";
 
 
     // Start is called before the first frame update
     void Start()
     {
-        this.CpslCollider = GetComponent<CapsuleCollider>();
-
-        this.PlayerAnim = GetComponentInChildren<Animator>();
         this.OriginalStepOffset = controller.stepOffset;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
         playerStartHeight = controller.height;
@@ -142,19 +179,19 @@ public class ThirdPersonMovement : MonoBehaviour
 
             if (controller.isGrounded)
             {
-                if (velocity.y < -jumpHeight)
+                if (Velocity.y < -jumpHeight)
                 {
                     // Debug.Log("velocity.y = " + velocity.y);
                     PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
-                    if (-velocity.y > 30)
+                    if (-Velocity.y > 30)
                     {
-                        velocity.y *= 3.5f;
+                        _velocity.y *= 3.5f;
                     }
-                    else if (-velocity.y > 20)
+                    else if (-Velocity.y > 20)
                     {
-                        velocity.y *= 2f;
+                        _velocity.y *= 2f;
                     }
-                    int fallDamage = (int)(-velocity.y - jumpHeight - playerStats.fallDamageReduction);
+                    int fallDamage = (int)(-Velocity.y - jumpHeight - playerStats.fallDamageReduction);
                     if (fallDamage < 0)
                     {
                         fallDamage = 0;
@@ -164,11 +201,11 @@ public class ThirdPersonMovement : MonoBehaviour
                 }
 
                 controller.stepOffset = this.OriginalStepOffset;
-                velocity.y = 0;
+                _velocity.y = 0;
             }
             else
             {
-                velocity.y += (Physics.gravity.y * Time.deltaTime);
+                _velocity.y += (Physics.gravity.y * Time.deltaTime);
 
                 // Prevents some wierd jumping bugs while moving across stairs.
                 controller.stepOffset = 0;
@@ -176,7 +213,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
             if (!PlayerStats.isAlive)
             {
-                velocity = Vector3.zero;
+                Velocity = Vector3.zero;
             }
 
             // Keyboard input (jump)
@@ -185,7 +222,7 @@ public class ThirdPersonMovement : MonoBehaviour
             // TODO: need to check more stuff for double jumping or other kinds of jumps.
             if (isJumping && controller.isGrounded)
             {
-                velocity.y = jumpHeight;
+                _velocity.y = jumpHeight;
             }
 
 
@@ -217,9 +254,9 @@ public class ThirdPersonMovement : MonoBehaviour
                 finalMoving = this.MoveDirection * -1 * 0.5f * Time.deltaTime;
             }
 
-            playerStats.ChangeStamina(this.IsDashing ? 1 : -1);
+            PlayerStats.ChangeStamina(this.IsDashing ? 1 : -1);
 
-            finalMoving += velocity * Time.deltaTime;
+            finalMoving += Velocity * Time.deltaTime;
             controller.Move(finalMoving);
 
             // Rotates the character according to where he looks.
