@@ -103,7 +103,7 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         get
         {
-            return Input.GetAxis("Dash") > 0 && !IsExhausted;
+            return Input.GetAxis("Dash") > 0;
         }
     }
 
@@ -165,7 +165,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         if (!PauseMenu.GameIsPaused && PlayerStats.isAlive)
         {
             this.HandleStopWhenDead();
@@ -188,7 +187,6 @@ public class ThirdPersonMovement : MonoBehaviour
         float vertical = Input.GetAxisRaw("Vertical");
 
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
         bool isMoving = direction.magnitude >= 0.1f;
 
         Vector3 finalMoving = Vector3.zero;
@@ -203,10 +201,9 @@ public class ThirdPersonMovement : MonoBehaviour
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-
             finalMoving = this.MoveDirection.normalized * (this.IsClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (this.IsDashing && !this.IsExhausted ? dashModifier : 1);
-            Debug.Log(this.IsDashing && !this.IsExhausted ? dashModifier : 1);
         }
+        // Slides player from unclimbable slopes
         else if (!this.IsClimbable)
         {
             finalMoving = this.MoveDirection * -1 * 0.5f * Time.deltaTime;
@@ -215,11 +212,11 @@ public class ThirdPersonMovement : MonoBehaviour
         PlayerStats.ChangeStamina(this.IsDashing ? 1 : -1);
 
         finalMoving += Velocity * Time.deltaTime;
+
         controller.Move(finalMoving);
-
-
     }
 
+    // Eden ref: please annotate this function
     private void HandleJump()
     {
         if (controller.isGrounded)
@@ -236,7 +233,9 @@ public class ThirdPersonMovement : MonoBehaviour
                 {
                     _velocity.y *= 2f;
                 }
+
                 int fallDamage = (int)(-Velocity.y - jumpHeight - playerStats.fallDamageReduction);
+
                 if (fallDamage < 0)
                 {
                     fallDamage = 0;
@@ -293,9 +292,9 @@ public class ThirdPersonMovement : MonoBehaviour
         this.IsClimbable = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up)) <= controller.slopeLimit;
     }
 
+    // Eden ref: please annotate this function
     private void HandleCrouchInput()
     {
-
         if (Input.GetKeyDown(CrouchKey) && !this.IsCrouching)
         {
             this.PlayerAnim.SetBool("Crouching", true);
@@ -314,6 +313,8 @@ public class ThirdPersonMovement : MonoBehaviour
             this.CpslCollider.height = this.CapsuleColliderStartingHeight;
         }
     }
+
+    // Eden ref: please annotate this function
     private void HandleDodgeInput()
     {
         if (Input.GetButtonDown("Dodge"))
@@ -323,14 +324,10 @@ public class ThirdPersonMovement : MonoBehaviour
         }
     }
 
+    // Eden ref: please annotate this function
     IEnumerator DodgeCoroutine()
     {
         float startTime = Time.time;
-
-        // if (Time.time >= startTime + dashTime)
-        // {
-        //     playerAnim.ResetTrigger("Roll");
-        // }
 
         while (Time.time < startTime + this.DashTime)
         {
