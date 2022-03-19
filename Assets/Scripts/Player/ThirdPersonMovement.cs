@@ -28,8 +28,8 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] private float turnSmoothTime = 0.1f;
 
     // Dodging Variables
-    [SerializeField] private float dodgeSpeed = 20f;
-    [SerializeField] private float dodgeTime = 0.25f;
+    [SerializeField] private float dodgeSpeed = 10f;
+    [SerializeField] private float dodgeTime = 0.5f;
 
 
     #endregion
@@ -323,7 +323,7 @@ public class ThirdPersonMovement : MonoBehaviour
     // Eden ref: please annotate this function
     private void HandleDodgeInput()
     {
-        if (Input.GetButtonDown("Dodge") && !this.IsRolling)
+        if (Input.GetButtonDown("Dodge") && !this.IsRolling && this.IsGrounded)
         {
             StartCoroutine(DodgeCoroutine());
         }
