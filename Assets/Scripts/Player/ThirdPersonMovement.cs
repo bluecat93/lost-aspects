@@ -329,7 +329,7 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         if (Input.GetButtonDown("Dodge"))
         {
-            Debug.Log("dodge on");
+            // Debug.Log("dodge on");
             this.PlayerAnim.SetTrigger("Roll");
             StartCoroutine(DodgeCoroutine());
         }
