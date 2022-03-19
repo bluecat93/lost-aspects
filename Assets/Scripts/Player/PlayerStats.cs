@@ -30,6 +30,18 @@ public class PlayerStats : MonoBehaviour
     public GameObject thirdPersonCamera;
     public bool isAlive = true;
 
+    private ThirdPersonMovement _thirdPersonMovement;
+    private ThirdPersonMovement thirdPersonMvmnt
+    {
+        get
+        {
+            if (this._thirdPersonMovement == null)
+                this._thirdPersonMovement = GetComponent<ThirdPersonMovement>();
+
+            return this._thirdPersonMovement;
+        }
+    }
+
     RespawnScript respawn;
 
     // Start is called before the first frame update
@@ -81,7 +93,7 @@ public class PlayerStats : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (currentHealth > 0)
+        if (currentHealth > 0 && !thirdPersonMvmnt.IsRolling)
         {
             currentHealth -= damage;
             healthBar.SetCurrent(currentHealth);
