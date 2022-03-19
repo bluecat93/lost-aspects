@@ -10,10 +10,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
     float turnSmoothVelocity;
 
-    // TODO: Move to options when created
-    private const KeyCode CrouchKey = KeyCode.C;
-    private const KeyCode DodgeKey = KeyCode.V;
-
     #region serializable fields
 
     // y movement paramaters
@@ -32,8 +28,8 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] private float turnSmoothTime = 0.1f;
 
     // Dodging Variables
-    [SerializeField] private float dashSpeed = 20f;
-    [SerializeField] private float dashTime = 0.25f;
+    [SerializeField] private float dodgeSpeed = 20f;
+    [SerializeField] private float dodgeTime = 0.25f;
 
 
     #endregion
@@ -303,7 +299,7 @@ public class ThirdPersonMovement : MonoBehaviour
     // Eden ref: please annotate this function
     private void HandleCrouchInput()
     {
-        if (Input.GetKeyDown(CrouchKey) && !this.IsCrouching)
+        if (Input.GetButtonDown("Crouch") && !this.IsCrouching)
         {
             // Debug.Log("Crouch on");
             this.PlayerAnim.SetBool("Crouching", true);
@@ -313,7 +309,7 @@ public class ThirdPersonMovement : MonoBehaviour
             this.CpslCollider.height = this.CapsuleColliderStartingHeight / 2;
 
         }
-        else if (Input.GetKeyDown(CrouchKey) && this.IsCrouching)
+        else if (Input.GetButtonDown("Crouch") && this.IsCrouching)
         {
             // Debug.Log("Crouch off");
             this.PlayerAnim.SetBool("Crouching", false);
@@ -340,9 +336,9 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         float startTime = Time.time;
 
-        while (Time.time < startTime + this.dashTime)
+        while (Time.time < startTime + this.dodgeTime)
         {
-            this.controller.Move(this.MoveDirection * this.dashSpeed * Time.deltaTime);
+            this.controller.Move(this.MoveDirection * this.dodgeSpeed * Time.deltaTime);
             yield return null;
         }
 
