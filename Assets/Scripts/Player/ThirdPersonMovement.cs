@@ -323,10 +323,8 @@ public class ThirdPersonMovement : MonoBehaviour
     // Eden ref: please annotate this function
     private void HandleDodgeInput()
     {
-        if (Input.GetButtonDown("Dodge"))
+        if (Input.GetButtonDown("Dodge") && !this.IsRolling)
         {
-            // Debug.Log("dodge on");
-            this.PlayerAnim.SetTrigger("Roll");
             StartCoroutine(DodgeCoroutine());
         }
     }
@@ -335,13 +333,15 @@ public class ThirdPersonMovement : MonoBehaviour
     IEnumerator DodgeCoroutine()
     {
         float startTime = Time.time;
+        this.IsRolling = true;
+        this.PlayerAnim.SetTrigger("Roll");
 
         while (Time.time < startTime + this.dodgeTime)
         {
             this.controller.Move(this.MoveDirection * this.dodgeSpeed * Time.deltaTime);
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
 
+        this.IsRolling = false;
     }
-
 }
