@@ -31,6 +31,11 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] private float movementSpeed = 5.0f;
     [SerializeField] private float turnSmoothTime = 0.1f;
 
+    // Dodging Variables
+    [SerializeField] private float dashSpeed = 20f;
+    [SerializeField] private float dashTime = 0.25f;
+
+
     #endregion
 
     #region properties
@@ -141,11 +146,6 @@ public class ThirdPersonMovement : MonoBehaviour
             return this.CpslCollider.height;
         }
     }
-
-    // Dodging Variables
-    public float DashSpeed { get; set; }
-    public float DashTime { get; set; }
-
     private float OriginalStepOffset { get; set; }
 
     #endregion
@@ -329,7 +329,7 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         if (Input.GetButtonDown("Dodge"))
         {
-            Debug.Log("dodge on");
+            // Debug.Log("dodge on");
             this.PlayerAnim.SetTrigger("Roll");
             StartCoroutine(DodgeCoroutine());
         }
@@ -340,9 +340,9 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         float startTime = Time.time;
 
-        while (Time.time < startTime + this.DashTime)
+        while (Time.time < startTime + this.dashTime)
         {
-            this.controller.Move(this.MoveDirection * this.DashSpeed * Time.deltaTime);
+            this.controller.Move(this.MoveDirection * this.dashSpeed * Time.deltaTime);
             yield return null;
         }
 
