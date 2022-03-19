@@ -31,12 +31,13 @@ public class PlayerStats : MonoBehaviour
     public bool isAlive = true;
 
     private ThirdPersonMovement _thirdPersonMovement;
-    private ThirdPersonMovement thirdPersonMvmnt
+
+    private ThirdPersonMovement ThrdPrsonMvmt
     {
         get
         {
             if (this._thirdPersonMovement == null)
-                this._thirdPersonMovement = GetComponent<ThirdPersonMovement>();
+                this._thirdPersonMovement = GetComponentInChildren<ThirdPersonMovement>();
 
             return this._thirdPersonMovement;
         }
@@ -47,7 +48,6 @@ public class PlayerStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         currentHealth = maxHealth;
         healthBar.SetMax(maxHealth);
         isAlive = true;
@@ -60,12 +60,12 @@ public class PlayerStats : MonoBehaviour
 
         InvokeRepeating("GettingHungry", 5.0f, 10.0f);
         InvokeRepeating("CheckHunger", 0.5f, 0.5f);
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Button to test death
         if (Input.GetKeyDown(KeyCode.P))
         {
             currentHealth = 0;
@@ -73,40 +73,24 @@ public class PlayerStats : MonoBehaviour
         if (currentHealth <= 0)
         {
             isAlive = false;
-            // thirdPersonCamera.SetActive(false);
-
-            // thirdPersonCamera.transform.SetPositionAndRotation(thirdPersonCamera.transform.position + Vector3.up, Quaternion.Euler(1, 0, 0));
-            // thirdPersonCamera.transform.RotateAround(transform.position, Vector3.up, Input.GetAxis("Mouse X") * 0.5f);
-
-
-            // offset = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * 1f, Vector3.up) * transform.position;
-            // transform.position = player.position + offset;
-            // transform.LookAt(player.position);
-
-
 
             gameOverUI.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
-
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, bool isBlockable = true)
     {
-        if (currentHealth > 0 && !thirdPersonMvmnt.IsRolling)
+        if (this.currentHealth > 0 && ((isBlockable && !this.ThrdPrsonMvmt.IsRolling) || (!isBlockable)))
         {
-            currentHealth -= damage;
-            healthBar.SetCurrent(currentHealth);
+            this.currentHealth -= damage;
+            this.healthBar.SetCurrent(currentHealth);
         }
     }
 
-    public void TakePercentileDamage(int damage)
+    public void TakePercentileDamage(int damage, bool isBlockable = true)
     {
-        if (currentHealth > 0)
-        {
-            currentHealth -= damage * 100 / maxHealth;
-            healthBar.SetCurrent(currentHealth);
-        }
+        this.TakeDamage(damage * 100 / this.maxHealth, isBlockable);
     }
 
     void GettingHungry()
@@ -122,7 +106,7 @@ public class PlayerStats : MonoBehaviour
     {
         if (currentHunger == 0) // how we take damage.
         {
-            TakeDamage(1);
+            TakeDamage(1, false);
         }
     }
 

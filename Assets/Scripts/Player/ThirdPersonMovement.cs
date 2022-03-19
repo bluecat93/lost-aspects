@@ -165,7 +165,7 @@ public class ThirdPersonMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    async void Update()
+    void Update()
     {
         if (!PauseMenu.GameIsPaused && this.PlyrStats.isAlive)
         {
@@ -245,7 +245,7 @@ public class ThirdPersonMovement : MonoBehaviour
                     fallDamage = 0;
                 }
                 // Debug.Log("Damage taken from fall damage: " + fallDamage);
-                this.PlyrStats.TakePercentileDamage(fallDamage);
+                this.PlyrStats.TakePercentileDamage(fallDamage, false);
             }
 
             this.controller.stepOffset = this.OriginalStepOffset;
