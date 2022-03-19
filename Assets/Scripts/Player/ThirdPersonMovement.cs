@@ -166,20 +166,20 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!PauseMenu.GameIsPaused && this.PlyrStats.isAlive)
-        {
-            this.HandleStopWhenDead();
-            this.HandleJump();
-            this.HandleMovement();
-            this.HandleCrouchInput();
-            this.HandleDodgeInput();
-            this.HandleCameraUnlock();
-        }
     }
 
     // Update is called once per frame
     async void Update()
     {
+        if (!PauseMenu.GameIsPaused && this.PlyrStats.isAlive)
+        {
+            this.HandleCrouchInput();
+            this.HandleDodgeInput();
+            this.HandleStopWhenDead();
+            this.HandleJump();
+            this.HandleMovement();
+            this.HandleCameraUnlock();
+        }
     }
 
     private void HandleMovement()
