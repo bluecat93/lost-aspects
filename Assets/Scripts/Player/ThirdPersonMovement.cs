@@ -305,6 +305,7 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(CrouchKey) && !this.IsCrouching)
         {
+            // Debug.Log("Crouch on");
             this.PlayerAnim.SetBool("Crouching", true);
             this.IsCrouching = true;
             this.controller.height = this.playerStartHeight * 0.5f;
@@ -314,6 +315,7 @@ public class ThirdPersonMovement : MonoBehaviour
         }
         else if (Input.GetKeyDown(CrouchKey) && this.IsCrouching)
         {
+            // Debug.Log("Crouch off");
             this.PlayerAnim.SetBool("Crouching", false);
             this.IsCrouching = false;
             this.controller.height = this.playerStartHeight;
@@ -327,6 +329,7 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         if (Input.GetButtonDown("Dodge"))
         {
+            Debug.Log("dodge on");
             this.PlayerAnim.SetTrigger("Roll");
             StartCoroutine(DodgeCoroutine());
         }
