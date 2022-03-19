@@ -18,14 +18,17 @@ public class PlayerStats : MonoBehaviour
     public int currentHealth;
     public int maxHunger = 100;
     public int currentHunger;
+    public int maxStamina = 100;
+    public int currentStamina;
     public int fallDamageReduction = 0;
 
 
     public BarScript healthBar;
     public BarScript hungerBar;
+    public BarScript staminaBar;
     public GameObject gameOverUI;
     public GameObject thirdPersonCamera;
-    public static bool isAlive = true;
+    public bool isAlive = true;
 
     RespawnScript respawn;
 
@@ -39,6 +42,9 @@ public class PlayerStats : MonoBehaviour
 
         currentHunger = maxHunger;
         hungerBar.SetMax(maxHunger);
+
+        currentStamina = maxStamina;
+        staminaBar.SetMax(maxStamina);
 
         InvokeRepeating("GettingHungry", 5.0f, 10.0f);
         InvokeRepeating("CheckHunger", 0.5f, 0.5f);
@@ -113,20 +119,27 @@ public class PlayerStats : MonoBehaviour
         gameOverUI.SetActive(false);
         respawn = FindObjectOfType<RespawnScript>();
         respawn.RespawnPlayer();
-        Healing();
-        Eating();
+        Heal();
+        Eat();
         thirdPersonCamera.SetActive(true);
         isAlive = true;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
     }
-    public void Healing()
+    public void Heal()
     {
         currentHealth = maxHealth;
         healthBar.SetCurrent(maxHealth);
     }
-    public void Eating()
+    public void Eat()
     {
         currentHunger = maxHunger;
         hungerBar.SetCurrent(maxHunger);
+    }
+
+    public void ChangeStamina(int amount)
+    {
+        currentStamina -= amount;
+        currentStamina = currentStamina > maxStamina ? maxStamina : currentStamina;
+        staminaBar.SetCurrent(currentStamina);
     }
 }
