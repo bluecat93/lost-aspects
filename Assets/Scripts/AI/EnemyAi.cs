@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System;
 
 public class EnemyAi : MonoBehaviour
 {
@@ -29,6 +30,9 @@ public class EnemyAi : MonoBehaviour
     private bool attackOnlyOnce = false;
     private float currentDeathTimer;
     private bool deadOnlyOnce = false;
+
+    // this is an event to let other scripts know this is attacking time.
+    public event EventHandler OnAttacking;
 
 
     //TODO: Will be refactored when we have multiplayer.
@@ -62,7 +66,7 @@ public class EnemyAi : MonoBehaviour
         if (!stats.isEnemyAlive())
         {
             state = State.Dead;
-            if(!deadOnlyOnce)
+            if (!deadOnlyOnce)
             {
                 currentDeathTimer = Time.time + stats.getDeathTimer();
             }
@@ -70,7 +74,7 @@ public class EnemyAi : MonoBehaviour
         }
         switch (state)
         {
-            case State.Roaming:  
+            case State.Roaming:
                 aiMovement.MoveTo(roamPosition);
                 if (aiMovement.ReachedPosition())
                 {
@@ -90,7 +94,7 @@ public class EnemyAi : MonoBehaviour
                 aiMovement.MoveTo(transform.position);
                 if (currentDeathTimer <= Time.time)
                 {
-                    transform.gameObject.SetActive(false);
+                    Destroy(gameObject);
                 }
                 break;
 
@@ -106,19 +110,19 @@ public class EnemyAi : MonoBehaviour
                 break;
 
         }
-        
+
     }
 
 
     private Vector3 GetRoamingPosition()
     {
         NavMeshHit navMeshHit;
-        float randomRange; 
+        float randomRange;
         Vector3 randomDirection;
 
-        randomRange = Random.Range(4f, 7f);
+        randomRange = UnityEngine.Random.Range(4f, 7f);
         randomDirection = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f)).normalized;
-        if (NavMesh.SamplePosition(transform.position+(randomDirection*randomRange), out navMeshHit, randomRange, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(transform.position + (randomDirection * randomRange), out navMeshHit, randomRange, NavMesh.AllAreas))
         {
             // Debug.Log("navMesh position: " + navMeshHit.position + "\nrandom position: " + randomDirection*randomRange);
             return navMeshHit.position;
@@ -142,11 +146,13 @@ public class EnemyAi : MonoBehaviour
         {
             animator.SetBool("InAttackRange", true);
             aiMovement.StopMoving();
-            if(Time.time > nextAttackTime)
+            if (Time.time > nextAttackTime)
             {
                 attackOnlyOnce = true;
                 nextAttackTime = Time.time + stats.getAttackTimeIntervals();
                 state = State.Attacking;
+                // TODO: change this to a more reasonable location (after the animation finish).
+                OnAttacking?.Invoke(this, EventArgs.Empty);
                 // do animation
                 animator.SetInteger("State", (int)state);
                 state = State.Chasing;
@@ -173,23 +179,24 @@ public class EnemyAi : MonoBehaviour
         transform.LookAt(gameObject.transform);
     }
 
-    public bool getIsAttacking()
+    public bool GetIsAttacking()
     {
         return isAttacking;
     }
 
-    public bool getAttackOnlyOnce()
+    public bool GetAttackOnlyOnce()
     {
         return attackOnlyOnce;
     }
 
-    public void setAttackOnlyOnce(bool attackOnlyOnce)
+    public void SetAttackOnlyOnce(bool attackOnlyOnce)
     {
         this.attackOnlyOnce = attackOnlyOnce;
     }
 
-    public PlayerStats getPlayerStats()
+    public PlayerStats GetPlayerStats()
     {
         return this.playerStats;
     }
+
 }

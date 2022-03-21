@@ -254,7 +254,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Basic Enemy Animator
+  m_Name: Ranged Enemy Animator
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: State
@@ -513,7 +513,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 0f534ab3b99e532408f6cc41a6840599, type: 3}
+  m_Motion: {fileID: -203655887218126122, guid: 113410bccb8a3b54fa982934fad836d6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

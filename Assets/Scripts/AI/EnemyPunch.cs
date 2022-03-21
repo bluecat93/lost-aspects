@@ -13,10 +13,10 @@ public class EnemyPunch : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player" && ai.getIsAttacking() && ai.getAttackOnlyOnce())
+        if (other.gameObject.tag == "Player" && ai.GetIsAttacking() && ai.GetAttackOnlyOnce())
         {
-            ai.getPlayerStats().TakeDamage(stats.getAttackDamage());
-            ai.setAttackOnlyOnce(false);
+            ai.GetPlayerStats().TakeDamage(stats.getAttackDamage());
+            ai.SetAttackOnlyOnce(false);
         }
     }
 }
