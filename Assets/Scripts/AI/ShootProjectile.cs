@@ -14,11 +14,15 @@ public class ShootProjectile : MonoBehaviour
         enemyAi.OnEndAttackAnimation += EnemyAi_OnEndAttackAnimation;
     }
 
-    private void EnemyAi_OnEndAttackAnimation(object sender, System.EventArgs e)
+    private bool EnemyAi_OnEndAttackAnimation(bool attackOnlyOnce)
     {
-        Vector3 fireballPositionYOffset = new Vector3(0, 1.201f, 0);
-        Vector3 fireballPositionXZOffset = transform.forward * 1.2f;
-        Instantiate(fireBall, this.transform.position + fireballPositionYOffset + fireballPositionXZOffset, Quaternion.identity);
+        if (attackOnlyOnce)
+        {
+            Vector3 fireballPositionYOffset = new Vector3(0, 1.201f, 0);
+            Vector3 fireballPositionXZOffset = transform.forward * 1.2f;
+            Instantiate(fireBall, this.transform.position + fireballPositionYOffset + fireballPositionXZOffset, Quaternion.identity);
+        }
+        return false;
     }
 
 }

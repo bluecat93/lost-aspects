@@ -29,8 +29,11 @@ public class EnemyAi : MonoBehaviour
     private bool deadOnlyOnce = false;
 
     // this is an event to let other scripts know this is attacking time.
-    public event EventHandler OnStartAttackAnimation;
-    public event EventHandler OnEndAttackAnimation;
+    // the event get a boolean to check if enemy allready attacked (no spamming attacks).
+    // the event returns a boolean: changes to false if enemy just attacked or returned the boolean it got.
+    public delegate bool OnAttackAnimationDelegate(bool attackOnlyOnce);
+    public event OnAttackAnimationDelegate OnStartAttackAnimation;
+    public event OnAttackAnimationDelegate OnEndAttackAnimation;
 
 
     //TODO: Will be refactored when we have multiplayer.
@@ -192,17 +195,17 @@ public class EnemyAi : MonoBehaviour
             this.AiMvmnt.StopMoving();
             if (this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("AttackWaiting"))
             {
-                //TODO: this is called many times and i need only one attack with ranged so i want to get the attackOnlyOnce boolean into the EventArgs.
-                OnEndAttackAnimation?.Invoke(this, EventArgs.Empty);
+                this.attackOnlyOnce = OnEndAttackAnimation?.Invoke(this.attackOnlyOnce) ?? true;
             }
             if (Time.time > nextAttackTime)
             {
                 this.attackOnlyOnce = true;
                 this.nextAttackTime = Time.time + this.EnmyStts.getAttackTimeIntervals();
                 this.state = State.Attacking;
-                OnStartAttackAnimation?.Invoke(this, EventArgs.Empty);
                 // do animation
                 this.Anmtr.SetInteger("State", (int)this.state);
+                // the invoke can make the bool return a null therefor it is a nullable bool (bool?) so if the bool will be null it means that no function was called.
+                this.attackOnlyOnce = OnStartAttackAnimation?.Invoke(this.attackOnlyOnce) ?? true;
                 this.state = State.Chasing;
             }
         }
