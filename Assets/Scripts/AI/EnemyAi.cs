@@ -187,8 +187,8 @@ public class EnemyAi : MonoBehaviour
         LookAtObject(player);
         if (Vector3.Distance(transform.position, player.transform.position) <= this.EnmyStts.getAttackDistance())
         {
-            animator.SetBool("InAttackRange", true);
-            aiMovement.StopMoving();
+            this.Anmtr.SetBool("InAttackRange", true);
+            this.AiMvmnt.StopMoving();
             if (Time.time > nextAttackTime)
             {
                 this.attackOnlyOnce = true;
