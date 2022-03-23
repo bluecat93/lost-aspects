@@ -106,6 +106,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4905165726499471461}
   - component: {fileID: 2876348976682861245}
+  - component: {fileID: 1254643182663964290}
+  - component: {fileID: 1440101188334354887}
   m_Layer: 0
   m_Name: Fireball
   m_TagString: Untagged
@@ -136,9 +138,38 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9031447526463286967}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.11042932
   m_Height: 0.23255157
   m_Direction: 2
   m_Center: {x: -0.00856781, y: -0.0023442805, z: -0.0033836365}
+--- !u!54 &1254643182663964290
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9031447526463286967}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1440101188334354887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9031447526463286967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41facb3b61785fa46999227c6c061bf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileSpeed: 200

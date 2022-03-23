@@ -6,6 +6,8 @@ public class ShootProjectile : MonoBehaviour
 {
     private EnemyAi enemyAi;
     [SerializeField] private Transform fireBall;
+    [SerializeField] private float xzOffset = 1.2f;
+    [SerializeField] private float yOffset = 1.201f;
 
     // Awake is called when the script instance is being loaded
     void Awake()
@@ -18,9 +20,11 @@ public class ShootProjectile : MonoBehaviour
     {
         if (attackOnlyOnce)
         {
-            Vector3 fireballPositionYOffset = new Vector3(0, 1.201f, 0);
-            Vector3 fireballPositionXZOffset = transform.forward * 1.2f;
-            Instantiate(fireBall, this.transform.position + fireballPositionYOffset + fireballPositionXZOffset, Quaternion.identity);
+            Vector3 fireballPositionYOffset = new Vector3(0, yOffset, 0);
+            Vector3 fireballPositionXZOffset = transform.forward * xzOffset;
+            Vector3 fireballFinalPosition = this.transform.position + fireballPositionYOffset + fireballPositionXZOffset;
+            fireBall.GetComponent<FireballPhysics>().Setup(fireballFinalPosition);
+            Instantiate(fireBall, fireballFinalPosition, Quaternion.identity);
         }
         return false;
     }
