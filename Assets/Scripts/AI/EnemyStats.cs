@@ -4,22 +4,14 @@ using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
 {
-    [SerializeField]
-    private int maxHealth = 100;
-    [SerializeField]
-    private int attackDamage = 5;
-    [SerializeField]
-    private float invulnerabilityFrameAmount = 0.5f;
-    [SerializeField]
-    private float attackTimeIntervals = 1f;
-    [SerializeField]
-    private float maxFollowDistance = 20f;
-    [SerializeField]
-    private float sightDistance = 10f;
-    [SerializeField]
-    private float attackDistance = 5f;
-    [SerializeField]
-    private float deathTimer = 5f;
+    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private int attackDamage = 5;
+    [SerializeField] private float invulnerabilityFrameAmount = 0.5f;
+    [SerializeField] private float attackTimeIntervals = 1f;
+    [SerializeField] private float maxFollowDistance = 20f;
+    [SerializeField] private float sightDistance = 10f;
+    [SerializeField] private float attackDistance = 5f;
+    [SerializeField] private float deathTimer = 5f;
 
     private int currentHealth;
     private float invulnerabilityFrame = 0f;
@@ -27,26 +19,26 @@ public class EnemyStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentHealth = maxHealth;
+        this.currentHealth = this.maxHealth;
     }
 
     public bool isEnemyAlive()
     {
-        return currentHealth >= 0;
+        return this.currentHealth >= 0;
     }
     public void TakeDamage(int damage)
     {
-        if (invulnerabilityFrame < Time.time)
+        if (this.invulnerabilityFrame < Time.time)
         {
-            invulnerabilityFrame = Time.time + invulnerabilityFrameAmount;
-            currentHealth -= damage;
+            this.invulnerabilityFrame = Time.time + this.invulnerabilityFrameAmount;
+            this.currentHealth -= damage;
         }
     }
     public void Heal(int heal)
     {
-        currentHealth += heal;
-        if (currentHealth > maxHealth)
-            currentHealth = maxHealth;
+        this.currentHealth += heal;
+        if (this.currentHealth > this.maxHealth)
+            this.currentHealth = this.maxHealth;
     }
 
     public float getDeathTimer()

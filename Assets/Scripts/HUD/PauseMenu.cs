@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
 
-    public static bool GameIsPaused = false;
+    public static bool isGamePaused = false;
     public GameObject pauseMenuUI;
     public GameObject optionsMenuUI;
 
@@ -21,7 +21,7 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameIsPaused)
+            if (isGamePaused)
             {
                 Resume();
             }
@@ -33,33 +33,33 @@ public class PauseMenu : MonoBehaviour
     }
     public void Resume()
     {
-        pauseMenuUI.SetActive(false);
-        optionsMenuUI.SetActive(false);
+        this.pauseMenuUI.SetActive(false);
+        this.optionsMenuUI.SetActive(false);
         Time.timeScale = 1f;
         Debug.Log("time is now:" + Time.deltaTime);
-        GameIsPaused = false;
+        isGamePaused = false;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
     }
 
     public void Pause()
     {
-        optionsMenuUI.SetActive(false);
-        pauseMenuUI.SetActive(true);
+        this.optionsMenuUI.SetActive(false);
+        this.pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         // Debug.Log("time is now:"+Time.deltaTime);
-        GameIsPaused = true;
+        isGamePaused = true;
         Cursor.lockState = CursorLockMode.None;
     }
 
     public void Options()
     {
-        pauseMenuUI.SetActive(false);
-        optionsMenuUI.SetActive(true);
+        this.pauseMenuUI.SetActive(false);
+        this.optionsMenuUI.SetActive(true);
     }
 
     public void QuitGame()
     {
-        GameIsPaused = false;
+        isGamePaused = false;
         Time.timeScale = 1f;
         SceneManager.LoadScene(quitButton);
     }

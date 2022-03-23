@@ -6,12 +6,18 @@ using UnityEngine.AI;
 public class AiMovement : MonoBehaviour
 {
     private Vector3 currentObjective;
-    private NavMeshAgent agent;
 
-    // Start is called before the first frame update
-    void Awake()
+    private NavMeshAgent _navMeshAgent;
+
+    private NavMeshAgent NvMshAgnt
     {
-        agent = GetComponent<NavMeshAgent>();
+        get
+        {
+            if (this._navMeshAgent == null)
+                this._navMeshAgent = GetComponent<NavMeshAgent>();
+
+            return this._navMeshAgent;
+        }
     }
 
     // Update is called once per frame
@@ -26,7 +32,7 @@ public class AiMovement : MonoBehaviour
     public void MoveTo(Vector3 currentObjective)
     {
         this.currentObjective = currentObjective;
-        agent.SetDestination(currentObjective);
+        this.NvMshAgnt.SetDestination(currentObjective);
     }
 
     public void StopMoving()
@@ -36,6 +42,6 @@ public class AiMovement : MonoBehaviour
 
     public bool ReachedPosition()
     {
-        return Vector3.Distance(transform.position, currentObjective) < 1f;
+        return Vector3.Distance(transform.position, this.currentObjective) < 1f;
     }
 }
