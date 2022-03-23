@@ -16,9 +16,6 @@ public class EnemyAi : MonoBehaviour
         Reseting
     }
 
-    private AiMovement aiMovement;
-    private Animator animator;
-    private EnemyStats stats;
 
     private Vector3 startingPosition;
     private Vector3 roamPosition;
@@ -34,61 +31,107 @@ public class EnemyAi : MonoBehaviour
     //TODO: Will be refactored when we have multiplayer.
     //Player stuff 
     public GameObject player;
-    private PlayerStats playerStats;
 
+    private PlayerStats _playerStats;
+
+    private PlayerStats PlyrStts
+    {
+        get
+        {
+            if (this._playerStats == null)
+                this._playerStats = GetComponent<PlayerStats>();
+
+            return this._playerStats;
+        }
+    }
+
+    private AiMovement _aiMovement;
+
+    private AiMovement AiMvmnt
+    {
+        get
+        {
+            if (this._aiMovement == null)
+                this._aiMovement = GetComponent<AiMovement>();
+
+            return this._aiMovement;
+        }
+    }
+
+    private Animator _animator;
+
+    private Animator Anmtr
+    {
+        get
+        {
+            if (this._animator == null)
+                this._animator = GetComponentInChildren<Animator>();
+
+            return this._animator;
+        }
+    }
+
+    private EnemyStats _enemyStats;
+
+    private EnemyStats EnmyStts
+    {
+        get
+        {
+            if (this._enemyStats == null)
+                this._enemyStats = GetComponent<EnemyStats>();
+
+            return this._enemyStats;
+        }
+    }
 
     private void Awake()
     {
-        stats = GetComponent<EnemyStats>();
-        aiMovement = GetComponent<AiMovement>();
-        state = State.Roaming;
-        animator = GetComponentInChildren<Animator>();
-        playerStats = player.GetComponent<PlayerStats>();
+        this.state = State.Roaming;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        startingPosition = transform.position;
-        roamPosition = GetRoamingPosition();
+        this.startingPosition = transform.position;
+        this.roamPosition = GetRoamingPosition();
     }
 
     // Update is called once per frame
     void Update()
     {
-        isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
+        this.isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
 
-        animator.SetInteger("State", (int)state);
-        if (!stats.isEnemyAlive())
+        this.Anmtr.SetInteger("State", (int)state);
+        if (!this.EnmyStts.isEnemyAlive())
         {
-            state = State.Dead;
-            if(!deadOnlyOnce)
+            this.state = State.Dead;
+            if (!deadOnlyOnce)
             {
-                currentDeathTimer = Time.time + stats.getDeathTimer();
+                this.currentDeathTimer = Time.time + this.EnmyStts.getDeathTimer();
             }
-            deadOnlyOnce = true;
+            this.deadOnlyOnce = true;
         }
-        switch (state)
+        switch (this.state)
         {
-            case State.Roaming:  
-                aiMovement.MoveTo(roamPosition);
-                if (aiMovement.ReachedPosition())
+            case State.Roaming:
+                this.AiMvmnt.MoveTo(this.roamPosition);
+                if (AiMvmnt.ReachedPosition())
                 {
                     //Reached roam position
-                    roamPosition = GetRoamingPosition();
+                    this.roamPosition = GetRoamingPosition();
                 }
                 FindTarget();
                 break;
 
             case State.Chasing:
-                aiMovement.MoveTo(player.transform.position);
+                this.AiMvmnt.MoveTo(player.transform.position);
                 AttackTarget();
                 StopChasing();
                 break;
 
             case State.Dead:
-                aiMovement.MoveTo(transform.position);
-                if (currentDeathTimer <= Time.time)
+                this.AiMvmnt.MoveTo(transform.position);
+                if (this.currentDeathTimer <= Time.time)
                 {
                     transform.gameObject.SetActive(false);
                 }
@@ -98,27 +141,27 @@ public class EnemyAi : MonoBehaviour
                 break;
 
             case State.Reseting:
-                aiMovement.MoveTo(startingPosition);
-                if (aiMovement.ReachedPosition())
+                this.AiMvmnt.MoveTo(this.startingPosition);
+                if (this.AiMvmnt.ReachedPosition())
                 {
-                    state = State.Roaming;
+                    this.state = State.Roaming;
                 }
                 break;
 
         }
-        
+
     }
 
 
     private Vector3 GetRoamingPosition()
     {
         NavMeshHit navMeshHit;
-        float randomRange; 
+        float randomRange;
         Vector3 randomDirection;
 
         randomRange = Random.Range(4f, 7f);
         randomDirection = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f)).normalized;
-        if (NavMesh.SamplePosition(transform.position+(randomDirection*randomRange), out navMeshHit, randomRange, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(transform.position + (randomDirection * randomRange), out navMeshHit, randomRange, NavMesh.AllAreas))
         {
             // Debug.Log("navMesh position: " + navMeshHit.position + "\nrandom position: " + randomDirection*randomRange);
             return navMeshHit.position;
@@ -128,9 +171,9 @@ public class EnemyAi : MonoBehaviour
 
     private void FindTarget()
     {
-        if (Vector3.Distance(transform.position, player.transform.position) <= stats.getSightDistance())
+        if (Vector3.Distance(transform.position, player.transform.position) <= this.EnmyStts.getSightDistance())
         {
-            state = State.Chasing;
+            this.state = State.Chasing;
         }
     }
 
@@ -138,31 +181,31 @@ public class EnemyAi : MonoBehaviour
     {
         // rotate towords player
         LookAtObject(player);
-        if (Vector3.Distance(transform.position, player.transform.position) <= stats.getAttackDistance())
+        if (Vector3.Distance(transform.position, player.transform.position) <= this.EnmyStts.getAttackDistance())
         {
-            animator.SetBool("InAttackRange", true);
-            aiMovement.StopMoving();
-            if(Time.time > nextAttackTime)
+            this.Anmtr.SetBool("InAttackRange", true);
+            this.AiMvmnt.StopMoving();
+            if (Time.time > nextAttackTime)
             {
-                attackOnlyOnce = true;
-                nextAttackTime = Time.time + stats.getAttackTimeIntervals();
-                state = State.Attacking;
+                this.attackOnlyOnce = true;
+                this.nextAttackTime = Time.time + this.EnmyStts.getAttackTimeIntervals();
+                this.state = State.Attacking;
                 // do animation
-                animator.SetInteger("State", (int)state);
-                state = State.Chasing;
+                this.Anmtr.SetInteger("State", (int)this.state);
+                this.state = State.Chasing;
             }
         }
         else
         {
-            animator.SetBool("InAttackRange", false);
+            this.Anmtr.SetBool("InAttackRange", false);
         }
     }
 
     private void StopChasing()
     {
-        if (Vector3.Distance(transform.position, player.transform.position) > stats.getMaxFollowDistance())
+        if (Vector3.Distance(transform.position, player.transform.position) > this.EnmyStts.getMaxFollowDistance())
         {
-            state = State.Reseting;
+            this.state = State.Reseting;
         }
     }
 
@@ -175,12 +218,12 @@ public class EnemyAi : MonoBehaviour
 
     public bool getIsAttacking()
     {
-        return isAttacking;
+        return this.isAttacking;
     }
 
     public bool getAttackOnlyOnce()
     {
-        return attackOnlyOnce;
+        return this.attackOnlyOnce;
     }
 
     public void setAttackOnlyOnce(bool attackOnlyOnce)
@@ -190,6 +233,6 @@ public class EnemyAi : MonoBehaviour
 
     public PlayerStats getPlayerStats()
     {
-        return this.playerStats;
+        return this.PlyrStts;
     }
 }

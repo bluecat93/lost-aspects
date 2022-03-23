@@ -167,7 +167,7 @@ public class ThirdPersonMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!PauseMenu.GameIsPaused && this.PlyrStats.isAlive)
+        if (!PauseMenu.isGamePaused && this.PlyrStats.isAlive)
         {
             this.HandleCrouchInput();
             this.HandleDodgeInput();

@@ -9,7 +9,7 @@ public class RespawnScript : MonoBehaviour
 
     public void RespawnPlayer()
     {
-        player.transform.position = respawnPoint.transform.position;
+        this.player.transform.position = this.respawnPoint.transform.position;
         Physics.SyncTransforms();
     }
 }

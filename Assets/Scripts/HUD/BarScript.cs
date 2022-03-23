@@ -10,30 +10,47 @@ using TMPro;
 /// <param name="slider"> The slider used in the bar </param>
 public class BarScript : MonoBehaviour
 {
-    private Slider slider;
-    private  TMP_Text text;
+    private Slider _slider;
 
-    private void Awake()
+    private Slider Sldr
     {
-        slider = GetComponent<Slider>();
-        text = GetComponentInChildren<TMP_Text>();
+        get
+        {
+            if (this._slider == null)
+                this._slider = GetComponent<Slider>();
+
+            return this._slider;
+        }
     }
+
+    private TMP_Text _tmp_Text;
+
+    private TMP_Text Tmp_Txt
+    {
+        get
+        {
+            if (this._tmp_Text == null)
+                this._tmp_Text = GetComponentInChildren<TMP_Text>();
+
+            return _tmp_Text;
+        }
+    }
+
     public void SetCurrent(int current)
     {
-        slider.value = current;
-        int percentile = (int)(current * 100 / slider.maxValue);
+        this.Sldr.value = current;
+        int percentile = (int)(current * 100 / this.Sldr.maxValue);
         if (percentile < 0)
         {
             percentile = 0;
         }
-        text.text = percentile + "%";
-
+        this.Tmp_Txt.text = percentile + "%";
     }
 
     public void SetMax(int max)
     {
-        if (max < slider.value)
-            slider.value = max;
-        slider.maxValue = max;
+        if (max < this.Sldr.value)
+            this.Sldr.value = max;
+        this.Sldr.maxValue = max;
     }
 }

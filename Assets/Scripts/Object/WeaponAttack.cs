@@ -10,12 +10,12 @@ public class WeaponAttack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Enemy" && isAttacking)
+        if (other.gameObject.tag == "Enemy" && this.isAttacking)
         {
             //enemy was hit
             Transform enemy = other.gameObject.transform;
             EnemyStats enemyStats = enemy.GetComponent<EnemyStats>();
-            enemyStats.TakeDamage(weaponBaseAttackDamage + weaponAttackDamage);
+            enemyStats.TakeDamage(this.weaponBaseAttackDamage + this.weaponAttackDamage);
         }
     }
 }

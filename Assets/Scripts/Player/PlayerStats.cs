@@ -48,15 +48,15 @@ public class PlayerStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentHealth = maxHealth;
-        healthBar.SetMax(maxHealth);
-        isAlive = true;
+        this.currentHealth = this.maxHealth;
+        this.healthBar.SetMax(this.maxHealth);
+        this.isAlive = true;
 
-        currentHunger = maxHunger;
-        hungerBar.SetMax(maxHunger);
+        this.currentHunger = this.maxHunger;
+        this.hungerBar.SetMax(this.maxHunger);
 
-        currentStamina = maxStamina;
-        staminaBar.SetMax(maxStamina);
+        this.currentStamina = this.maxStamina;
+        this.staminaBar.SetMax(this.maxStamina);
 
         InvokeRepeating("GettingHungry", 5.0f, 10.0f);
         InvokeRepeating("CheckHunger", 0.5f, 0.5f);
@@ -68,13 +68,13 @@ public class PlayerStats : MonoBehaviour
         // Button to test death
         if (Input.GetKeyDown(KeyCode.P))
         {
-            currentHealth = 0;
+            this.currentHealth = 0;
         }
-        if (currentHealth <= 0)
+        if (this.currentHealth <= 0)
         {
-            isAlive = false;
+            this.isAlive = false;
 
-            gameOverUI.SetActive(true);
+            this.gameOverUI.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
         }
     }
@@ -95,16 +95,16 @@ public class PlayerStats : MonoBehaviour
 
     void GettingHungry()
     {
-        if (currentHunger > 0)
+        if (this.currentHunger > 0)
         {
-            currentHunger--;
-            hungerBar.SetCurrent(currentHunger);
+            this.currentHunger--;
+            this.hungerBar.SetCurrent(this.currentHunger);
         }
     }
 
     void CheckHunger()
     {
-        if (currentHunger == 0) // how we take damage.
+        if (this.currentHunger == 0) // how we take damage.
         {
             TakeDamage(1, false);
         }
@@ -112,30 +112,30 @@ public class PlayerStats : MonoBehaviour
 
     public void Respawn()
     {
-        gameOverUI.SetActive(false);
-        respawn = FindObjectOfType<RespawnScript>();
-        respawn.RespawnPlayer();
+        this.gameOverUI.SetActive(false);
+        this.respawn = FindObjectOfType<RespawnScript>();
+        this.respawn.RespawnPlayer();
         Heal();
         Eat();
-        thirdPersonCamera.SetActive(true);
-        isAlive = true;
+        this.thirdPersonCamera.SetActive(true);
+        this.isAlive = true;
         Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
     }
     public void Heal()
     {
-        currentHealth = maxHealth;
-        healthBar.SetCurrent(maxHealth);
+        this.currentHealth = this.maxHealth;
+        this.healthBar.SetCurrent(this.maxHealth);
     }
     public void Eat()
     {
-        currentHunger = maxHunger;
-        hungerBar.SetCurrent(maxHunger);
+        this.currentHunger = this.maxHunger;
+        this.hungerBar.SetCurrent(this.maxHunger);
     }
 
     public void ChangeStamina(int amount)
     {
-        currentStamina -= amount;
-        currentStamina = currentStamina > maxStamina ? maxStamina : currentStamina;
-        staminaBar.SetCurrent(currentStamina);
+        this.currentStamina -= amount;
+        this.currentStamina = this.currentStamina > this.maxStamina ? this.maxStamina : this.currentStamina;
+        this.staminaBar.SetCurrent(this.currentStamina);
     }
 }

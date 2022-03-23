@@ -6,20 +6,54 @@ using UnityEngine;
 public class PlayerAbilities : MonoBehaviour
 {
     public float maxAttackDistance = 1.0f;
-    private PlayerStats playerStats;
 
     private Ray[] ray;
+
     public float playerMiddleHeight = 2;
 
-    public WeaponAttack weapon;
+    public WeaponAttack _weaponAttack;
 
-    private Animator playerAnim;
+    private WeaponAttack WpnAttck
+    {
+        get
+        {
+            if (this._weaponAttack == null)
+                this._weaponAttack = GetComponentInChildren<WeaponAttack>();
+
+            return this._weaponAttack;
+        }
+    }
+
+    private Animator _animator;
+
+    private Animator Anmtor
+    {
+        get
+        {
+            if (this._animator == null)
+                this._animator = GetComponentInChildren<Animator>();
+
+            return this._animator;
+        }
+    }
+
+    private PlayerStats _playerStats;
+
+    private PlayerStats PlyrStts
+    {
+        get
+        {
+            if (this._playerStats == null)
+                this._playerStats = GetComponent<PlayerStats>();
+
+            return this._playerStats;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        playerStats = transform.gameObject.GetComponent<PlayerStats>();
         ray = new Ray[3];
-        playerAnim = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -30,17 +64,17 @@ public class PlayerAbilities : MonoBehaviour
         // 3 rays that indicate the attack range.
         for (int i = -1; i <= 1; i++)
         {
-            ray[i + 1] = new Ray(transform.position + Vector3.up * playerMiddleHeight,
-                (transform.forward + (i * transform.right)).normalized * maxAttackDistance);
-            Debug.DrawRay(ray[i + 1].origin, ray[i + 1].direction * maxAttackDistance);
+            ray[i + 1] = new Ray(transform.position + Vector3.up * this.playerMiddleHeight,
+                (transform.forward + (i * transform.right)).normalized * this.maxAttackDistance);
+            Debug.DrawRay(ray[i + 1].origin, ray[i + 1].direction * this.maxAttackDistance);
         }
 
         // float attacking = Input.GetAxisRaw("Swing");
         if (Input.GetButtonDown("Swing"))
         {
-            playerAnim.SetTrigger("Attack");
+            this.Anmtor.SetTrigger("Attack");
         }
-        weapon.isAttacking = playerAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack");
+        this.WpnAttck.isAttacking = this.Anmtor.GetCurrentAnimatorStateInfo(0).IsName("Attack");
     }
 
     // still saved this method. maybe someone will want to see how to find the closest object from a given list of objects.
