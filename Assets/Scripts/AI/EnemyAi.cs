@@ -39,7 +39,7 @@ public class EnemyAi : MonoBehaviour
         get
         {
             if (this._playerStats == null)
-                this._playerStats = GetComponent<PlayerStats>();
+                this._playerStats = player.GetComponent<PlayerStats>();
 
             return this._playerStats;
         }
