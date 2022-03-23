@@ -11,10 +11,10 @@ public class ShootProjectile : MonoBehaviour
     void Awake()
     {
         enemyAi = GetComponent<EnemyAi>();
-        enemyAi.OnAttacking += EnemyAi_OnAttacking;
+        enemyAi.OnEndAttackAnimation += EnemyAi_OnEndAttackAnimation;
     }
 
-    private void EnemyAi_OnAttacking(object sender, System.EventArgs e)
+    private void EnemyAi_OnEndAttackAnimation(object sender, System.EventArgs e)
     {
         Vector3 fireballPositionYOffset = new Vector3(0, 1.201f, 0);
         Vector3 fireballPositionXZOffset = transform.forward * 1.2f;

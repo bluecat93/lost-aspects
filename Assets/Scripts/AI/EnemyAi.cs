@@ -29,7 +29,8 @@ public class EnemyAi : MonoBehaviour
     private bool deadOnlyOnce = false;
 
     // this is an event to let other scripts know this is attacking time.
-    public event EventHandler OnAttacking;
+    public event EventHandler OnStartAttackAnimation;
+    public event EventHandler OnEndAttackAnimation;
 
 
     //TODO: Will be refactored when we have multiplayer.
@@ -189,13 +190,17 @@ public class EnemyAi : MonoBehaviour
         {
             this.Anmtr.SetBool("InAttackRange", true);
             this.AiMvmnt.StopMoving();
+            if (this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("AttackWaiting"))
+            {
+                //TODO: this is called many times and i need only one attack with ranged so i want to get the attackOnlyOnce boolean into the EventArgs.
+                OnEndAttackAnimation?.Invoke(this, EventArgs.Empty);
+            }
             if (Time.time > nextAttackTime)
             {
                 this.attackOnlyOnce = true;
                 this.nextAttackTime = Time.time + this.EnmyStts.getAttackTimeIntervals();
                 this.state = State.Attacking;
-                // TODO: change this to a more reasonable location (after the animation finish).
-                OnAttacking?.Invoke(this, EventArgs.Empty);
+                OnStartAttackAnimation?.Invoke(this, EventArgs.Empty);
                 // do animation
                 this.Anmtr.SetInteger("State", (int)this.state);
                 this.state = State.Chasing;
