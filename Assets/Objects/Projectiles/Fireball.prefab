@@ -106,7 +106,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4905165726499471461}
   - component: {fileID: 2876348976682861245}
-  - component: {fileID: 1254643182663964290}
   - component: {fileID: 1440101188334354887}
   m_Layer: 0
   m_Name: Fireball
@@ -122,7 +121,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9031447526463286967}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.027023211, y: 0.94539225, z: -0.08123474, w: 0.3144903}
   m_LocalPosition: {x: 16.73953, y: 1.440725, z: 65.73497}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -144,22 +143,6 @@ CapsuleCollider:
   m_Height: 0.23255157
   m_Direction: 2
   m_Center: {x: -0.00856781, y: -0.0023442805, z: -0.0033836365}
---- !u!54 &1254643182663964290
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9031447526463286967}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &1440101188334354887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,3 +156,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 200
+  projectileLifeSpan: 5

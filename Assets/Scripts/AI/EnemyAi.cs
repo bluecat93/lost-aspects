@@ -31,7 +31,7 @@ public class EnemyAi : MonoBehaviour
     // this is an event to let other scripts know this is attacking time.
     // the event get a boolean to check if enemy allready attacked (no spamming attacks).
     // the event returns a boolean: changes to false if enemy just attacked or returned the boolean it got.
-    public delegate bool OnAttackAnimationDelegate(bool attackOnlyOnce);
+    public delegate bool OnAttackAnimationDelegate(bool attackOnlyOnce, Transform target);
     public event OnAttackAnimationDelegate OnStartAttackAnimation;
     public event OnAttackAnimationDelegate OnEndAttackAnimation;
 
@@ -195,7 +195,7 @@ public class EnemyAi : MonoBehaviour
             this.AiMvmnt.StopMoving();
             if (this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("AttackWaiting"))
             {
-                this.attackOnlyOnce = OnEndAttackAnimation?.Invoke(this.attackOnlyOnce) ?? true;
+                this.attackOnlyOnce = OnEndAttackAnimation?.Invoke(this.attackOnlyOnce, player.transform) ?? true;
             }
             if (Time.time > nextAttackTime)
             {
@@ -205,7 +205,7 @@ public class EnemyAi : MonoBehaviour
                 // do animation
                 this.Anmtr.SetInteger("State", (int)this.state);
                 // the invoke can make the bool return a null therefor it is a nullable bool (bool?) so if the bool will be null it means that no function was called.
-                this.attackOnlyOnce = OnStartAttackAnimation?.Invoke(this.attackOnlyOnce) ?? true;
+                this.attackOnlyOnce = OnStartAttackAnimation?.Invoke(this.attackOnlyOnce, player.transform) ?? true;
                 this.state = State.Chasing;
             }
         }

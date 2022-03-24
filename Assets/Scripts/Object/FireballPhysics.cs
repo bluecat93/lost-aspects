@@ -5,9 +5,25 @@ using UnityEngine;
 public class FireballPhysics : MonoBehaviour
 {
     [SerializeField] private float projectileSpeed = 5f;
-    public void Setup(Vector3 shootDirection)
+    [SerializeField] private float projectileLifeSpan = 5f;
+    private Vector3 projectileDirection;
+    //private Rigidbody rigidbody;
+
+    void Start()
     {
-        Rigidbody rigidbody = GetComponent<Rigidbody>();
-        rigidbody.AddForce(shootDirection * projectileSpeed, ForceMode.Impulse);
+        //rigidbody = GetComponent<Rigidbody>();
+    }
+    public void Setup(Transform target)
+    {
+
+        transform.LookAt(target);
+        projectileDirection = transform.forward;
+        Destroy(gameObject, projectileLifeSpan);
+    }
+
+    void update()
+    {
+        transform.position += projectileDirection * Time.deltaTime * projectileSpeed;
+        //rigidbody.AddForce(transform.forward * projectileSpeed, ForceMode.Impulse);
     }
 }
