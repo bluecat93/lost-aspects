@@ -126,12 +126,21 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         get
         {
-            return Physics.Raycast(transform.position, Vector3.down, 0.1f);
+            return Physics.Raycast(transform.position, Vector3.down, 0.2f);
         }
     }
 
+    public bool IsJumping
+    {
+        get
+        {
+            return Input.GetAxis("Jump") > 0;
+        }
+    }
 
     private bool IsClimbable { get; set; }
+
+    private float GroundAngle { get; set; }
 
     private Vector3 MoveDirection { get; set; }
 
@@ -212,11 +221,17 @@ public class ThirdPersonMovement : MonoBehaviour
             finalMoving = this.MoveDirection * -1 * 0.5f * Time.deltaTime;
         }
 
+
         // Handles stamina
         this.PlyrStats.ChangeStamina(this.IsDashing ? 1 : -1);
 
         // Moves player
         finalMoving += Velocity * Time.deltaTime;
+
+        // Handles going down slopes
+        if (this.IsGrounded && !this.IsJumping && Velocity.y <= 0)
+            finalMoving.y = finalMoving.y * this.GroundAngle;
+
         this.controller.Move(finalMoving);
     }
 
@@ -265,15 +280,13 @@ public class ThirdPersonMovement : MonoBehaviour
         }
 
         // Keyboard input (jump)
-        bool isJumping = Input.GetAxis("Jump") > 0;
+
 
         // TODO: need to check more stuff for double jumping or other kinds of jumps.
-        if (isJumping && this.controller.isGrounded)
+        if (this.IsJumping && this.controller.isGrounded)
         {
             this._velocity.y = this.jumpHeight;
         }
-
-
     }
 
     private void HandleCameraUnlock()
@@ -293,7 +306,8 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        this.IsClimbable = Mathf.Round(Vector3.Angle(hit.normal, Vector3.up)) <= this.controller.slopeLimit;
+        this.GroundAngle = Vector3.Angle(hit.normal, Vector3.up);
+        this.IsClimbable = Mathf.Round(this.GroundAngle) <= this.controller.slopeLimit;
     }
 
     // Eden ref: please annotate this function
