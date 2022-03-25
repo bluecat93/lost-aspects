@@ -7,7 +7,8 @@ public class MapGenerator : MonoBehaviour
     public enum DrawMode
     {
         Noisemap,
-        colorMap
+        ColorMap,
+        Mesh
     }
 
     public DrawMode drawMode;
@@ -23,7 +24,7 @@ public class MapGenerator : MonoBehaviour
     public bool autoUpdate;
     public TerrainType[] regions;
 
-    public async void GenerateMap()
+    public void GenerateMap()
     {
         float[,] noiseMap = Noise.GenerateNoiseMap(this.mapWidth, this.mapHeight, this.seed, this.noiseScale, this.octave, this.persistance, this.lacunarity, this.offset);
         Color[] colorMap = new Color[this.mapWidth * this.mapHeight];
@@ -49,8 +50,11 @@ public class MapGenerator : MonoBehaviour
 
         switch (this.drawMode)
         {
-            case DrawMode.colorMap:
+            case DrawMode.ColorMap:
                 display.DrawTexture(TextureGenerator.TextureFromColorMap(colorMap, this.mapWidth, this.mapHeight));
+                break;
+            case DrawMode.Mesh:
+                display.DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap), TextureGenerator.TextureFromColorMap(colorMap, this.mapWidth, this.mapHeight));
                 break;
             default:
                 display.DrawTexture(TextureGenerator.TextureFromHeightMap(noiseMap));
