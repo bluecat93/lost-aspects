@@ -181,8 +181,8 @@ public class ThirdPersonMovement : MonoBehaviour
             this.HandleCrouchInput();
             this.HandleDodgeInput();
             this.HandleStopWhenDead();
-            this.HandleJump();
-            this.HandleMovement();
+            // this.HandleJump();
+            // this.HandleMovement();
             this.HandleCameraUnlock();
         }
     }
