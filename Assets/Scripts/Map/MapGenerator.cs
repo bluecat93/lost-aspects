@@ -13,23 +13,29 @@ public class MapGenerator : MonoBehaviour
         Mesh,
         FalloffMap
     }
-    public DrawMode drawMode;
-    public Noise.NormalizeMode normalizeMode;
 
+    public enum Biomes
+    {
+        Mountains,
+        Forest,
+        Grass,
+        Desert
+    }
+
+    public DrawMode drawMode;
+    public Biomes biome;
+    // int biomeIndex = Convert.ToInt32(biome);
+    public Noise.NormalizeMode normalizeMode;
+    public bool isUseFallofMap;
     public const int mapChunkSize = 239;
 
     [Range(0, 6)] public int editorPreviewLevelOfDetails;
-    public float noiseScale;
-    public int octave;
-    [Range(0, 1)] public float persistance;
-    public float lacunarity;
-    public int seed;
-    public Vector2 offset;
-    public bool isUseFallofMap;
-    public float meshHeightMultiplier;
-    public AnimationCurve meshHeightCurve;
+
     public bool autoUpdate;
-    public TerrainType[] regions;
+    // public TerrainType[] regions;
+
+    public Biome[] biomes;
+
     float[,] falloffMap;
 
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
@@ -46,13 +52,15 @@ public class MapGenerator : MonoBehaviour
 
         MapDisplay display = FindObjectOfType<MapDisplay>();
 
+        int biomeIndex = Convert.ToInt32(biome);
+
         switch (this.drawMode)
         {
             case DrawMode.ColorMap:
                 display.DrawTexture(TextureGenerator.TextureFromColorMap(mapData.colorMap, mapChunkSize, mapChunkSize));
                 break;
             case DrawMode.Mesh:
-                display.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapData.heightMap, this.meshHeightMultiplier, this.meshHeightCurve, this.editorPreviewLevelOfDetails), TextureGenerator.TextureFromColorMap(mapData.colorMap, mapChunkSize, mapChunkSize));
+                display.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapData.heightMap, this.biomes[biomeIndex].meshHeightMultiplier, this.biomes[biomeIndex].meshHeightCurve, this.editorPreviewLevelOfDetails), TextureGenerator.TextureFromColorMap(mapData.colorMap, mapChunkSize, mapChunkSize));
                 break;
             case DrawMode.FalloffMap:
                 display.DrawTexture(TextureGenerator.TextureFromHeightMap(FalloffGenerator.GenerateFalloffMap(mapChunkSize)));
@@ -99,7 +107,9 @@ public class MapGenerator : MonoBehaviour
 
     void MeshDataThread(MapData mapData, int lod, Action<MeshData> callback)
     {
-        MeshData meshData = MeshGenerator.GenerateTerrainMesh(mapData.heightMap, this.meshHeightMultiplier, this.meshHeightCurve, lod);
+        int biomeIndex = Convert.ToInt32(biome);
+
+        MeshData meshData = MeshGenerator.GenerateTerrainMesh(mapData.heightMap, this.biomes[biomeIndex].meshHeightMultiplier, this.biomes[biomeIndex].meshHeightCurve, lod);
         lock (this.meshDataThreadInfoQueue)
         {
             this.meshDataThreadInfoQueue.Enqueue(new MapThreadInfo<MeshData>(callback, meshData));
@@ -129,7 +139,8 @@ public class MapGenerator : MonoBehaviour
 
     MapData GenerateMapData(Vector2 center)
     {
-        float[,] noiseMap = Noise.GenerateNoiseMap(mapChunkSize + 2, mapChunkSize + 2, this.seed, this.noiseScale, this.octave, this.persistance, this.lacunarity, center + this.offset, normalizeMode);
+        int biomeIndex = Convert.ToInt32(biome);
+        float[,] noiseMap = Noise.GenerateNoiseMap(mapChunkSize + 2, mapChunkSize + 2, this.biomes[biomeIndex].seed, this.biomes[biomeIndex].noiseScale, this.biomes[biomeIndex].octave, this.biomes[biomeIndex].persistance, this.biomes[biomeIndex].lacunarity, center + this.biomes[biomeIndex].offset, normalizeMode);
         Color[] colorMap = new Color[mapChunkSize * mapChunkSize];
 
         for (int y = 0; y < mapChunkSize; y++)
@@ -142,13 +153,21 @@ public class MapGenerator : MonoBehaviour
                 }
                 float currentHeight = noiseMap[x, y];
 
-                foreach (TerrainType region in this.regions)
+                foreach (TerrainType region in this.biomes[biomeIndex].terrainTypes)
                 {
                     if (currentHeight >= region.height)
                         colorMap[y * mapChunkSize + x] = region.color;
                     else
                         break;
                 }
+
+                // foreach (TerrainType region in this.regions)
+                // {
+                //     if (currentHeight >= region.height)
+                //         colorMap[y * mapChunkSize + x] = region.color;
+                //     else
+                //         break;
+                // }
             }
         }
 
@@ -158,10 +177,11 @@ public class MapGenerator : MonoBehaviour
 
     private void OnValidate()
     {
-        if (this.lacunarity < 1)
-            this.lacunarity = 1;
-        if (this.octave < 0)
-            this.octave = 0;
+        int biomeIndex = Convert.ToInt32(biome);
+        if (this.biomes[biomeIndex].lacunarity < 1)
+            this.biomes[biomeIndex].lacunarity = 1;
+        if (this.biomes[biomeIndex].octave < 0)
+            this.biomes[biomeIndex].octave = 0;
 
         this.falloffMap = FalloffGenerator.GenerateFalloffMap(mapChunkSize);
     }
@@ -185,6 +205,21 @@ public struct TerrainType
     public string name;
     public float height;
     public Color color;
+}
+
+[System.Serializable]
+public struct Biome
+{
+    public string name;
+    public float noiseScale;
+    public int octave;
+    [Range(0, 1)] public float persistance;
+    public float lacunarity;
+    public int seed;
+    public Vector2 offset;
+    public float meshHeightMultiplier;
+    public AnimationCurve meshHeightCurve;
+    public TerrainType[] terrainTypes;
 }
 
 public struct MapData
