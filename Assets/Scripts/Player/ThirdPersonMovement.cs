@@ -228,9 +228,9 @@ public class ThirdPersonMovement : MonoBehaviour
         // Moves player
         finalMoving += Velocity * Time.deltaTime;
 
-        // Handles going down slopes
-        if (this.IsGrounded && !this.IsJumping && Velocity.y <= 0)
-            finalMoving.y = finalMoving.y * this.GroundAngle;
+        // // Handles going down slopes
+        // if (this.IsGrounded && !this.IsJumping && Velocity.y <= 0)
+        //     finalMoving.y = finalMoving.y * this.GroundAngle;
 
         this.controller.Move(finalMoving);
     }
