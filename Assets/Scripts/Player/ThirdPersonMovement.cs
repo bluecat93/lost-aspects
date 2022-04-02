@@ -39,10 +39,10 @@ public class ThirdPersonMovement : MonoBehaviour
     [Header("Player Grounded")]
     [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
     public bool IsGrounded = true;
-    [Tooltip("Useful for rough ground")]
-    public float GroundedOffset = -0.14f;
+    [Tooltip("Useful for rough ground. If you are not sure, keep on 0")]
+    public float GroundedOffset = 0.0f;
     [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
-    public float GroundedRadius = 0.28f;
+    public float GroundedRadius = 0.5f;
     [Tooltip("What layers the character uses as ground")]
     public LayerMask GroundLayers;
 
@@ -140,6 +140,14 @@ public class ThirdPersonMovement : MonoBehaviour
         }
     }
 
+    private bool IsMoving
+    {
+        get
+        {
+            return Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0;
+        }
+    }
+
     public bool IsCrouching { get; set; }
 
     public bool IsRolling { get; set; }
@@ -186,6 +194,8 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private float TerminalVelocity = -53.0f;
 
+    private Vector3 TargetDirection { get; set; }
+
     #endregion
 
     // Eden ref: do we need this?
@@ -211,12 +221,12 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         if (!PauseMenu.isGamePaused && this.PlyrStats.isAlive)
         {
-            //this.HandleCrouchInput();
-            //this.HandleDodgeInput();
+            this.HandleCrouchInput();
             //this.HandleStopWhenDead();
             this.HandleJump();
             this.GroundedCheck();
             this.HandleMovement();
+            this.HandleDodgeInput();
         }
     }
 
@@ -232,9 +242,8 @@ public class ThirdPersonMovement : MonoBehaviour
 
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
-        Vector2 twoDimentionMovement = new Vector2(horizontal, vertical);
-        bool isMoving = twoDimentionMovement == Vector2.zero;
-        if (isMoving) targetSpeed = 0.0f;
+
+        if (!IsMoving) targetSpeed = 0.0f;
 
         // a reference to the players current horizontal velocity
         float currentHorizontalSpeed = new Vector3(controller.velocity.x, 0.0f, controller.velocity.z).magnitude;
@@ -266,11 +275,13 @@ public class ThirdPersonMovement : MonoBehaviour
         Vector3 inputDirection = new Vector3(horizontal, 0.0f, vertical).normalized;
 
         // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
+
+
         // if there is a move input rotate player when the player is moving
-        if (!isMoving)
+        if (this.IsMoving)
         {
             TargetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
-            float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, TargetRotation, ref RotationVelocity, rotationSmoothTime);
+            //float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, TargetRotation, ref RotationVelocity, rotationSmoothTime);
 
             // rotate to face input direction relative to camera position
             // transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
@@ -282,11 +293,10 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             transform.rotation = new Quaternion(0.0f, playerCamera.rotation.y, 0.0f, playerCamera.rotation.w);
         }
-
-        Vector3 targetDirection = Quaternion.Euler(0.0f, TargetRotation, 0.0f) * Vector3.forward;
+        TargetDirection = Quaternion.Euler(0.0f, TargetRotation, 0.0f) * Vector3.forward;
 
         // move the player
-        controller.Move(targetDirection.normalized * (speed * Time.deltaTime) + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
+        controller.Move(TargetDirection.normalized * (speed * Time.deltaTime) + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
 
         // update animator if using character
         // if (_hasAnimator)
@@ -485,13 +495,19 @@ public class ThirdPersonMovement : MonoBehaviour
     // Eden ref: please annotate this function
     IEnumerator DodgeCoroutine()
     {
+
         float startTime = Time.time;
         this.IsRolling = true;
         this.PlayerAnim.SetTrigger("Roll");
 
         while (Time.time < startTime + this.dodgeTime)
         {
-            this.controller.Move(this.MoveDirection * this.dodgeSpeed * Time.deltaTime);
+
+            //Vector3 nonMovingDirection = Quaternion.Euler(0.0f, playerCamera.eulerAngles.y, 0.0f) * Vector3.forward;
+            //Vector3 dodgeDirection = this.IsMoving ? this.TargetDirection.normalized : nonMovingDirection.normalized;
+            Vector3 dodgeDirection = this.TargetDirection.normalized;
+
+            this.controller.Move(dodgeDirection * this.dodgeSpeed * Time.deltaTime);
             yield return new WaitForFixedUpdate();
         }
 
@@ -551,23 +567,6 @@ public class ThirdPersonMovement : MonoBehaviour
             finalMoving.y = finalMoving.y * this.GroundAngle;
 
         this.controller.Move(finalMoving);
-    }
-
-
-
-
-
-
-
-
-    void OnDrawGizmosSelected()
-    {
-
-        Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-
-        // Draw a yellow sphere at the transform's position
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(spherePosition, GroundedRadius);
     }
 
 }
