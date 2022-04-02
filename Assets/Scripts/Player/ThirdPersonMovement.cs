@@ -36,6 +36,21 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] private float dodgeSpeed = 10f;
     [SerializeField] private float dodgeTime = 0.5f;
 
+    [Header("Player Grounded")]
+    [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
+    public bool IsGrounded = true;
+    [Tooltip("Useful for rough ground")]
+    public float GroundedOffset = -0.14f;
+    [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
+    public float GroundedRadius = 0.28f;
+    [Tooltip("What layers the character uses as ground")]
+    public LayerMask GroundLayers;
+
+    [Space(10)]
+    [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
+    public float JumpTimeout = 0.50f;
+    [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
+    public float FallTimeout = 0.15f;
 
     #endregion
 
@@ -56,6 +71,8 @@ public class ThirdPersonMovement : MonoBehaviour
             _velocity = value;
         }
     }
+
+    private float VerticalVelocity { get; set; }
 
     private Rigidbody _rgbody;
 
@@ -127,13 +144,14 @@ public class ThirdPersonMovement : MonoBehaviour
 
     public bool IsRolling { get; set; }
 
-    public bool IsGrounded
-    {
-        get
-        {
-            return Physics.Raycast(transform.position, Vector3.down, 0.2f);
-        }
-    }
+    // public bool IsGrounded
+    // {
+    //     get
+    //     {
+    //         return Physics.Raycast(transform.position, Vector3.down, 0.2f);
+    //     }
+    // }
+
 
     public bool IsJumping
     {
@@ -159,8 +177,14 @@ public class ThirdPersonMovement : MonoBehaviour
     private float OriginalStepOffset { get; set; }
     private float AnimationBlend { get; set; }
     private float TargetRotation { get; set; }
-    // TODO: eden helpo, it is called by ref so i cant use indexer or something...
+    // TODO: eden helpo, it is called by ref so i cant use indexer or something... just change the rotation velocity to get set and see the error
     private float RotationVelocity;
+
+    // Timeout delta
+    private float FallTimeoutDelta { get; set; }
+    private float JumpTimeoutDelta { get; set; }
+
+    private float TerminalVelocity = -53.0f;
 
     #endregion
 
@@ -190,16 +214,16 @@ public class ThirdPersonMovement : MonoBehaviour
             //this.HandleCrouchInput();
             //this.HandleDodgeInput();
             //this.HandleStopWhenDead();
-            //this.HandleJump();
+            this.HandleJump();
+            this.GroundedCheck();
             this.HandleMovement();
-            //this.HandleCameraUnlock();
         }
     }
 
     private void HandleMovement()
     {
         // set target speed based on move speed, sprint speed and if sprint is pressed
-        float targetSpeed = IsDashing ? dashModifier : movementSpeed;
+        float targetSpeed = IsDashing ? dashModifier * movementSpeed : movementSpeed;
 
         // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -262,9 +286,7 @@ public class ThirdPersonMovement : MonoBehaviour
         Vector3 targetDirection = Quaternion.Euler(0.0f, TargetRotation, 0.0f) * Vector3.forward;
 
         // move the player
-        //_controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-        // delete this and uncomment the line above when working with jumping nstuff...
-        controller.Move(targetDirection.normalized * (speed * Time.deltaTime) + new Vector3(0.0f, 0.0f, 0.0f) * Time.deltaTime);
+        controller.Move(targetDirection.normalized * (speed * Time.deltaTime) + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
 
         // update animator if using character
         // if (_hasAnimator)
@@ -274,56 +296,94 @@ public class ThirdPersonMovement : MonoBehaviour
         // }
     }
 
-    private void DeprecatedHandleMovement()
+    private void GroundedCheck()
     {
-        // Gets vertical and horizontal axises
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        // set sphere position, with offset
+        Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
+        IsGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
 
-        // Calculates current direction
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-        bool isMoving = direction.magnitude >= 0.1f;
-
-        Vector3 finalMoving = Vector3.zero;
-
-        // Calculates target angle according to mouse movement and keys
-        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
-
-        // Calculates if moving forward is possible
-        Vector3 directionMod = (this.IsClimbable || !this.IsGrounded ? Vector3.forward : Vector3.back);
-
-        // Sets the diraction according to relevant parameters
-        this.MoveDirection = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
-
-        if (isMoving)
-        {
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            this.transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            finalMoving = this.MoveDirection.normalized * (this.IsClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (this.IsDashing && !this.IsExhausted ? dashModifier : 1);
-        }
-        // Slides player from unclimbable slopes
-        else if (!this.IsClimbable)
-        {
-            finalMoving = this.MoveDirection * -1 * 0.5f * Time.deltaTime;
-        }
-
-
-        // Handles stamina
-        this.PlyrStats.ChangeStamina(this.IsDashing ? 1 : -1);
-
-        // Moves player
-        finalMoving += Velocity * Time.deltaTime;
-
-        // Handles going down slopes
-        if (this.IsGrounded && !this.IsJumping && Velocity.y <= 0)
-            finalMoving.y = finalMoving.y * this.GroundAngle;
-
-        this.controller.Move(finalMoving);
+        // update animator if using character
+        // if (_hasAnimator)
+        // {
+        //     _animator.SetBool(_animIDGrounded, Grounded);
+        // }
     }
 
-    // Eden ref: please annotate this function
     private void HandleJump()
+    {
+        if (IsGrounded)
+        {
+            // reset the fall timeout timer
+            FallTimeoutDelta = FallTimeout;
+
+            // update animator if using character
+            // if (_hasAnimator)
+            // {
+            //     _animator.SetBool(_animIDJump, false);
+            //     _animator.SetBool(_animIDFreeFall, false);
+            // }
+
+            // stop our velocity dropping infinitely when grounded
+            if (VerticalVelocity < 0.0f)
+            {
+                //TODO: add fall damage here.
+
+                VerticalVelocity = -2f;
+            }
+
+            // Jump
+            if (IsJumping && JumpTimeoutDelta <= 0.0f)
+            {
+                // the square root of H * -2 * G = how much velocity needed to reach desired height
+                VerticalVelocity = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y);
+
+                // update animator if using character
+                // if (_hasAnimator)
+                // {
+                //     _animator.SetBool(_animIDJump, true);
+                // }
+            }
+
+            // jump timeout
+            if (JumpTimeoutDelta >= 0.0f)
+            {
+                JumpTimeoutDelta -= Time.deltaTime;
+            }
+        }
+        else
+        {
+            // reset the jump timeout timer
+            JumpTimeoutDelta = JumpTimeout;
+
+            // fall timeout
+            if (FallTimeoutDelta >= 0.0f)
+            {
+                FallTimeoutDelta -= Time.deltaTime;
+            }
+            else
+            {
+                // update animator if using character
+                // if (_hasAnimator)
+                // {
+                //     _animator.SetBool(_animIDFreeFall, true);
+                // }
+            }
+
+            // if we are not grounded, do not jump
+            //_input.jump = false;
+        }
+
+        // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+        if (VerticalVelocity > TerminalVelocity)
+        {
+            VerticalVelocity += Physics.gravity.y * Time.deltaTime;
+        }
+    }
+
+
+
+    // Eden ref: please annotate this function
+    private void DeprecatedHandleJump()
     {
         if (this.controller.isGrounded)
         {
@@ -376,15 +436,7 @@ public class ThirdPersonMovement : MonoBehaviour
         }
     }
 
-    private void HandleCameraUnlock()
-    {
-        // Rotates the character according to where he looks.
-        if (Input.GetAxisRaw("Camera Unlocked") == 0)
-        {
-            GameObject mainCamera = GameObject.Find("Player/Main Camera");
-            this.transform.eulerAngles = new Vector3(this.transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, this.transform.eulerAngles.z);
-        }
-    }
+
 
     private void HandleStopWhenDead()
     {
@@ -445,4 +497,83 @@ public class ThirdPersonMovement : MonoBehaviour
 
         this.IsRolling = false;
     }
+
+
+
+
+
+
+
+
+    private void DeprecatedHandleMovement()
+    {
+        // Gets vertical and horizontal axises
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+
+        // Calculates current direction
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+        bool isMoving = direction.magnitude >= 0.1f;
+
+        Vector3 finalMoving = Vector3.zero;
+
+        // Calculates target angle according to mouse movement and keys
+        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
+
+        // Calculates if moving forward is possible
+        Vector3 directionMod = (this.IsClimbable || !this.IsGrounded ? Vector3.forward : Vector3.back);
+
+        // Sets the diraction according to relevant parameters
+        this.MoveDirection = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
+
+        if (isMoving)
+        {
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            this.transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            finalMoving = this.MoveDirection.normalized * (this.IsClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (this.IsDashing && !this.IsExhausted ? dashModifier : 1);
+        }
+        // Slides player from unclimbable slopes
+        else if (!this.IsClimbable)
+        {
+            finalMoving = this.MoveDirection * -1 * 0.5f * Time.deltaTime;
+        }
+
+
+        // Handles stamina
+        this.PlyrStats.ChangeStamina(this.IsDashing ? 1 : -1);
+
+        // Moves player
+        finalMoving += Velocity * Time.deltaTime;
+
+        // Handles going down slopes
+        if (this.IsGrounded && !this.IsJumping && Velocity.y <= 0)
+            finalMoving.y = finalMoving.y * this.GroundAngle;
+
+        this.controller.Move(finalMoving);
+    }
+
+
+
+
+
+
+
+
+    void OnDrawGizmosSelected()
+    {
+
+        Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
+
+        // Draw a yellow sphere at the transform's position
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(spherePosition, GroundedRadius);
+    }
+
 }
+
+
+
+
+
+
