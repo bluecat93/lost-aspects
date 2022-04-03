@@ -14,21 +14,65 @@ using UnityEngine;
 /// <param name="hungerBar"> assign the script of the hunger bar in the player hud </param>
 public class PlayerStats : MonoBehaviour
 {
+    [Header("Health Variables")]
+    [Tooltip("Health character starts with")]
     public int maxHealth = 100;
+    [Tooltip("Health character currently has")]
     public int currentHealth;
-    public int maxHunger = 100;
-    public int currentHunger;
+    [HideInInspector] public bool isAlive = true;
+
+    [Header("Stamina Variables")]
+    [Tooltip("Stamina character starts with")]
     public int maxStamina = 100;
+    [Tooltip("Stamina character currently has")]
     public int currentStamina;
+
+    [Header("Stamina Recharge Variables")]
+    [Tooltip("When to start regenerating stamina")]
+    public float regenStartTime = 2f;
+    [Tooltip("How fast stamina recharges")]
+    public int regenRate = 1;
+    [Tooltip("How often stamina recharges, lower is better")]
+    public float regenTick = 0.1f;
+    [Tooltip("How often stamina recharges when hungry")]
+    public float regenWhenHungry = 0.5f;
+
+    // Check if currently regenning
+    private Coroutine isRegen;
+    // Variables to hold new and hold regen rates when hungry or full
+    private float regenRateWhenFull = 1f;
+    private float currentRegenRate = 1f;
+
+    [Header("Hunger Variables")]
+    [Tooltip("Hunger when character is full")]
+    public int maxHunger = 100;
+    [Tooltip("Characters current hunger rating")]
+    public int currentHunger;
+    [Tooltip("Start lowering hunger")]
+    public float hungerStartTime = 5.0f;
+    [Tooltip("How often to lower hunger")]
+    public float hungerRepeatTime = 10.0f;
+
+    [HideInInspector] public bool isHungry = false;
+
+    [Header("UI Bars")]
+    [Tooltip("Bar that displays character health")]
+    public BarScript healthBar;
+    [Tooltip("Bar that displays character hunger")]
+    public BarScript hungerBar;
+    [Tooltip("Bar that displays character stamina")]
+    public BarScript staminaBar;
+
+    [Header("Game objects")]
+    [Tooltip("Game over screen")]
+    public GameObject gameOverUI;
+    [Tooltip("Camera that follows player")]
+    public GameObject thirdPersonCamera;
+
+    [Header("Other variables")]
+    [Tooltip("Reduce fall damage")]
     public int fallDamageReduction = 0;
 
-
-    public BarScript healthBar;
-    public BarScript hungerBar;
-    public BarScript staminaBar;
-    public GameObject gameOverUI;
-    public GameObject thirdPersonCamera;
-    public bool isAlive = true;
 
     private ThirdPersonMovement _thirdPersonMovement;
 
@@ -58,7 +102,9 @@ public class PlayerStats : MonoBehaviour
         this.currentStamina = this.maxStamina;
         this.staminaBar.SetMax(this.maxStamina);
 
-        InvokeRepeating("GettingHungry", 5.0f, 10.0f);
+        regenRateWhenFull = regenTick;
+
+        InvokeRepeating("GettingHungry", this.hungerStartTime, this.hungerRepeatTime);
         InvokeRepeating("CheckHunger", 0.5f, 0.5f);
     }
 
@@ -77,6 +123,7 @@ public class PlayerStats : MonoBehaviour
             this.gameOverUI.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
         }
+
     }
 
     public void TakeDamage(int damage, bool isBlockable = true)
@@ -104,9 +151,15 @@ public class PlayerStats : MonoBehaviour
 
     void CheckHunger()
     {
-        if (this.currentHunger == 0) // how we take damage.
+        if (this.currentHunger == 0) // how we know if character is hungry
         {
-            TakeDamage(1, false);
+            this.isHungry = true;
+            regenTick = regenWhenHungry;
+        }
+        else
+        {
+            this.isHungry = false;
+            regenTick = regenRateWhenFull;
         }
     }
 
@@ -134,8 +187,36 @@ public class PlayerStats : MonoBehaviour
 
     public void ChangeStamina(int amount)
     {
-        this.currentStamina -= amount;
+        this.currentStamina += amount;
         this.currentStamina = this.currentStamina > this.maxStamina ? this.maxStamina : this.currentStamina;
         this.staminaBar.SetCurrent(this.currentStamina);
+        if (this.currentStamina < this.maxStamina)
+        {
+            if (this.isRegen != null)
+                StopCoroutine(this.isRegen);
+            this.isRegen = StartCoroutine(RegenStamina());
+        }
     }
+
+    private IEnumerator RegenStamina()
+    {
+        Debug.Log("regenning stamina");
+        // Start regenerating stamina after a few seconds
+        yield return new WaitForSeconds(this.regenStartTime);
+
+        while (this.currentStamina < this.maxStamina)
+        {
+            Debug.Log("regenning stamina");
+            this.currentStamina += this.regenRate;
+            this.staminaBar.SetCurrent(this.currentStamina);
+            yield return new WaitForSeconds(this.regenTick);
+        }
+        this.isRegen = null;
+    }
+
+    // public void RechargeStamina()
+    // {
+    //     if (this.currentStamina != this.maxStamina)
+    //         ChangeStamina(RechargeRate);
+    // }
 }
