@@ -28,7 +28,8 @@ public class PlayerStats : MonoBehaviour
     public BarScript staminaBar;
     public GameObject gameOverUI;
     public GameObject thirdPersonCamera;
-    public bool isAlive = true;
+    [HideInInspector] public bool isAlive = true;
+    [HideInInspector] public bool isHungry = false;
 
     private ThirdPersonMovement _thirdPersonMovement;
 
@@ -106,7 +107,11 @@ public class PlayerStats : MonoBehaviour
     {
         if (this.currentHunger == 0) // how we take damage.
         {
-            TakeDamage(1, false);
+            isHungry = true;
+        }
+        else
+        {
+            isHungry = false;
         }
     }
 

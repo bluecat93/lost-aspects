@@ -35,6 +35,8 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] private float dodgeSpeed = 10f;
     [Tooltip("The time (in seconds) it takes for the character to dodge (from start to finish)")]
     [SerializeField] private float dodgeTime = 0.5f;
+    [Tooltip("How much stamina a roll takes")]
+    [SerializeField] private int dodgeCost = 50;
 
 
     [Header("Player Grounded")]
@@ -109,7 +111,9 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         get
         {
-            return Input.GetAxis("Dash") > 0;
+            if (!PlyrStats.isHungry)
+                return Input.GetAxis("Dash") > 0;
+            return false;
         }
     }
 
@@ -373,7 +377,7 @@ public class ThirdPersonMovement : MonoBehaviour
     // Eden ref: please annotate this function
     private void HandleDodgeInput()
     {
-        if (Input.GetButtonDown("Dodge") && !this.IsRolling && this.IsGrounded)
+        if (Input.GetButtonDown("Dodge") && !this.IsRolling && this.IsGrounded && PlyrStats.currentStamina >= this.dodgeCost)
         {
             StartCoroutine(DodgeCoroutine());
         }
@@ -396,8 +400,10 @@ public class ThirdPersonMovement : MonoBehaviour
 
             this.controller.Move(dodgeDirection * this.dodgeSpeed * Time.deltaTime + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
             yield return new WaitForFixedUpdate();
+
         }
 
+        PlyrStats.ChangeStamina(dodgeCost);
         this.IsRolling = false;
     }
 }
