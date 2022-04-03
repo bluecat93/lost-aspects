@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System;
 
 public class EnemyAi : MonoBehaviour
 {
@@ -26,6 +27,13 @@ public class EnemyAi : MonoBehaviour
     private bool attackOnlyOnce = false;
     private float currentDeathTimer;
     private bool deadOnlyOnce = false;
+
+    // this is an event to let other scripts know this is attacking time.
+    // the event get a boolean to check if enemy allready attacked (no spamming attacks).
+    // the event returns a boolean: changes to false if enemy just attacked or returned the boolean it got.
+    public delegate bool OnAttackAnimationDelegate(bool attackOnlyOnce, Transform target);
+    public event OnAttackAnimationDelegate OnStartAttackAnimation;
+    public event OnAttackAnimationDelegate OnEndAttackAnimation;
 
 
     //TODO: Will be refactored when we have multiplayer.
@@ -133,7 +141,7 @@ public class EnemyAi : MonoBehaviour
                 this.AiMvmnt.MoveTo(transform.position);
                 if (this.currentDeathTimer <= Time.time)
                 {
-                    transform.gameObject.SetActive(false);
+                    Destroy(gameObject);
                 }
                 break;
 
@@ -159,7 +167,7 @@ public class EnemyAi : MonoBehaviour
         float randomRange;
         Vector3 randomDirection;
 
-        randomRange = Random.Range(4f, 7f);
+        randomRange = UnityEngine.Random.Range(4f, 7f);
         randomDirection = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f)).normalized;
         if (NavMesh.SamplePosition(transform.position + (randomDirection * randomRange), out navMeshHit, randomRange, NavMesh.AllAreas))
         {
@@ -185,6 +193,10 @@ public class EnemyAi : MonoBehaviour
         {
             this.Anmtr.SetBool("InAttackRange", true);
             this.AiMvmnt.StopMoving();
+            if (this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("AttackWaiting"))
+            {
+                this.attackOnlyOnce = OnEndAttackAnimation?.Invoke(this.attackOnlyOnce, player.transform) ?? true;
+            }
             if (Time.time > nextAttackTime)
             {
                 this.attackOnlyOnce = true;
@@ -192,6 +204,8 @@ public class EnemyAi : MonoBehaviour
                 this.state = State.Attacking;
                 // do animation
                 this.Anmtr.SetInteger("State", (int)this.state);
+                // the invoke can make the bool return a null therefor it is a nullable bool (bool?) so if the bool will be null it means that no function was called.
+                this.attackOnlyOnce = OnStartAttackAnimation?.Invoke(this.attackOnlyOnce, player.transform) ?? true;
                 this.state = State.Chasing;
             }
         }
@@ -216,23 +230,24 @@ public class EnemyAi : MonoBehaviour
         transform.LookAt(gameObject.transform);
     }
 
-    public bool getIsAttacking()
+    public bool GetIsAttacking()
     {
         return this.isAttacking;
     }
 
-    public bool getAttackOnlyOnce()
+    public bool GetAttackOnlyOnce()
     {
         return this.attackOnlyOnce;
     }
 
-    public void setAttackOnlyOnce(bool attackOnlyOnce)
+    public void SetAttackOnlyOnce(bool attackOnlyOnce)
     {
         this.attackOnlyOnce = attackOnlyOnce;
     }
 
-    public PlayerStats getPlayerStats()
+    public PlayerStats GetPlayerStats()
     {
         return this.PlyrStts;
     }
+
 }
