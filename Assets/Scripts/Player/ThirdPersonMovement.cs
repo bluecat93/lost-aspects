@@ -271,6 +271,7 @@ public class ThirdPersonMovement : MonoBehaviour
         // set sphere position, with offset
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
         IsGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+        //PlayerAnim.SetBool("isGrounded", true);
 
         // update animator if using character
         // if (_hasAnimator)
@@ -285,6 +286,10 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             // reset the fall timeout timer
             FallTimeoutDelta = FallTimeout;
+
+            PlayerAnim.SetBool("isGrounded", true);
+            PlayerAnim.SetBool("isJumping", false);
+            PlayerAnim.SetBool("isFalling", false);
 
             // update animator if using character
             // if (_hasAnimator)
@@ -309,6 +314,9 @@ public class ThirdPersonMovement : MonoBehaviour
             {
                 // the square root of H * -2 * G = how much velocity needed to reach desired height
                 VerticalVelocity = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y);
+
+                PlayerAnim.SetBool("isJumping", true);
+                PlayerAnim.SetBool("isGrounded", false);
 
                 // update animator if using character
                 // if (_hasAnimator)
@@ -335,6 +343,7 @@ public class ThirdPersonMovement : MonoBehaviour
             }
             else
             {
+                PlayerAnim.SetBool("isFalling", true);
                 // update animator if using character
                 // if (_hasAnimator)
                 // {
@@ -381,6 +390,11 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             StartCoroutine(DodgeCoroutine());
         }
+    }
+
+    private void HandleJumpAnimation()
+    {
+
     }
 
     // Eden ref: please annotate this function
