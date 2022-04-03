@@ -4,37 +4,38 @@ using UnityEngine;
 
 public class ThirdPersonMovement : MonoBehaviour
 {
-    // Eden ref: where do this 3 params get assigned?
-    public CharacterController controller;
-    public Transform playerCamera;
-
-    float turnSmoothVelocity;
-
     #region serializable fields
 
-    // y movement paramaters
-    [SerializeField] private float jumpHeight = 5f;
-    [SerializeField] private float dashModifier = 1.5f;
+    [Header("Components")]
+    [Tooltip("The character controller component")]
+    [SerializeField] private CharacterController controller;
+    [Tooltip("The player's camera (main camera)")]
+    [SerializeField] private Transform playerCamera;
 
 
-    // Eden Ref: please check if those viarables need to be on class level or can we move them to the relevant functions
-    // Crouching variables, player height at start and collider position
-    [SerializeField] private float playerStartHeight;
-    [SerializeField] private float colliderStartHeight;
-    [SerializeField] private float crouchColliderPositionY = 0.05f;
-    [SerializeField] private float heightChange = 0.5f;
-
+    [Header("Basic Movement Variables")]
+    [Tooltip("The character's base movement speed")]
     [SerializeField] private float movementSpeed = 5.0f;
     [Tooltip("Acceleration and deceleration")]
     [SerializeField] private float speedChangeRate = 10.0f;
-    [SerializeField] private float turnSmoothTime = 0.1f;
-    [Tooltip("How fast the character turns to face movement direction")]
-    [Range(0.0f, 0.3f)]
-    [SerializeField] private float rotationSmoothTime = 0.12f;
 
-    // Dodging Variables
+
+    [Header("Dashing Variables")]
+    [Tooltip("The speed multiplier when sprinting")]
+    [SerializeField] private float dashModifier = 1.5f;
+
+
+    [Header("Crouching Variables")]
+    [Tooltip("The height of the character while crouching")]
+    [SerializeField] private float heightChange = 0.5f;
+
+
+    [Header("Dodging Variables")]
+    [Tooltip("The speed of the character while dodgeing")]
     [SerializeField] private float dodgeSpeed = 10f;
+    [Tooltip("The time (in seconds) it takes for the character to dodge (from start to finish)")]
     [SerializeField] private float dodgeTime = 0.5f;
+
 
     [Header("Player Grounded")]
     [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
@@ -46,7 +47,10 @@ public class ThirdPersonMovement : MonoBehaviour
     [Tooltip("What layers the character uses as ground")]
     public LayerMask GroundLayers;
 
-    [Space(10)]
+
+    [Header("Y movement parameters")]
+    [Tooltip("The higher the field, the hiegher the jump.")]
+    [SerializeField] private float jumpHeight = 5f;
     [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
     public float JumpTimeout = 0.50f;
     [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
@@ -55,36 +59,7 @@ public class ThirdPersonMovement : MonoBehaviour
     #endregion
 
     #region properties
-
-    private Vector3 _velocity;
-
-    private Vector3 Velocity
-    {
-        get
-        {
-            if (_velocity == null)
-                _velocity = Vector3.zero;
-            return _velocity;
-        }
-        set
-        {
-            _velocity = value;
-        }
-    }
-
     private float VerticalVelocity { get; set; }
-
-    private Rigidbody _rgbody;
-
-    private Rigidbody Rgbody
-    {
-        get
-        {
-            if (this._rgbody == null)
-                this._rgbody = GetComponent<Rigidbody>();
-            return this._rgbody;
-        }
-    }
 
     private Animator _playerAnim;
 
@@ -152,15 +127,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
     public bool IsRolling { get; set; }
 
-    // public bool IsGrounded
-    // {
-    //     get
-    //     {
-    //         return Physics.Raycast(transform.position, Vector3.down, 0.2f);
-    //     }
-    // }
-
-
     public bool IsJumping
     {
         get
@@ -169,24 +135,12 @@ public class ThirdPersonMovement : MonoBehaviour
         }
     }
 
-    private bool IsClimbable { get; set; }
 
-    private float GroundAngle { get; set; }
+    private float CapsuleColliderStartingHeight { get; set; }
 
-    private Vector3 MoveDirection { get; set; }
-
-    private float CapsuleColliderStartingHeight
-    {
-        get
-        {
-            return this.CpslCollider.height;
-        }
-    }
     private float OriginalStepOffset { get; set; }
     private float AnimationBlend { get; set; }
     private float TargetRotation { get; set; }
-    // TODO: eden helpo, it is called by ref so i cant use indexer or something... just change the rotation velocity to get set and see the error
-    private float RotationVelocity;
 
     // Timeout delta
     private float FallTimeoutDelta { get; set; }
@@ -196,24 +150,21 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private Vector3 TargetDirection { get; set; }
 
-    #endregion
+    private float PlayerStartHeight { get; set; }
+    private float ColliderStartHeight { get; set; }
 
-    // Eden ref: do we need this?
-    // private string animParamSpeed = "Speed";
+    #endregion
 
     // Start is called before the first frame update
     void Start()
     {
         this.OriginalStepOffset = controller.stepOffset;
-        this.playerStartHeight = controller.height;
-        this.colliderStartHeight = controller.center.y;
+        this.PlayerStartHeight = controller.height;
+        this.ColliderStartHeight = controller.center.y;
+        this.CapsuleColliderStartingHeight = this.CpslCollider.height;
 
         // Locking cursor to not show it while moving.
         Cursor.lockState = CursorLockMode.Locked;
-    }
-
-    private void FixedUpdate()
-    {
     }
 
     // Update is called once per frame
@@ -222,7 +173,6 @@ public class ThirdPersonMovement : MonoBehaviour
         if (!PauseMenu.isGamePaused && this.PlyrStats.isAlive)
         {
             this.HandleCrouchInput();
-            //this.HandleStopWhenDead();
             this.HandleJump();
             this.GroundedCheck();
             this.HandleDodgeInput();
@@ -378,9 +328,6 @@ public class ThirdPersonMovement : MonoBehaviour
                 //     _animator.SetBool(_animIDFreeFall, true);
                 // }
             }
-
-            // if we are not grounded, do not jump
-            //_input.jump = false;
         }
 
         // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
@@ -388,75 +335,6 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             VerticalVelocity += Physics.gravity.y * Time.deltaTime;
         }
-    }
-
-
-
-    // Eden ref: please annotate this function
-    private void DeprecatedHandleJump()
-    {
-        if (this.controller.isGrounded)
-        {
-            if (this.Velocity.y < -this.jumpHeight)
-            {
-                // Debug.Log("velocity.y = " + velocity.y);
-                PlayerStats playerStats = transform.gameObject.GetComponent<PlayerStats>();
-                if (-this.Velocity.y > 30)
-                {
-                    this._velocity.y *= 3.5f;
-                }
-                else if (-this.Velocity.y > 20)
-                {
-                    this._velocity.y *= 2f;
-                }
-
-                int fallDamage = (int)(-this.Velocity.y - this.jumpHeight - this.PlyrStats.fallDamageReduction);
-
-                if (fallDamage < 0)
-                {
-                    fallDamage = 0;
-                }
-                // Debug.Log("Damage taken from fall damage: " + fallDamage);
-                this.PlyrStats.TakePercentileDamage(fallDamage, false);
-            }
-
-            this.controller.stepOffset = this.OriginalStepOffset;
-            this._velocity.y = 0;
-        }
-        else
-        {
-            this._velocity.y += (Physics.gravity.y * Time.deltaTime);
-
-            // Prevents some wierd jumping bugs while moving across stairs.
-            this.controller.stepOffset = 0;
-        }
-
-        if (!this.PlyrStats.isAlive)
-        {
-            Velocity = Vector3.zero;
-        }
-
-        // Keyboard input (jump)
-
-
-        // TODO: need to check more stuff for double jumping or other kinds of jumps.
-        if (this.IsJumping && this.controller.isGrounded)
-        {
-            this._velocity.y = this.jumpHeight;
-        }
-    }
-
-
-
-    private void HandleStopWhenDead()
-    {
-        this.Velocity = this.PlyrStats.isAlive ? this.Velocity : Vector3.zero;
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        this.GroundAngle = Vector3.Angle(hit.normal, Vector3.up);
-        this.IsClimbable = Mathf.Round(this.GroundAngle) <= this.controller.slopeLimit;
     }
 
     // Eden ref: please annotate this function
@@ -467,7 +345,7 @@ public class ThirdPersonMovement : MonoBehaviour
             // Debug.Log("Crouch on");
             this.PlayerAnim.SetBool("Crouching", true);
             this.IsCrouching = true;
-            this.controller.height = this.playerStartHeight * 0.5f;
+            this.controller.height = this.PlayerStartHeight * 0.5f;
             this.controller.center = new Vector3(this.controller.center.x, this.heightChange, this.controller.center.z);
             this.CpslCollider.height = this.CapsuleColliderStartingHeight / 2;
 
@@ -477,8 +355,8 @@ public class ThirdPersonMovement : MonoBehaviour
             // Debug.Log("Crouch off");
             this.PlayerAnim.SetBool("Crouching", false);
             this.IsCrouching = false;
-            this.controller.height = this.playerStartHeight;
-            this.controller.center = new Vector3(controller.center.x, this.colliderStartHeight, controller.center.z);
+            this.controller.height = this.PlayerStartHeight;
+            this.controller.center = new Vector3(controller.center.x, this.ColliderStartHeight, controller.center.z);
             this.CpslCollider.height = this.CapsuleColliderStartingHeight;
         }
     }
@@ -513,62 +391,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
         this.IsRolling = false;
     }
-
-
-
-
-
-
-
-
-    private void DeprecatedHandleMovement()
-    {
-        // Gets vertical and horizontal axises
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-
-        // Calculates current direction
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-        bool isMoving = direction.magnitude >= 0.1f;
-
-        Vector3 finalMoving = Vector3.zero;
-
-        // Calculates target angle according to mouse movement and keys
-        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
-
-        // Calculates if moving forward is possible
-        Vector3 directionMod = (this.IsClimbable || !this.IsGrounded ? Vector3.forward : Vector3.back);
-
-        // Sets the diraction according to relevant parameters
-        this.MoveDirection = Quaternion.Euler(0f, targetAngle, 0f) * directionMod;
-
-        if (isMoving)
-        {
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            this.transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            finalMoving = this.MoveDirection.normalized * (this.IsClimbable ? movementSpeed : 0.5f) * Time.deltaTime * (this.IsDashing && !this.IsExhausted ? dashModifier : 1);
-        }
-        // Slides player from unclimbable slopes
-        else if (!this.IsClimbable)
-        {
-            finalMoving = this.MoveDirection * -1 * 0.5f * Time.deltaTime;
-        }
-
-
-        // Handles stamina
-        this.PlyrStats.ChangeStamina(this.IsDashing ? 1 : -1);
-
-        // Moves player
-        finalMoving += Velocity * Time.deltaTime;
-
-        // Handles going down slopes
-        if (this.IsGrounded && !this.IsJumping && Velocity.y <= 0)
-            finalMoving.y = finalMoving.y * this.GroundAngle;
-
-        this.controller.Move(finalMoving);
-    }
-
 }
 
 
