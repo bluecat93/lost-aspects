@@ -64,8 +64,7 @@ public class ThirdPersonMovement : MonoBehaviour
     #endregion
 
     #region properties
-    private float VerticalVelocity { get; set; }
-
+    #region components
     private Animator _playerAnim;
 
     private Animator PlayerAnim
@@ -103,7 +102,9 @@ public class ThirdPersonMovement : MonoBehaviour
             return this._cpslCollider;
         }
     }
+    #endregion
 
+    #region booleans
     private bool IsDashing
     {
         get
@@ -140,22 +141,26 @@ public class ThirdPersonMovement : MonoBehaviour
         }
     }
 
+    #endregion
 
+    #region starting properties
     private float CapsuleColliderStartingHeight { get; set; }
-
     private float OriginalStepOffset { get; set; }
-    private float AnimationBlend { get; set; }
-    private float TargetRotation { get; set; }
-
-    // Timeout delta
-    private float FallTimeoutDelta { get; set; }
-    private float JumpTimeoutDelta { get; set; }
-
-    private Vector3 TargetDirection { get; set; }
-
     private float PlayerStartHeight { get; set; }
     private float ColliderStartHeight { get; set; }
 
+    #endregion
+
+    #region Timeout delta
+    private float FallTimeoutDelta { get; set; }
+    private float JumpTimeoutDelta { get; set; }
+    #endregion
+
+    #region movemment changes
+    private float VerticalVelocity { get; set; }
+    private float TargetRotation { get; set; }
+    private Vector3 TargetDirection { get; set; }
+    #endregion
     #endregion
 
     // Start is called before the first frame update
@@ -222,7 +227,6 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             speed = targetSpeed;
         }
-        AnimationBlend = Mathf.Lerp(AnimationBlend, targetSpeed, Time.deltaTime * speedChangeRate);
 
         // normalise input direction
         Vector3 inputDirection = new Vector3(horizontal, 0.0f, vertical).normalized;
