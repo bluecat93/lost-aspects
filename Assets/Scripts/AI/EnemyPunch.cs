@@ -31,10 +31,10 @@ public class EnemyPunch : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player" && this.EnmyAi.GetIsAttacking() && this.EnmyAi.GetAttackOnlyOnce())
+        if (other.gameObject.tag == "Player" && this.EnmyAi.getIsAttacking() && this.EnmyAi.getAttackOnlyOnce())
         {
-            other.GetComponent<PlayerStats>().TakeDamage(this.EnmyStts.getAttackDamage());
-            this.EnmyAi.SetAttackOnlyOnce(false);
+            this.EnmyAi.getPlayerStats().TakeDamage(this.EnmyStts.getAttackDamage());
+            this.EnmyAi.setAttackOnlyOnce(false);
         }
     }
 }
