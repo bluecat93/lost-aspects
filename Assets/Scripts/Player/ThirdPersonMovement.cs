@@ -225,8 +225,9 @@ public class ThirdPersonMovement : MonoBehaviour
             //this.HandleStopWhenDead();
             this.HandleJump();
             this.GroundedCheck();
-            this.HandleMovement();
             this.HandleDodgeInput();
+            this.HandleMovement();
+
         }
     }
 
@@ -243,7 +244,7 @@ public class ThirdPersonMovement : MonoBehaviour
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
-        if (!IsMoving) targetSpeed = 0.0f;
+        if (!this.IsMoving) targetSpeed = 0.0f;
 
         // a reference to the players current horizontal velocity
         float currentHorizontalSpeed = new Vector3(controller.velocity.x, 0.0f, controller.velocity.z).magnitude;
@@ -277,16 +278,14 @@ public class ThirdPersonMovement : MonoBehaviour
         // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
 
 
-        // if there is a move input rotate player when the player is moving
-        if (this.IsMoving)
-        {
-            TargetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
-            //float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, TargetRotation, ref RotationVelocity, rotationSmoothTime);
 
-            // rotate to face input direction relative to camera position
-            // transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+        TargetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
+        //float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, TargetRotation, ref RotationVelocity, rotationSmoothTime);
 
-        }
+        // rotate to face input direction relative to camera position
+        // transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+
+
 
         // rotate to face camera direction
         if (Input.GetAxisRaw("Camera Unlocked") == 0)
@@ -296,7 +295,8 @@ public class ThirdPersonMovement : MonoBehaviour
         TargetDirection = Quaternion.Euler(0.0f, TargetRotation, 0.0f) * Vector3.forward;
 
         // move the player
-        controller.Move(TargetDirection.normalized * (speed * Time.deltaTime) + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
+        if (!this.IsRolling)
+            controller.Move(TargetDirection.normalized * (speed * Time.deltaTime) + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
 
         // update animator if using character
         // if (_hasAnimator)
@@ -504,10 +504,10 @@ public class ThirdPersonMovement : MonoBehaviour
         {
 
             //Vector3 nonMovingDirection = Quaternion.Euler(0.0f, playerCamera.eulerAngles.y, 0.0f) * Vector3.forward;
-            //Vector3 dodgeDirection = this.IsMoving ? this.TargetDirection.normalized : nonMovingDirection.normalized;
-            Vector3 dodgeDirection = this.TargetDirection.normalized;
+            Vector3 dodgeDirection = this.IsMoving ? this.TargetDirection.normalized : (this.TargetDirection * -1).normalized;
+            //Vector3 dodgeDirection = this.TargetDirection;
 
-            this.controller.Move(dodgeDirection * this.dodgeSpeed * Time.deltaTime);
+            this.controller.Move(dodgeDirection * this.dodgeSpeed * Time.deltaTime + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
             yield return new WaitForFixedUpdate();
         }
 
