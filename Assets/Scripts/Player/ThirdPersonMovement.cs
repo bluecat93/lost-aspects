@@ -52,9 +52,14 @@ public class ThirdPersonMovement : MonoBehaviour
     [Tooltip("The higher the field, the hiegher the jump.")]
     [SerializeField] private float jumpHeight = 5f;
     [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
-    public float JumpTimeout = 0.50f;
+    [SerializeField] private float JumpTimeout = 0.50f;
     [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
-    public float FallTimeout = 0.15f;
+    [SerializeField] private float FallTimeout = 0.15f;
+    [Tooltip("Maximum falling speed (should allways be a negative number)")]
+    [SerializeField] private float TerminalVelocity = -53.0f;
+    [Tooltip("Minumum falling speed it takes to start taking fall damage (should allways be a negative number that is lower than -2)")]
+    [SerializeField] private float minumumFallForDamage = -10.0f;
+
 
     #endregion
 
@@ -146,8 +151,6 @@ public class ThirdPersonMovement : MonoBehaviour
     private float FallTimeoutDelta { get; set; }
     private float JumpTimeoutDelta { get; set; }
 
-    private float TerminalVelocity = -53.0f;
-
     private Vector3 TargetDirection { get; set; }
 
     private float PlayerStartHeight { get; set; }
@@ -177,7 +180,6 @@ public class ThirdPersonMovement : MonoBehaviour
             this.GroundedCheck();
             this.HandleDodgeInput();
             this.HandleMovement();
-
         }
     }
 
@@ -286,8 +288,11 @@ public class ThirdPersonMovement : MonoBehaviour
             // stop our velocity dropping infinitely when grounded
             if (VerticalVelocity < 0.0f)
             {
-                //TODO: add fall damage here.
-
+                // checking for fall damage
+                if (VerticalVelocity <= minumumFallForDamage)
+                {
+                    PlyrStats.TakePercentileDamage((int)(minumumFallForDamage - VerticalVelocity + 1), false);
+                }
                 VerticalVelocity = -2f;
             }
 
