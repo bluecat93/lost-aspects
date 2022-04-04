@@ -271,7 +271,10 @@ public class ThirdPersonMovement : MonoBehaviour
         // set sphere position, with offset
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
         IsGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
-        //PlayerAnim.SetBool("isGrounded", true);
+        if (IsGrounded)
+            PlayerAnim.SetBool("isGrounded", true);
+        else
+            PlayerAnim.SetBool("isGrounded", false);
 
         // update animator if using character
         // if (_hasAnimator)
@@ -287,7 +290,6 @@ public class ThirdPersonMovement : MonoBehaviour
             // reset the fall timeout timer
             FallTimeoutDelta = FallTimeout;
 
-            PlayerAnim.SetBool("isGrounded", true);
             PlayerAnim.SetBool("isJumping", false);
             PlayerAnim.SetBool("isFalling", false);
 
@@ -316,7 +318,7 @@ public class ThirdPersonMovement : MonoBehaviour
                 VerticalVelocity = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y);
 
                 PlayerAnim.SetBool("isJumping", true);
-                PlayerAnim.SetBool("isGrounded", false);
+                //PlayerAnim.SetBool("isGrounded", false);
 
                 // update animator if using character
                 // if (_hasAnimator)
