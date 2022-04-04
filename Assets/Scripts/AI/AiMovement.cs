@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
 public class AiMovement : MonoBehaviour
 {
     private Vector3 currentObjective;
@@ -45,3 +46,4 @@ public class AiMovement : MonoBehaviour
         return Vector3.Distance(transform.position, this.currentObjective) < 1f;
     }
 }
+

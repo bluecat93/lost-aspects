@@ -14,7 +14,7 @@ public class WeaponAttack : MonoBehaviour
         {
             //enemy was hit
             Transform enemy = other.gameObject.transform;
-            EnemyStats enemyStats = enemy.GetComponent<EnemyStats>();
+            Enemy.Stats enemyStats = enemy.GetComponent<Enemy.Stats>();
             enemyStats.TakeDamage(this.weaponBaseAttackDamage + this.weaponAttackDamage);
         }
     }
