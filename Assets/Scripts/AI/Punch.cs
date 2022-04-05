@@ -6,8 +6,8 @@ namespace Enemy
 {
     public class Punch : MonoBehaviour
     {
+        private bool isAttacking = false;
         private Ai _enemyAi;
-
         private Ai EnmyAi
         {
             get
@@ -18,8 +18,8 @@ namespace Enemy
                 return this._enemyAi;
             }
         }
-        private Stats _enemyStats;
 
+        private Stats _enemyStats;
         private Stats EnmyStts
         {
             get
@@ -31,6 +31,10 @@ namespace Enemy
             }
         }
 
+
+        private void start()
+        {
+        }
         private void OnTriggerStay(Collider other)
         {
             if (other.gameObject.tag == "Player" && this.EnmyAi.getIsAttacking() && this.EnmyAi.getAttackOnlyOnce())

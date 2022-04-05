@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System;
 
 namespace Enemy
 {
     public class Ai : MonoBehaviour
     {
+        //state machine:
         private enum State
         {
             Idle,
@@ -18,19 +20,19 @@ namespace Enemy
             Reseting
         }
 
+        #region parameters
 
         private Vector3 startingPosition;
         private Vector3 roamPosition;
         private State state;
 
         private float nextAttackTime;
-        private bool isAttacking;
         private bool attackOnlyOnce = false;
         private float currentDeathTimer;
         private bool deadOnlyOnce = false;
+        bool isAttacking = false;
 
 
-        //TODO: Will be refactored when we have multiplayer.
         //Player stuff
         private GameObject player;
 
@@ -46,6 +48,7 @@ namespace Enemy
                 return this._playerStats;
             }
         }
+
 
         private AiMovement _aiMovement;
 
@@ -85,7 +88,7 @@ namespace Enemy
                 return this._enemyStats;
             }
         }
-
+        #endregion
         private void Awake()
         {
             this.state = State.Roaming;
@@ -102,18 +105,16 @@ namespace Enemy
         // Update is called once per frame
         void Update()
         {
-            this.isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
-
+            isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
             this.Anmtr.SetInteger("State", (int)state);
-            if (!this.EnmyStts.isEnemyAlive())
-            {
-                this.state = State.Dead;
-                if (!deadOnlyOnce)
-                {
-                    this.currentDeathTimer = Time.time + this.EnmyStts.getDeathTimer();
-                }
-                this.deadOnlyOnce = true;
-            }
+
+            HandleDeath();
+            HandleStateMachine();
+
+        }
+
+        private void HandleStateMachine()
+        {
             switch (this.state)
             {
                 case State.Roaming:
@@ -153,6 +154,18 @@ namespace Enemy
             }
         }
 
+        private void HandleDeath()
+        {
+            if (!this.EnmyStts.isEnemyAlive())
+            {
+                this.state = State.Dead;
+                if (!this.deadOnlyOnce)
+                {
+                    this.currentDeathTimer = Time.time + this.EnmyStts.getDeathTimer();
+                }
+                this.deadOnlyOnce = true;
+            }
+        }
 
         private Vector3 GetRoamingPosition()
         {
@@ -160,7 +173,7 @@ namespace Enemy
             float randomRange;
             Vector3 randomDirection;
 
-            randomRange = Random.Range(4f, 7f);
+            randomRange = UnityEngine.Random.Range(4f, 7f);
             randomDirection = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f)).normalized;
             if (NavMesh.SamplePosition(transform.position + (randomDirection * randomRange), out navMeshHit, randomRange, NavMesh.AllAreas))
             {
@@ -210,16 +223,9 @@ namespace Enemy
             }
         }
 
-
-
         public void LookAtObject(GameObject gameObject)
         {
             transform.LookAt(gameObject.transform);
-        }
-
-        public bool getIsAttacking()
-        {
-            return this.isAttacking;
         }
 
         public bool getAttackOnlyOnce()
@@ -235,6 +241,11 @@ namespace Enemy
         public PlayerStats getPlayerStats()
         {
             return this.PlyrStts;
+        }
+
+        internal bool getIsAttacking()
+        {
+            return this.isAttacking;
         }
     }
 
