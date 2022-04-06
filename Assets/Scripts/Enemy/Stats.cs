@@ -19,6 +19,8 @@ namespace Enemy
         [SerializeField] private int attackDamage = 5;
         [Tooltip("The time (in seconds) it takes between each attack")]
         [SerializeField] private float attackTimeIntervals = 1f;
+        [Tooltip("The numbers of attacks per combo")]
+        [SerializeField] private int numberOfAttacks = 1;
 
         [Header("Distance")]
         [Tooltip("The maximum distance it takes for the enemy to stop following the character")]
@@ -81,6 +83,10 @@ namespace Enemy
             return this.attackDamage;
         }
 
+        public int getNumberOfAttacks()
+        {
+            return this.numberOfAttacks;
+        }
 
     }
 

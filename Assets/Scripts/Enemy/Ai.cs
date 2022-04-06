@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System;
+using UnityEngine.Events;
+
 
 namespace Enemy
 {
@@ -31,6 +33,12 @@ namespace Enemy
         private float currentDeathTimer;
         private bool deadOnlyOnce = false;
         bool isAttacking = false;
+        private int currentAttack;
+
+        //events
+        //gets int currentAttack - the current number of attack, 
+        //bool isStartAttack - true if its the start of the attack animation or false if its the end of the attack animation.
+        [HideInInspector] public UnityEvent<int, bool> attackEvent;
 
 
         //Player stuff
@@ -100,11 +108,13 @@ namespace Enemy
             this.startingPosition = transform.position;
             this.roamPosition = GetRoamingPosition();
             this.player = GameObject.FindGameObjectWithTag("Player");
+            currentAttack = 1;
         }
 
         // Update is called once per frame
         void Update()
         {
+            //this.attackEvent.Invoke(currentAttack, true);
             isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
             this.Anmtr.SetInteger("State", (int)state);
 
@@ -199,20 +209,30 @@ namespace Enemy
             {
                 this.Anmtr.SetBool("InAttackRange", true);
                 this.AiMvmnt.StopMoving();
-                if (Time.time > nextAttackTime)
-                {
-                    this.attackOnlyOnce = true;
-                    this.nextAttackTime = Time.time + this.EnmyStts.getAttackTimeIntervals();
-                    this.state = State.Attacking;
-                    // do animation
-                    this.Anmtr.SetInteger("State", (int)this.state);
-                    this.state = State.Chasing;
-                }
+                StartCoroutine(AttackCoroutine());
             }
             else
             {
                 this.Anmtr.SetBool("InAttackRange", false);
             }
+        }
+
+        IEnumerator AttackCoroutine()
+        {
+            this.state = State.Attacking;
+            this.Anmtr.SetInteger("State", (int)this.state);
+            this.Anmtr.SetInteger("AttackNumber", this.currentAttack);
+            float timer = this.Anmtr.GetCurrentAnimatorStateInfo(0).length;
+            float startTime = Time.time;
+            this.attackEvent.Invoke(currentAttack, true);
+            while (Time.time < startTime + timer)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            this.attackEvent.Invoke(currentAttack, false);
+            this.currentAttack = (this.currentAttack == this.EnmyStts.getNumberOfAttacks()) ? 1 : this.currentAttack + 1;
+            this.Anmtr.SetInteger("State", (int)this.state);
+            this.state = State.Chasing;
         }
 
         private void StopChasing()
@@ -243,7 +263,7 @@ namespace Enemy
             return this.PlyrStts;
         }
 
-        internal bool getIsAttacking()
+        public bool getIsAttacking()
         {
             return this.isAttacking;
         }
