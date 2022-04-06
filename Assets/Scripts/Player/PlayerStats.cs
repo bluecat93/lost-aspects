@@ -41,7 +41,29 @@ public class PlayerStats : MonoBehaviour
     private Coroutine isRegen;
     // Variables to hold new and hold regen rates when hungry or full
     private float regenRateWhenFull = 1f;
-    private float currentRegenRate = 1f;
+    // private float currentRegenRate = 1f;
+
+    [Header("Basic Movement Variables")]
+    [Tooltip("The character's base movement speed")]
+    [SerializeField] public float movementSpeed = 5.0f;
+    [Tooltip("Acceleration and deceleration")]
+    [SerializeField] public float speedChangeRate = 10.0f;
+
+    [Header("Dashing Variables")]
+    [Tooltip("The speed multiplier when sprinting")]
+    [SerializeField] public float dashModifier = 1.5f;
+
+    [Header("Jumping Variables")]
+    [Tooltip("The higher this field, the higher the jump")]
+    [SerializeField] public float jumpHeight = 5f;
+
+    [Header("Dodging Variables")]
+    [Tooltip("The speed of the character while dodgeing")]
+    [SerializeField] public float dodgeSpeed = 10f;
+    [Tooltip("The time (in seconds) it takes for the character to dodge (from start to finish)")]
+    [SerializeField] public float dodgeTime = 0.5f;
+    [Tooltip("How much stamina a roll takes")]
+    [SerializeField] public int dodgeCost = -50;
 
     [Header("Hunger Variables")]
     [Tooltip("Hunger when character is full")]
