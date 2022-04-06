@@ -702,7 +702,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1168804103}
-  m_LocalRotation: {x: 0.26985064, y: -6.8022876e-10, z: -1.9063134e-10, w: 0.9629022}
+  m_LocalRotation: {x: 0.2698507, y: 0.000000040585075, z: -0.000000011371679, w: 0.9629022}
   m_LocalPosition: {x: 12.32, y: 5.32, z: 6.2299995}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1395,15 +1395,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482269542894, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.26985064
+      value: 0.26985067
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482269542894, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -4.406689e-16
+      value: 0.00000004058329
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482269542894, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 5.368859e-16
+      value: -0.000000011373355
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482627739641, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_FollowOffset.y
@@ -1447,11 +1447,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482932395901, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000000016480865
+      value: -0.000000016480865
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482932395901, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0000000049437494
+      value: 0.0000000049437494
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
@@ -1515,6 +1515,10 @@ PrefabInstance:
       value: AttackEvent
       objectReference: {fileID: 0}
     - target: {fileID: 7087518948227232314, guid: 05dda3682bb0ae54da1c3c7ade426f8c, type: 3}
+      propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7087518948227232314, guid: 05dda3682bb0ae54da1c3c7ade426f8c, type: 3}
       propertyPath: testingEvents.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
@@ -1527,12 +1531,20 @@ PrefabInstance:
       value: Enemy.MeleeAttack, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7087518948227232314, guid: 05dda3682bb0ae54da1c3c7ade426f8c, type: 3}
+      propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: Enemy.MeleeAttack, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7087518948227232314, guid: 05dda3682bb0ae54da1c3c7ade426f8c, type: 3}
       propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7087518948227232314, guid: 05dda3682bb0ae54da1c3c7ade426f8c, type: 3}
       propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7087518948227232314, guid: 05dda3682bb0ae54da1c3c7ade426f8c, type: 3}
+      propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7087518949622995595, guid: 05dda3682bb0ae54da1c3c7ade426f8c, type: 3}
       propertyPath: m_Name

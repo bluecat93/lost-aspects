@@ -114,7 +114,6 @@ namespace Enemy
         // Update is called once per frame
         void Update()
         {
-            //this.attackEvent.Invoke(currentAttack, true);
             isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
             this.Anmtr.SetInteger("State", (int)state);
 
@@ -231,8 +230,6 @@ namespace Enemy
             }
             this.attackEvent.Invoke(currentAttack, false);
             this.currentAttack = (this.currentAttack == this.EnmyStts.getNumberOfAttacks()) ? 1 : this.currentAttack + 1;
-            this.Anmtr.SetInteger("State", (int)this.state);
-            this.state = State.Chasing;
         }
 
         private void StopChasing()

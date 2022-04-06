@@ -1357,6 +1357,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15ae10229da582548bbccf3016ba80c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackNumber: 1
+  damageModifier: 1
 --- !u!1 &7087518948809189306
 GameObject:
   m_ObjectHideFlags: 0
@@ -2162,9 +2164,9 @@ GameObject:
   - component: {fileID: 7087518949622995702}
   - component: {fileID: 7087518948227232314}
   - component: {fileID: 7087518949622995703}
-  - component: {fileID: 7087518949622995700}
-  - component: {fileID: 7087518949622995701}
   - component: {fileID: 7087518949622995594}
+  - component: {fileID: 7087518949622995701}
+  - component: {fileID: 7087518949622995700}
   m_Layer: 0
   m_Name: Basic Enemy
   m_TagString: Enemy
@@ -2221,7 +2223,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7192a0c014ca6dc478982d37b9dde382, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 8165736442878897092, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+  attackEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7087518949622995703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2234,6 +2238,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36395b6e127150d49b9f0fde3931d4c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7087518949622995594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7087518949622995595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f28fd8a7e260b24469b258242696ae04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 20
+  invulnerabilityFrameAmount: 0.3
+  deathTimer: 5
+  attackDamage: 20
+  attackTimeIntervals: 1
+  numberOfAttacks: 1
+  maxFollowDistance: 20
+  sightDistance: 10
+  attackDistance: 1
+--- !u!136 &7087518949622995701
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7087518949622995595}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1.9068013
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.89820975, z: 0}
 --- !u!54 &7087518949622995700
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2250,40 +2289,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &7087518949622995701
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7087518949622995595}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1.9068013
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.89820975, z: 0}
---- !u!114 &7087518949622995594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7087518949622995595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f28fd8a7e260b24469b258242696ae04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 20
-  attackDamage: 20
-  invulnerabilityFrameAmount: 0.3
-  attackTimeIntervals: 1
-  maxFollowDistance: 20
-  sightDistance: 10
-  attackDistance: 1
-  deathTimer: 5
 --- !u!1 &7087518949638229635
 GameObject:
   m_ObjectHideFlags: 0
