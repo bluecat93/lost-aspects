@@ -17,7 +17,6 @@ namespace Enemy
             Roaming,
             Chasing,
             Dead,
-            //avoids animation canceling
             Attacking,
             Reseting
         }
@@ -96,6 +95,19 @@ namespace Enemy
                 return this._enemyStats;
             }
         }
+
+        private AnimationEventsHandler _eventHandler;
+
+        private AnimationEventsHandler EvntHndlr
+        {
+            get
+            {
+                if (this._eventHandler == null)
+                    this._eventHandler = GetComponentInChildren<AnimationEventsHandler>();
+                return this._eventHandler;
+            }
+        }
+
         #endregion
         private void Awake()
         {
@@ -105,6 +117,7 @@ namespace Enemy
         // Start is called before the first frame update
         void Start()
         {
+            this.EvntHndlr.OnAttackEventTrigger.AddListener(AttackEvent);
             this.startingPosition = transform.position;
             this.roamPosition = GetRoamingPosition();
             this.player = GameObject.FindGameObjectWithTag("Player");
@@ -135,7 +148,8 @@ namespace Enemy
                     }
                     FindTarget();
                     break;
-
+                case State.Attacking:
+                    break;
                 case State.Chasing:
                     this.AiMvmnt.MoveTo(player.transform.position);
                     AttackTarget();
@@ -148,9 +162,6 @@ namespace Enemy
                     {
                         transform.gameObject.SetActive(false);
                     }
-                    break;
-
-                case State.Attacking:
                     break;
 
                 case State.Reseting:
@@ -208,28 +219,17 @@ namespace Enemy
             {
                 this.Anmtr.SetBool("InAttackRange", true);
                 this.AiMvmnt.StopMoving();
-                StartCoroutine(AttackCoroutine());
+                // used for animations only
+                this.state = State.Attacking;
+                this.Anmtr.SetInteger("AttackNumber", this.currentAttack);
+                this.Anmtr.SetInteger("State", (int)this.state);
+                this.state = State.Chasing;
+
             }
             else
             {
                 this.Anmtr.SetBool("InAttackRange", false);
             }
-        }
-
-        IEnumerator AttackCoroutine()
-        {
-            this.state = State.Attacking;
-            this.Anmtr.SetInteger("State", (int)this.state);
-            this.Anmtr.SetInteger("AttackNumber", this.currentAttack);
-            float timer = this.Anmtr.GetCurrentAnimatorStateInfo(0).length;
-            float startTime = Time.time;
-            this.attackEvent.Invoke(currentAttack, true);
-            while (Time.time < startTime + timer)
-            {
-                yield return new WaitForFixedUpdate();
-            }
-            this.attackEvent.Invoke(currentAttack, false);
-            this.currentAttack = (this.currentAttack == this.EnmyStts.getNumberOfAttacks()) ? 1 : this.currentAttack + 1;
         }
 
         private void StopChasing()
@@ -245,25 +245,21 @@ namespace Enemy
             transform.LookAt(gameObject.transform);
         }
 
-        public bool getAttackOnlyOnce()
-        {
-            return this.attackOnlyOnce;
-        }
-
-        public void setAttackOnlyOnce(bool attackOnlyOnce)
-        {
-            this.attackOnlyOnce = attackOnlyOnce;
-        }
-
         public PlayerStats getPlayerStats()
         {
             return this.PlyrStts;
         }
 
-        public bool getIsAttacking()
+        public void AttackEvent(bool isAttacking)
         {
-            return this.isAttacking;
+            this.attackEvent.Invoke(currentAttack, isAttacking);
+            // finished attack animation.
+            if (!isAttacking)
+            {
+                this.currentAttack = (this.currentAttack == this.EnmyStts.getNumberOfAttacks()) ? 1 : this.currentAttack + 1;
+            }
         }
+
     }
 
 }

@@ -42,14 +42,14 @@ namespace Enemy
         [SerializeField] private float damageModifier = 1f;
         private bool isAttacking;
 
-        private void start()
+        private void Start()
         {
             EnmyAi.attackEvent.AddListener(AttackEvent);
             this.attackOnlyOnce = false;
         }
         private void OnTriggerStay(Collider other)
         {
-            if (other.gameObject.tag == "Player" && isAttacking && this.attackOnlyOnce)
+            if (other.gameObject.tag == "Player" && this.attackOnlyOnce)
             {
                 this.EnmyAi.getPlayerStats().TakeDamage((int)(this.EnmyStts.getAttackDamage() * damageModifier));
                 this.attackOnlyOnce = false;
