@@ -672,7 +672,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1168804103}
-  m_LocalRotation: {x: 0.14220116, y: 0.000000004023501, z: 5.780651e-10, w: 0.98983777}
+  m_LocalRotation: {x: 0.14220116, y: 0.000000004023501, z: 5.7806515e-10, w: 0.98983777}
   m_LocalPosition: {x: 12.32, y: 2.98, z: 5.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1377,11 +1377,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2018522481729995848, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000019088317
+      value: -0.000000019086254
       objectReference: {fileID: 0}
     - target: {fileID: 2018522481729995848, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000023896713
+      value: 0.0000000023894131
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482269542894, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1445,11 +1445,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482932395901, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0000000084921
+      value: 0.00000001126329
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482932395901, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000013780783
+      value: -0.0000000018277801
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
@@ -1534,9 +1534,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 781654694}
     - target: {fileID: 8165736442223772229, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: jumpHeight
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8165736442223772229, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: staminaBar
       value: 
       objectReference: {fileID: 1603823708}
+    - target: {fileID: 8165736442223772229, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: dashModifier
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8165736442223772229, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: movementSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8165736442223772229, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: thirdPersonCamera
       value: 
@@ -1593,5 +1605,9 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 1168804107}
+    - target: {fileID: 8165736442878897099, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
