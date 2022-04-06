@@ -12,32 +12,9 @@ public class ThirdPersonMovement : MonoBehaviour
     [Tooltip("The player's camera (main camera)")]
     [SerializeField] private Transform playerCamera;
 
-
-    [Header("Basic Movement Variables")]
-    [Tooltip("The character's base movement speed")]
-    [SerializeField] private float movementSpeed = 5.0f;
-    [Tooltip("Acceleration and deceleration")]
-    [SerializeField] private float speedChangeRate = 10.0f;
-
-
-    [Header("Dashing Variables")]
-    [Tooltip("The speed multiplier when sprinting")]
-    [SerializeField] private float dashModifier = 1.5f;
-
-
     [Header("Crouching Variables")]
     [Tooltip("The height of the character while crouching")]
     [SerializeField] private float heightChange = 0.5f;
-
-
-    [Header("Dodging Variables")]
-    [Tooltip("The speed of the character while dodgeing")]
-    [SerializeField] private float dodgeSpeed = 10f;
-    [Tooltip("The time (in seconds) it takes for the character to dodge (from start to finish)")]
-    [SerializeField] private float dodgeTime = 0.5f;
-    [Tooltip("How much stamina a roll takes")]
-    [SerializeField] private int dodgeCost = -50;
-
 
     [Header("Player Grounded")]
     [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
@@ -49,10 +26,7 @@ public class ThirdPersonMovement : MonoBehaviour
     [Tooltip("What layers the character uses as ground")]
     public LayerMask GroundLayers;
 
-
     [Header("Y movement parameters")]
-    [Tooltip("The higher the field, the hiegher the jump.")]
-    [SerializeField] private float jumpHeight = 5f;
     [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
     [SerializeField] private float JumpTimeout = 0.50f;
     [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
@@ -61,6 +35,10 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] private float TerminalVelocity = -53.0f;
     [Tooltip("Minumum falling speed it takes to start taking fall damage (should allways be a negative number that is lower than -2)")]
     [SerializeField] private float minumumFallForDamage = -10.0f;
+
+    [Header("Animation Variables")]
+    [Tooltip("When to start landing animation")]
+    [SerializeField] private float animationGroundOffset = -0.8f;
 
 
     #endregion
@@ -195,7 +173,7 @@ public class ThirdPersonMovement : MonoBehaviour
     private void HandleMovement()
     {
         // set target speed based on move speed, sprint speed and if sprint is pressed
-        float targetSpeed = IsDashing ? dashModifier * movementSpeed : movementSpeed;
+        float targetSpeed = IsDashing ? PlyrStats.dashModifier * PlyrStats.movementSpeed : PlyrStats.movementSpeed;
 
         // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -222,7 +200,7 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             // creates curved result rather than a linear one giving a more organic speed change
             // note T in Lerp is clamped, so we don't need to clamp our speed
-            speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * speedChangeRate);
+            speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * PlyrStats.speedChangeRate);
 
             // round speed to 3 decimal places
             speed = Mathf.Round(speed * 1000f) / 1000f;
@@ -272,6 +250,12 @@ public class ThirdPersonMovement : MonoBehaviour
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
         IsGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
 
+        Vector3 landingSphere = new Vector3(transform.position.x, transform.position.y - animationGroundOffset, transform.position.z);
+        if (Physics.CheckSphere(landingSphere, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore))
+            PlayerAnim.SetBool("isGrounded", true);
+        else
+            PlayerAnim.SetBool("isGrounded", false);
+
         // update animator if using character
         // if (_hasAnimator)
         // {
@@ -285,6 +269,9 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             // reset the fall timeout timer
             FallTimeoutDelta = FallTimeout;
+
+            PlayerAnim.SetBool("isJumping", false);
+            PlayerAnim.SetBool("isFalling", false);
 
             // update animator if using character
             // if (_hasAnimator)
@@ -308,7 +295,10 @@ public class ThirdPersonMovement : MonoBehaviour
             if (IsJumping && JumpTimeoutDelta <= 0.0f)
             {
                 // the square root of H * -2 * G = how much velocity needed to reach desired height
-                VerticalVelocity = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y);
+                VerticalVelocity = Mathf.Sqrt(PlyrStats.jumpHeight * -2f * Physics.gravity.y);
+
+                PlayerAnim.SetBool("isJumping", true);
+                //PlayerAnim.SetBool("isGrounded", false);
 
                 // update animator if using character
                 // if (_hasAnimator)
@@ -335,6 +325,7 @@ public class ThirdPersonMovement : MonoBehaviour
             }
             else
             {
+                PlayerAnim.SetBool("isFalling", true);
                 // update animator if using character
                 // if (_hasAnimator)
                 // {
@@ -377,29 +368,34 @@ public class ThirdPersonMovement : MonoBehaviour
     // Eden ref: please annotate this function
     private void HandleDodgeInput()
     {
-        if (Input.GetButtonDown("Dodge") && !this.IsRolling && this.IsGrounded && PlyrStats.currentStamina >= Mathf.Abs(this.dodgeCost))
+        if (Input.GetButtonDown("Dodge") && !this.IsRolling && this.IsGrounded && PlyrStats.currentStamina >= Mathf.Abs(PlyrStats.dodgeCost))
         {
             StartCoroutine(DodgeCoroutine());
         }
+    }
+
+    private void HandleJumpAnimation()
+    {
+
     }
 
     // Eden ref: please annotate this function
     IEnumerator DodgeCoroutine()
     {
 
-        PlyrStats.ChangeStamina(dodgeCost);
+        PlyrStats.ChangeStamina(PlyrStats.dodgeCost);
         float startTime = Time.time;
         this.IsRolling = true;
         this.PlayerAnim.SetTrigger("Roll");
 
-        while (Time.time < startTime + this.dodgeTime)
+        while (Time.time < startTime + PlyrStats.dodgeTime)
         {
 
             //Vector3 nonMovingDirection = Quaternion.Euler(0.0f, playerCamera.eulerAngles.y, 0.0f) * Vector3.forward;
             Vector3 dodgeDirection = this.IsMoving ? this.TargetDirection.normalized : (this.TargetDirection * -1).normalized;
             //Vector3 dodgeDirection = this.TargetDirection;
 
-            this.controller.Move(dodgeDirection * this.dodgeSpeed * Time.deltaTime + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
+            this.controller.Move(dodgeDirection * PlyrStats.dodgeSpeed * Time.deltaTime + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
             yield return new WaitForFixedUpdate();
 
         }
