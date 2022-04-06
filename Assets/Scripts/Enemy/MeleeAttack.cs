@@ -44,7 +44,7 @@ namespace Enemy
 
         private void start()
         {
-            //EnmyAi.attackEvent.AddListener(AttackEvent);
+            EnmyAi.attackEvent.AddListener(AttackEvent);
             this.attackOnlyOnce = false;
         }
         private void OnTriggerStay(Collider other)
