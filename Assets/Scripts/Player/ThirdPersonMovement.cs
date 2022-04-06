@@ -62,6 +62,10 @@ public class ThirdPersonMovement : MonoBehaviour
     [Tooltip("Minumum falling speed it takes to start taking fall damage (should allways be a negative number that is lower than -2)")]
     [SerializeField] private float minumumFallForDamage = -10.0f;
 
+    [Header("Animation Variables")]
+    [Tooltip("When to start landing animation")]
+    [SerializeField] private float animationGroundOffset = -0.8f;
+
 
     #endregion
 
@@ -271,7 +275,9 @@ public class ThirdPersonMovement : MonoBehaviour
         // set sphere position, with offset
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
         IsGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
-        if (IsGrounded)
+
+        Vector3 landingSphere = new Vector3(transform.position.x, transform.position.y - animationGroundOffset, transform.position.z);
+        if (Physics.CheckSphere(landingSphere, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore))
             PlayerAnim.SetBool("isGrounded", true);
         else
             PlayerAnim.SetBool("isGrounded", false);

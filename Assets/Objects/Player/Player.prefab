@@ -77,7 +77,7 @@ MonoBehaviour:
   dodgeTime: 0.5
   dodgeCost: -50
   IsGrounded: 1
-  GroundedOffset: 0
+  GroundedOffset: -0.4
   GroundedRadius: 0.5
   GroundLayers:
     serializedVersion: 2
@@ -87,6 +87,7 @@ MonoBehaviour:
   FallTimeout: 0.15
   TerminalVelocity: -50
   minumumFallForDamage: -20
+  animationGroundOffset: 0.4
 --- !u!114 &8165736442223772229
 MonoBehaviour:
   m_ObjectHideFlags: 0
