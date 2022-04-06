@@ -27,8 +27,6 @@ namespace Enemy
         private Vector3 roamPosition;
         private State state;
 
-        private float nextAttackTime;
-        private bool attackOnlyOnce = false;
         private float currentDeathTimer;
         private bool deadOnlyOnce = false;
         bool isAttacking = false;

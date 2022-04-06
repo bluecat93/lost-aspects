@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class AnimationEventsHandler : MonoBehaviour
 {
-    [HideInInspector] public UnityEvent<bool> OnAttackEventTrigger;
+    public UnityEvent<bool> OnAttackEventTrigger;
 
     public void AttackStarted()
     {
