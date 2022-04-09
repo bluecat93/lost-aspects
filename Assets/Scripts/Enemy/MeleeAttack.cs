@@ -30,7 +30,7 @@ namespace Enemy
         public override void AttackEvent(int attackNumber, bool isStartAttack)
         {
             isAttacking = isStartAttack && this.attackNumber == attackNumber;
-            // Debug.Log("isAttacking = " + isAttacking);
+            //Debug.Log("isAttacking = " + isAttacking);
             if (isAttacking)
             {
                 this.attackOnlyOnce = true;
