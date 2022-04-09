@@ -25,7 +25,7 @@ namespace Projectile
                 {
                     if (tag == "player")
                     {
-                        other.GetComponent<PlayerStats>().TakeDamage(damage);
+                        other.GetComponent<Player.Stats>().TakeDamage(damage);
                     }
                     else if (tag == "enemy")
                     {

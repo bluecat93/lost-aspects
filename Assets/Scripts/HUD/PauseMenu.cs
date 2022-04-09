@@ -3,64 +3,68 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PauseMenu : MonoBehaviour
+
+namespace HeadsUpDisplay
 {
-
-    public static bool isGamePaused = false;
-    public GameObject pauseMenuUI;
-    public GameObject optionsMenuUI;
-
-    string quitButton = "MainMenu";
-
-    // Update is called once per frame
-    void Start()
+    public class PauseMenu : MonoBehaviour
     {
-        Time.timeScale = 1f;
-    }
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
+
+        public static bool isGamePaused = false;
+        public GameObject pauseMenuUI;
+        public GameObject optionsMenuUI;
+
+        string quitButton = "MainMenu";
+
+        // Update is called once per frame
+        void Start()
         {
-            if (isGamePaused)
+            Time.timeScale = 1f;
+        }
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Resume();
-            }
-            else
-            {
-                Pause();
+                if (isGamePaused)
+                {
+                    Resume();
+                }
+                else
+                {
+                    Pause();
+                }
             }
         }
-    }
-    public void Resume()
-    {
-        this.pauseMenuUI.SetActive(false);
-        this.optionsMenuUI.SetActive(false);
-        Time.timeScale = 1f;
-        Debug.Log("time is now:" + Time.deltaTime);
-        isGamePaused = false;
-        Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
-    }
+        public void Resume()
+        {
+            this.pauseMenuUI.SetActive(false);
+            this.optionsMenuUI.SetActive(false);
+            Time.timeScale = 1f;
+            Debug.Log("time is now:" + Time.deltaTime);
+            isGamePaused = false;
+            Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
+        }
 
-    public void Pause()
-    {
-        this.optionsMenuUI.SetActive(false);
-        this.pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
-        // Debug.Log("time is now:"+Time.deltaTime);
-        isGamePaused = true;
-        Cursor.lockState = CursorLockMode.None;
-    }
+        public void Pause()
+        {
+            this.optionsMenuUI.SetActive(false);
+            this.pauseMenuUI.SetActive(true);
+            Time.timeScale = 0f;
+            // Debug.Log("time is now:"+Time.deltaTime);
+            isGamePaused = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
 
-    public void Options()
-    {
-        this.pauseMenuUI.SetActive(false);
-        this.optionsMenuUI.SetActive(true);
-    }
+        public void Options()
+        {
+            this.pauseMenuUI.SetActive(false);
+            this.optionsMenuUI.SetActive(true);
+        }
 
-    public void QuitGame()
-    {
-        isGamePaused = false;
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(quitButton);
+        public void QuitGame()
+        {
+            isGamePaused = false;
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(quitButton);
+        }
     }
 }

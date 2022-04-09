@@ -41,14 +41,14 @@ namespace Enemy
         //Player stuff
         private GameObject player;
 
-        private PlayerStats _playerStats;
+        private Player.Stats _playerStats;
 
-        private PlayerStats PlyrStts
+        private Player.Stats PlyrStts
         {
             get
             {
                 if (this._playerStats == null)
-                    this._playerStats = player.GetComponent<PlayerStats>();
+                    this._playerStats = player.GetComponent<Player.Stats>();
 
                 return this._playerStats;
             }
@@ -243,7 +243,7 @@ namespace Enemy
             transform.LookAt(gameObject.transform);
         }
 
-        public PlayerStats getPlayerStats()
+        public Player.Stats getPlayerStats()
         {
             return this.PlyrStts;
         }

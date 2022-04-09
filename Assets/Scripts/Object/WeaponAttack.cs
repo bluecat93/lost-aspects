@@ -2,20 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponAttack : MonoBehaviour
+namespace Object
 {
-    private int weaponBaseAttackDamage = 0;
-    public int weaponAttackDamage = 10;
-    public bool isAttacking = false;
-
-    private void OnTriggerEnter(Collider other)
+    public class WeaponAttack : MonoBehaviour
     {
-        if (other.gameObject.tag == "Enemy" && this.isAttacking)
+        private int weaponBaseAttackDamage = 0;
+        public int weaponAttackDamage = 10;
+        public bool isAttacking = false;
+
+        private void OnTriggerEnter(Collider other)
         {
-            //enemy was hit
-            Transform enemy = other.gameObject.transform;
-            Enemy.Stats enemyStats = enemy.GetComponent<Enemy.Stats>();
-            enemyStats.TakeDamage(this.weaponBaseAttackDamage + this.weaponAttackDamage);
+            if (other.gameObject.tag == "Enemy" && this.isAttacking)
+            {
+                //enemy was hit
+                Transform enemy = other.gameObject.transform;
+                Enemy.Stats enemyStats = enemy.GetComponent<Enemy.Stats>();
+                enemyStats.TakeDamage(this.weaponBaseAttackDamage + this.weaponAttackDamage);
+            }
         }
     }
+
 }

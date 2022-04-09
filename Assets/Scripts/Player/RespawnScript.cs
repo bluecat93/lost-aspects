@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RespawnScript : MonoBehaviour
+namespace Player
 {
-    [SerializeField] private Transform player;
-    [SerializeField] private Transform respawnPoint;
-
-    public void RespawnPlayer()
+    public class RespawnScript : MonoBehaviour
     {
-        this.player.transform.position = this.respawnPoint.transform.position;
-        Physics.SyncTransforms();
+        [SerializeField] private Transform player;
+        [SerializeField] private Transform respawnPoint;
+
+        public void RespawnPlayer()
+        {
+            this.player.transform.position = this.respawnPoint.transform.position;
+            Physics.SyncTransforms();
+        }
     }
 }
