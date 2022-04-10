@@ -47,7 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathTimer: 5
-  taglist: 0000000002000000
+  hitList: 0000000002000000
+  destructionOnHitList: 000000000200000003000000
 --- !u!54 &3933351214278990673
 Rigidbody:
   m_ObjectHideFlags: 0
