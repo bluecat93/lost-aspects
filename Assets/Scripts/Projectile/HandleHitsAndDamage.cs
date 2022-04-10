@@ -11,16 +11,20 @@ namespace Projectile
         {
             Player,
             Enemy,
-            Equipable
+            Equipable,
+            Terrain
         }
 
         [Tooltip("Time in seconds untill the projectile will disappear")]
         [SerializeField] private float deathTimer;
-        [Tooltip("The type of who this projectile can hit")]
-        [SerializeField] List<Type> taglist;
+        [Tooltip("The type of who this projectile can deal damage to")]
+        [SerializeField] List<Type> hitList;
+        [Tooltip("The type of who this projectile will be destoyed by when hit.")]
+        [SerializeField] List<Type> destructionOnHitList;
 
         private int damage = 0;
-
+        //used when something special happens that makes the projectile not destroy itself.
+        private bool evadeDestruction = false;
         private bool attackOnlyOnce = false;
         // Start is called before the first frame update
         void Start()
@@ -31,35 +35,51 @@ namespace Projectile
         // Run on all tags that can be hit by the projectile. If found one then do the damage. In any case, destroy the object after
         private void OnTriggerStay(Collider other)
         {
-            if (!attackOnlyOnce)
+            // Debug.Log("collided with: " + other + "\tand its tag is: " + other.tag);
+            foreach (Type type in hitList)
             {
-                attackOnlyOnce = true;
-                // Debug.Log("collided with: " + other + "\tand its tag is: " + other.tag);
-                foreach (Type type in taglist)
+                // Convert the type enum to tag.
+                string tag = type.ToString();
+                if (other.gameObject.tag.Equals(tag))
                 {
-                    // Convert the type enum to tag.
-                    string tag = type.ToString();
-                    if (other.gameObject.tag == tag)
+                    if (!attackOnlyOnce)
                     {
+                        attackOnlyOnce = true;
                         // Got a hit with something the projectile can hit.
-                        if (tag == "Player")
+                        if (tag.Equals("Player"))
                         {
                             other.GetComponent<Player.Stats>().TakeDamage(damage);
                         }
-                        else if (tag == "Enemy")
+                        else if (tag.Equals("Enemy"))
                         {
                             other.GetComponent<Enemy.Stats>().TakeDamage(damage);
                         }
-                        else if (tag == "Equipable")
+                        else if (tag.Equals("Equipable"))
                         {
                             other.GetComponentInParent<Player.Stats>().TakeDamage(damage);
                         }
                     }
                 }
-                // After got a hit with anything do this: 
-
-                // Destroy game object now.
-                Destroy(gameObject, 0);
+            }
+            // After got a hit with anything do this: 
+            foreach (Type type in destructionOnHitList)
+            {
+                if (other.tag.Equals(type.ToString()))
+                {
+                    if (type == Type.Player)
+                    {
+                        evadeDestruction = other.GetComponent<Player.ThirdPersonMovement>().IsRolling;
+                    }
+                    else if (type == Type.Equipable)
+                    {
+                        evadeDestruction = other.GetComponentInParent<Player.ThirdPersonMovement>().IsRolling;
+                    }
+                    if (!evadeDestruction)
+                    {
+                        // Destroy game object now.
+                        Destroy(gameObject, 0);
+                    }
+                }
             }
         }
         public void setDamage(int damage)
