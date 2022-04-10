@@ -8,7 +8,7 @@ namespace Object
     {
         private int weaponBaseAttackDamage = 0;
         public int weaponAttackDamage = 10;
-        public bool isAttacking = false;
+        [HideInInspector] public bool isAttacking = false;
 
         private void OnTriggerEnter(Collider other)
         {

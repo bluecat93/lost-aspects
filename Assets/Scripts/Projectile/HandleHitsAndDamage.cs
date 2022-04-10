@@ -6,34 +6,55 @@ namespace Projectile
 {
     public class HandleHitsAndDamage : MonoBehaviour
     {
-        [Tooltip("time in seconds untill the projectile will disappear")]
+        // The tag list types that can be interactable.
+        enum Type
+        {
+            Player,
+            Enemy,
+            Equipable
+        }
+        [Tooltip("Time in seconds untill the projectile will disappear")]
         [SerializeField] private float deathTimer;
-        // Start is called before the first frame update
-        [Tooltip("The Tags of who this projectile can hit")]
-        [SerializeField] List<string> taglist;
+        [Tooltip("The type of who this projectile can hit")]
+        [SerializeField] List<Type> taglist;
+
         private int damage = 0;
+
+        // Start is called before the first frame update
         void Start()
         {
             Destroy(gameObject, deathTimer);
         }
 
+        // Run on all tags that can be hit by the projectile. If found one then do the damage. In any case, destroy the object after
         private void OnTriggerStay(Collider other)
         {
-            foreach (string tag in taglist)
+            // Debug.Log("collided with: " + other + "\tand its tag is: " + other.tag);
+            foreach (Type type in taglist)
             {
+                // Convert the type enum to tag.
+                string tag = type.ToString();
                 if (other.gameObject.tag == tag)
                 {
-                    if (tag == "player")
+                    // Got a hit with something the projectile can hit.
+                    if (tag == "Player")
                     {
                         other.GetComponent<Player.Stats>().TakeDamage(damage);
                     }
-                    else if (tag == "enemy")
+                    else if (tag == "Enemy")
                     {
                         other.GetComponent<Enemy.Stats>().TakeDamage(damage);
                     }
-                    Destroy(gameObject, deathTimer);
+                    else if (tag == "Equipable")
+                    {
+                        other.GetComponentInParent<Player.Stats>().TakeDamage(damage);
+                    }
                 }
             }
+            // After got a hit with anything do this: 
+
+            // Destroy game object now.
+            Destroy(gameObject, 0);
         }
         public void setDamage(int damage)
         {

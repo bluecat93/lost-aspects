@@ -10,7 +10,6 @@ namespace Enemy
         [SerializeField] protected int attackNumber = 1;
         [Tooltip("The attack damage modifier")]
         [SerializeField] protected float damageModifier = 1f;
-
         private Stats _enemyStats;
         protected Stats EnmyStts
         {
@@ -36,9 +35,6 @@ namespace Enemy
         }
 
         abstract public void AttackEvent(int attackNumber, bool isStartAttack);
-
-
-
     }
 
 }

@@ -39,7 +39,7 @@ namespace HeadsUpDisplay
             this.pauseMenuUI.SetActive(false);
             this.optionsMenuUI.SetActive(false);
             Time.timeScale = 1f;
-            Debug.Log("time is now:" + Time.deltaTime);
+            // Debug.Log("time is now:" + Time.deltaTime);
             isGamePaused = false;
             Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
         }

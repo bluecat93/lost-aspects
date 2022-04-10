@@ -11,10 +11,9 @@ GameObject:
   - component: {fileID: 2793524747707923005}
   - component: {fileID: 7878305083775345758}
   - component: {fileID: 895144603662866340}
-  - component: {fileID: 8978459012274837695}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Equipable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -82,19 +81,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8978459012274837695
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1305386798143364697}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1938749750948331997
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,10 +92,9 @@ GameObject:
   - component: {fileID: 6437797917592775784}
   - component: {fileID: 8722161452955146420}
   - component: {fileID: 4644359470811979422}
-  - component: {fileID: 5867602346553078046}
   m_Layer: 0
   m_Name: Cylinder
-  m_TagString: Untagged
+  m_TagString: Equipable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -177,20 +162,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &5867602346553078046
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1938749750948331997}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &4456215271406063157
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,7 +175,7 @@ GameObject:
   - component: {fileID: 6334699367326770268}
   m_Layer: 0
   m_Name: Sword
-  m_TagString: Untagged
+  m_TagString: Equipable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -254,6 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponAttackDamage: 10
+  isAttacking: 0
 --- !u!1 &5836643780103238540
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,10 +237,9 @@ GameObject:
   - component: {fileID: 3972673691599413205}
   - component: {fileID: 857439762527005064}
   - component: {fileID: 8395300382676261957}
-  - component: {fileID: 9125947923823000828}
   m_Layer: 0
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: Equipable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -336,19 +307,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &9125947923823000828
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5836643780103238540}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7617556361141121162
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,10 +318,9 @@ GameObject:
   - component: {fileID: 2774080104575947786}
   - component: {fileID: 1561585324016217739}
   - component: {fileID: 5066418665353420329}
-  - component: {fileID: 1495405328110640220}
   m_Layer: 0
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Equipable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -431,16 +388,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1495405328110640220
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7617556361141121162}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

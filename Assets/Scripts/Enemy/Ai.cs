@@ -258,6 +258,11 @@ namespace Enemy
             }
         }
 
+        public GameObject GetAttackingPlayer()
+        {
+            return player;
+        }
+
     }
 
 }
