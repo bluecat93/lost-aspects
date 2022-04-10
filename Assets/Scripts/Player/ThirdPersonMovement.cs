@@ -252,12 +252,14 @@ namespace Player
             // set sphere position, with offset
             Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
             IsGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
-
-            Vector3 landingSphere = new Vector3(transform.position.x, transform.position.y - animationGroundOffset, transform.position.z);
-            if (Physics.CheckSphere(landingSphere, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore))
+            if (IsGrounded)
                 PlayerAnim.SetBool("isGrounded", true);
             else
                 PlayerAnim.SetBool("isGrounded", false);
+
+            Vector3 landingSphereAnim = new Vector3(transform.position.x, transform.position.y - animationGroundOffset, transform.position.z);
+            if (Physics.CheckSphere(landingSphereAnim, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore))
+                PlayerAnim.SetBool("isGrounded", true);
 
             // update animator if using character
             // if (_hasAnimator)
@@ -273,8 +275,8 @@ namespace Player
                 // reset the fall timeout timer
                 FallTimeoutDelta = FallTimeout;
 
-                PlayerAnim.SetBool("isJumping", false);
-                PlayerAnim.SetBool("isFalling", false);
+                this.PlayerAnim.SetBool("isJumping", false);
+                this.PlayerAnim.SetBool("isFalling", false);
 
                 // update animator if using character
                 // if (_hasAnimator)
@@ -301,6 +303,7 @@ namespace Player
                     VerticalVelocity = Mathf.Sqrt(PlyrStats.jumpHeight * -2f * Physics.gravity.y);
 
                     PlayerAnim.SetBool("isJumping", true);
+                    PlayerAnim.SetBool("isGrounded", false);
                     //PlayerAnim.SetBool("isGrounded", false);
 
                     // update animator if using character
