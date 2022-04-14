@@ -17,6 +17,18 @@ namespace Object
                 //enemy was hit
                 Transform enemy = other.gameObject.transform;
                 Enemy.Stats enemyStats = enemy.GetComponent<Enemy.Stats>();
+                int finalDamage = this.weaponBaseAttackDamage + this.weaponAttackDamage;
+                switch (GetComponentInParent<Player.Abilities>().attackNumber)
+                {
+                    case 2:
+                        finalDamage += 5;
+                        break;
+                    case 3:
+                        finalDamage = 50;
+                        break;
+                    default:
+                        break;
+                }
                 enemyStats.TakeDamage(this.weaponBaseAttackDamage + this.weaponAttackDamage);
             }
         }
