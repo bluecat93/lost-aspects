@@ -31,7 +31,7 @@ namespace Object
                 }
                 enemyStats.TakeDamage(this.weaponBaseAttackDamage + this.weaponAttackDamage);
 
-                Debug.Log("enemy hit with attack number: " + GetComponentInParent<Player.Abilities>().attackNumber);
+                // Debug.Log("enemy hit with attack number: " + GetComponentInParent<Player.Abilities>().attackNumber);
             }
         }
     }

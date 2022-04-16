@@ -225,13 +225,13 @@ namespace Player
 
         private IEnumerator RegenStamina()
         {
-            Debug.Log("regenning stamina");
+            // Debug.Log("regenning stamina");
             // Start regenerating stamina after a few seconds
             yield return new WaitForSeconds(this.regenStartTime);
 
             while (this.currentStamina < this.maxStamina)
             {
-                Debug.Log("regenning stamina");
+                // Debug.Log("regenning stamina");
                 this.currentStamina += this.regenRate;
                 this.staminaBar.SetCurrent(this.currentStamina);
                 yield return new WaitForSeconds(this.regenTick);
