@@ -30,6 +30,8 @@ namespace Object
                         break;
                 }
                 enemyStats.TakeDamage(this.weaponBaseAttackDamage + this.weaponAttackDamage);
+
+                Debug.Log("enemy hit with attack number: " + GetComponentInParent<Player.Abilities>().attackNumber);
             }
         }
     }

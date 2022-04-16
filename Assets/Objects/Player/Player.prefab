@@ -69,20 +69,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 8165736442878897098}
   playerCamera: {fileID: 0}
-  movementSpeed: 3
-  speedChangeRate: 10
-  dashModifier: 5
   heightChange: 0.55
-  dodgeSpeed: 10
-  dodgeTime: 0.5
-  dodgeCost: -50
   IsGrounded: 1
   GroundedOffset: -0.4
   GroundedRadius: 0.5
   GroundLayers:
     serializedVersion: 2
     m_Bits: 9
-  jumpHeight: 3
   JumpTimeout: 0.5
   FallTimeout: 0.15
   TerminalVelocity: -50
@@ -109,6 +102,13 @@ MonoBehaviour:
   regenRate: 1
   regenTick: 0.03
   regenWhenHungry: 0.5
+  movementSpeed: 5
+  speedChangeRate: 10
+  dashModifier: 1.5
+  jumpHeight: 5
+  dodgeSpeed: 10
+  dodgeTime: 0.5
+  dodgeCost: -50
   maxHunger: 10
   currentHunger: 0
   hungerStartTime: 5
@@ -132,9 +132,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83f41c0194bd1314e86162829c87c765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAttackDistance: 2
-  playerMiddleHeight: 1
-  _weaponAttack: {fileID: 0}
+  attackNumber: 0
+  attackEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &8165736442878897097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -537,6 +538,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &3599946362676765320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9048839780537837784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50a1b54adab700f4c9c351d6e70239d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnAttackEventTrigger:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &8165736441742120622
 PrefabInstance:
   m_ObjectHideFlags: 0
