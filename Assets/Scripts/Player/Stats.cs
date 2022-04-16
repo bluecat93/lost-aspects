@@ -19,26 +19,26 @@ namespace Player
     {
         [Header("Health Variables")]
         [Tooltip("Health character starts with")]
-        public int maxHealth = 100;
+        [SerializeField] private int maxHealth = 100;
         [Tooltip("Health character currently has")]
-        public int currentHealth;
+        [SerializeField] private int currentHealth;
         [HideInInspector] public bool isAlive = true;
 
         [Header("Stamina Variables")]
         [Tooltip("Stamina character starts with")]
-        public int maxStamina = 100;
+        [SerializeField] private int maxStamina = 100;
         [Tooltip("Stamina character currently has")]
-        public int currentStamina;
+        [SerializeField] private int currentStamina;
 
         [Header("Stamina Recharge Variables")]
         [Tooltip("When to start regenerating stamina")]
-        public float regenStartTime = 2f;
+        [SerializeField] private float regenStartTime = 2f;
         [Tooltip("How fast stamina recharges")]
-        public int regenRate = 1;
+        [SerializeField] private int regenRate = 1;
         [Tooltip("How often stamina recharges, lower is better")]
-        public float regenTick = 0.1f;
+        [SerializeField] private float regenTick = 0.1f;
         [Tooltip("How often stamina recharges when hungry")]
-        public float regenWhenHungry = 0.5f;
+        [SerializeField] private float regenWhenHungry = 0.5f;
 
         // Check if currently regenning
         private Coroutine isRegen;
@@ -237,6 +237,11 @@ namespace Player
                 yield return new WaitForSeconds(this.regenTick);
             }
             this.isRegen = null;
+        }
+
+        public int GetCurrentStamina()
+        {
+            return this.currentStamina;
         }
 
         // public void RechargeStamina()

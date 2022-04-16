@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System;
 using UnityEngine.Events;
-
+using Animation;
 
 namespace Enemy
 {
@@ -94,14 +94,14 @@ namespace Enemy
             }
         }
 
-        private AnimationEventsHandler _eventHandler;
+        private EventsHandler _eventHandler;
 
-        private AnimationEventsHandler EvntHndlr
+        private EventsHandler EvntHndlr
         {
             get
             {
                 if (this._eventHandler == null)
-                    this._eventHandler = GetComponentInChildren<AnimationEventsHandler>();
+                    this._eventHandler = GetComponentInChildren<EventsHandler>();
                 return this._eventHandler;
             }
         }

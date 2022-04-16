@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Object;
+using UnityEngine.Events;
 
 namespace Player
 {
@@ -48,6 +49,7 @@ namespace Player
         }
 
         [HideInInspector] public int attackNumber;
+        [HideInInspector] public UnityEvent<int, bool> attackEvent;
 
         // Start is called before the first frame update
         void Start()

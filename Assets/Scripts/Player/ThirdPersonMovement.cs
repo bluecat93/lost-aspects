@@ -102,7 +102,7 @@ namespace Player
         {
             get
             {
-                return this.PlyrStats.currentStamina <= 0;
+                return this.PlyrStats.GetCurrentStamina() <= 0;
             }
         }
 
@@ -374,7 +374,7 @@ namespace Player
         // Eden ref: please annotate this function
         private void HandleDodgeInput()
         {
-            if (Input.GetButtonDown("Dodge") && !this.IsRolling && this.IsGrounded && PlyrStats.currentStamina >= Mathf.Abs(PlyrStats.dodgeCost))
+            if (Input.GetButtonDown("Dodge") && !this.IsRolling && this.IsGrounded && PlyrStats.GetCurrentStamina() >= Mathf.Abs(PlyrStats.dodgeCost))
             {
                 StartCoroutine(DodgeCoroutine());
             }
