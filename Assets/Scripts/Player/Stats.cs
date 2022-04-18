@@ -22,7 +22,7 @@ namespace Player
         [SerializeField] private int maxHealth = 100;
         [Tooltip("Health character currently has")]
         [SerializeField] private int currentHealth;
-        [HideInInspector] public bool isAlive = true;
+        private bool isAlive = true;
 
         [Header("Stamina Variables")]
         [Tooltip("Stamina character starts with")]
@@ -48,55 +48,55 @@ namespace Player
 
         [Header("Basic Movement Variables")]
         [Tooltip("The character's base movement speed")]
-        [SerializeField] public float movementSpeed = 5.0f;
+        [SerializeField] private float movementSpeed = 5.0f;
         [Tooltip("Acceleration and deceleration")]
-        [SerializeField] public float speedChangeRate = 10.0f;
+        [SerializeField] private float speedChangeRate = 10.0f;
 
         [Header("Dashing Variables")]
         [Tooltip("The speed multiplier when sprinting")]
-        [SerializeField] public float dashModifier = 1.5f;
+        [SerializeField] private float dashModifier = 1.5f;
 
         [Header("Jumping Variables")]
         [Tooltip("The higher this field, the higher the jump")]
-        [SerializeField] public float jumpHeight = 5f;
+        [SerializeField] private float jumpHeight = 5f;
 
         [Header("Dodging Variables")]
         [Tooltip("The speed of the character while dodgeing")]
-        [SerializeField] public float dodgeSpeed = 10f;
+        [SerializeField] private float dodgeSpeed = 10f;
         [Tooltip("The time (in seconds) it takes for the character to dodge (from start to finish)")]
-        [SerializeField] public float dodgeTime = 0.5f;
+        [SerializeField] private float dodgeTime = 0.5f;
         [Tooltip("How much stamina a roll takes")]
-        [SerializeField] public int dodgeCost = -50;
+        [SerializeField] private int dodgeCost = -50;
 
         [Header("Hunger Variables")]
         [Tooltip("Hunger when character is full")]
-        public int maxHunger = 100;
+        [SerializeField] private int maxHunger = 100;
         [Tooltip("Characters current hunger rating")]
-        public int currentHunger;
+        [SerializeField] private int currentHunger;
         [Tooltip("Start lowering hunger")]
-        public float hungerStartTime = 5.0f;
+        [SerializeField] private float hungerStartTime = 5.0f;
         [Tooltip("How often to lower hunger")]
-        public float hungerRepeatTime = 10.0f;
+        [SerializeField] private float hungerRepeatTime = 10.0f;
 
-        [HideInInspector] public bool isHungry = false;
+        private bool isHungry = false;
 
         [Header("UI Bars")]
         [Tooltip("Bar that displays character health")]
-        public BarScript healthBar;
+        [SerializeField] private BarScript healthBar;
         [Tooltip("Bar that displays character hunger")]
-        public BarScript hungerBar;
+        [SerializeField] private BarScript hungerBar;
         [Tooltip("Bar that displays character stamina")]
-        public BarScript staminaBar;
+        [SerializeField] private BarScript staminaBar;
 
         [Header("Game objects")]
         [Tooltip("Game over screen")]
-        public GameObject gameOverUI;
+        [SerializeField] private GameObject gameOverUI;
         [Tooltip("Camera that follows player")]
-        public GameObject thirdPersonCamera;
+        [SerializeField] private GameObject thirdPersonCamera;
 
         [Header("Other variables")]
         [Tooltip("Reduce fall damage")]
-        public int fallDamageReduction = 0;
+        [SerializeField] private int fallDamageReduction = 0;
 
 
         private ThirdPersonMovement _thirdPersonMovement;
@@ -239,10 +239,65 @@ namespace Player
             this.isRegen = null;
         }
 
+        #region Getters and Setters
+
         public int GetCurrentStamina()
         {
             return this.currentStamina;
         }
+
+        public float GetMovementSpeed()
+        {
+            return this.movementSpeed;
+        }
+
+        public float GetDashModifier()
+        {
+            return this.dashModifier;
+        }
+
+        public float GetJumpHeight()
+        {
+            return this.jumpHeight;
+        }
+
+        public float GetSpeedChangeRate()
+        {
+            return this.speedChangeRate;
+        }
+
+        public float GetDodgeSpeed()
+        {
+            return this.dodgeSpeed;
+        }
+
+        public float GetDodgeTime()
+        {
+            return this.dodgeTime;
+        }
+
+        public int GetDodgeCost()
+        {
+            return this.dodgeCost;
+        }
+
+        public bool IsHungry()
+        {
+            return this.isHungry;
+        }
+
+        public bool IsAlive()
+        {
+            return this.isAlive;
+        }
+
+        public void SetMovementSpeed(float movementSpeed)
+        {
+            this.movementSpeed = movementSpeed;
+        }
+
+        #endregion
+
 
         // public void RechargeStamina()
         // {

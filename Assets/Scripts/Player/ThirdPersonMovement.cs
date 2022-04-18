@@ -92,7 +92,7 @@ namespace Player
         {
             get
             {
-                if (!PlyrStats.isHungry)
+                if (!PlyrStats.IsHungry())
                     return Input.GetAxis("Dash") > 0;
                 return false;
             }
@@ -163,7 +163,7 @@ namespace Player
         // Update is called once per frame
         void Update()
         {
-            if (!HeadsUpDisplay.PauseMenu.isGamePaused && this.PlyrStats.isAlive)
+            if (!HeadsUpDisplay.PauseMenu.isGamePaused && this.PlyrStats.IsAlive())
             {
                 this.HandleCrouchInput();
                 this.HandleJump();
@@ -176,7 +176,7 @@ namespace Player
         private void HandleMovement()
         {
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = IsDashing ? PlyrStats.dashModifier * PlyrStats.movementSpeed : PlyrStats.movementSpeed;
+            float targetSpeed = IsDashing ? PlyrStats.GetDashModifier() * PlyrStats.GetMovementSpeed() : PlyrStats.GetMovementSpeed();
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -203,7 +203,7 @@ namespace Player
             {
                 // creates curved result rather than a linear one giving a more organic speed change
                 // note T in Lerp is clamped, so we don't need to clamp our speed
-                speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * PlyrStats.speedChangeRate);
+                speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * PlyrStats.GetSpeedChangeRate());
 
                 // round speed to 3 decimal places
                 speed = Mathf.Round(speed * 1000f) / 1000f;
@@ -300,7 +300,7 @@ namespace Player
                 if (IsJumping && JumpTimeoutDelta <= 0.0f)
                 {
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
-                    VerticalVelocity = Mathf.Sqrt(PlyrStats.jumpHeight * -2f * Physics.gravity.y);
+                    VerticalVelocity = Mathf.Sqrt(PlyrStats.GetJumpHeight() * -2f * Physics.gravity.y);
 
                     PlayerAnim.SetBool("isJumping", true);
                     PlayerAnim.SetBool("isGrounded", false);
@@ -374,7 +374,7 @@ namespace Player
         // Eden ref: please annotate this function
         private void HandleDodgeInput()
         {
-            if (Input.GetButtonDown("Dodge") && !this.IsRolling && this.IsGrounded && PlyrStats.GetCurrentStamina() >= Mathf.Abs(PlyrStats.dodgeCost))
+            if (Input.GetButtonDown("Dodge") && !this.IsRolling && this.IsGrounded && PlyrStats.GetCurrentStamina() >= Mathf.Abs(PlyrStats.GetDodgeCost()))
             {
                 StartCoroutine(DodgeCoroutine());
             }
@@ -389,19 +389,19 @@ namespace Player
         IEnumerator DodgeCoroutine()
         {
 
-            PlyrStats.ChangeStamina(PlyrStats.dodgeCost);
+            PlyrStats.ChangeStamina(PlyrStats.GetDodgeCost());
             float startTime = Time.time;
             this.IsRolling = true;
             this.PlayerAnim.SetTrigger("Roll");
 
-            while (Time.time < startTime + PlyrStats.dodgeTime)
+            while (Time.time < startTime + PlyrStats.GetDodgeTime())
             {
 
                 //Vector3 nonMovingDirection = Quaternion.Euler(0.0f, playerCamera.eulerAngles.y, 0.0f) * Vector3.forward;
                 Vector3 dodgeDirection = this.IsMoving ? this.TargetDirection.normalized : (this.TargetDirection * -1).normalized;
                 //Vector3 dodgeDirection = this.TargetDirection;
 
-                this.controller.Move(dodgeDirection * PlyrStats.dodgeSpeed * Time.deltaTime + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
+                this.controller.Move(dodgeDirection * PlyrStats.GetDodgeSpeed() * Time.deltaTime + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
                 yield return new WaitForFixedUpdate();
 
             }
