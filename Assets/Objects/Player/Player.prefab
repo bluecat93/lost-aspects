@@ -95,7 +95,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
-  isAlive: 1
   maxStamina: 100
   currentStamina: 0
   regenStartTime: 0.3
@@ -113,7 +112,6 @@ MonoBehaviour:
   currentHunger: 0
   hungerStartTime: 5
   hungerRepeatTime: 10
-  isHungry: 0
   healthBar: {fileID: 0}
   hungerBar: {fileID: 0}
   staminaBar: {fileID: 0}
@@ -132,10 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83f41c0194bd1314e86162829c87c765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackNumber: 0
-  attackEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  defaultAnimatorController: {fileID: 9100000, guid: fc21a4cf3c9e0a94da7584f08e7c59b6, type: 2}
 --- !u!114 &8165736442878897097
 MonoBehaviour:
   m_ObjectHideFlags: 0

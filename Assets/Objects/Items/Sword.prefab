@@ -224,7 +224,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de89ff03049eb924887301b49e3201a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponAttackDamage: 10
+  animatorController: {fileID: 9100000, guid: fd745eaa7b858f84c82017b71ca6c486, type: 2}
+  weaponBaseAttackDamage: 20
+  attackDamageModifier:
+  - 1
+  - 1.5
+  - 3
   isAttacking: 0
 --- !u!1 &5836643780103238540
 GameObject:

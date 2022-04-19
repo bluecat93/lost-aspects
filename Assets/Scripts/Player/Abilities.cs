@@ -11,20 +11,9 @@ namespace Player
 {
     public class Abilities : MonoBehaviour
     {
-        private int maximumNumberOfAttacks = 3;
-
-        private WeaponAttack _weaponAttack;
-
-        private WeaponAttack WpnAttck
-        {
-            get
-            {
-                if (this._weaponAttack == null)
-                    this._weaponAttack = GetComponentInChildren<WeaponAttack>();
-
-                return this._weaponAttack;
-            }
-        }
+        [Header("Animations")]
+        [Tooltip("The default animator controller.")]
+        [SerializeField] private RuntimeAnimatorController defaultAnimatorController;
 
         private Animator _animator;
 
@@ -39,65 +28,44 @@ namespace Player
             }
         }
 
-        private Stats _playerStats;
-
-        private Stats PlyrStts
-        {
-            get
-            {
-                if (this._playerStats == null)
-                    this._playerStats = GetComponent<Stats>();
-
-                return this._playerStats;
-            }
-        }
-
         private EventsHandler _eventHandler;
 
-        private EventsHandler EvntHndlr
-        {
-            get
-            {
-                if (this._eventHandler == null)
-                    this._eventHandler = GetComponentInChildren<EventsHandler>();
-                return this._eventHandler;
-            }
-        }
-
-        [HideInInspector] public int attackNumber;
-        [HideInInspector] public UnityEvent<int> attackEvent;
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            attackNumber = 1;
-            this.EvntHndlr.OnAttackEventTrigger.AddListener(AttackEvent);
-        }
+        private bool isEquiped = false;
 
         // Update is called once per frame
         void Update()
         {
-            // float attacking = Input.GetAxisRaw("Swing");
-            if (Input.GetButtonDown("Swing") && !this.WpnAttck.isAttacking)
+            if (Input.GetButtonDown("Equip"))
             {
-                this.Anmtor.SetInteger("Attack Number", attackNumber);
-                this.Anmtor.SetTrigger("Attack");
+                if (isEquiped)
+                {
+                    unequipWeapon();
+                }
+                else
+                {
+                    EquipWeapon();
+                }
+                isEquiped = !isEquiped;
             }
         }
 
-        public void AttackEvent(bool isAttacking)
+        //Equip or unequip a weapon. NOTE: this will only work with one weapon type. if we will have more than we have to insantiate them in the right positions by getting the offsets and the like.
+        #region Weapon Equpiment
+        public void EquipWeapon()
         {
-            if (isAttacking)
-            {
-                this.WpnAttck.isAttacking = true;
-
-            }
-            else
-            {
-                this.WpnAttck.isAttacking = false;
-                attackNumber = attackNumber == maximumNumberOfAttacks ? 1 : attackNumber + 1;
-            }
+            WeaponAttack meleeWeapon = GetComponentInChildren<WeaponAttack>(true);
+            meleeWeapon.gameObject.SetActive(true);
+            meleeWeapon.Equip();
         }
+        public void unequipWeapon()
+        {
+            WeaponAttack meleeWeapon = GetComponentInChildren<WeaponAttack>(true);
+            meleeWeapon.gameObject.SetActive(false);
+            Functions.SetAnimatorController(Anmtor, this.defaultAnimatorController);
+
+        }
+
+        #endregion
 
     }
 

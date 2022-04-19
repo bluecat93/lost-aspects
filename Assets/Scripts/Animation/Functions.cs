@@ -22,5 +22,10 @@ namespace Animation
             Debug.Log(animator.GetCurrentAnimatorStateInfo(0).GetHashCode() == stateNameHash);
             return AnimatorIsPlaying(animator) && animator.GetCurrentAnimatorStateInfo(0).GetHashCode() == stateNameHash;
         }
+
+        public static void SetAnimatorController(Animator animator, RuntimeAnimatorController newAnimatorController)
+        {
+            animator.runtimeAnimatorController = newAnimatorController as RuntimeAnimatorController;
+        }
     }
 }
