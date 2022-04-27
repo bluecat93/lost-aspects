@@ -664,6 +664,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8165736442878897092, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
   m_PrefabInstance: {fileID: 8165736442242936851}
   m_PrefabAsset: {fileID: 0}
+--- !u!143 &901472020 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 8165736442878897098, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+  m_PrefabInstance: {fileID: 8165736442242936851}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &939546401 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7087518948227232314, guid: 05dda3682bb0ae54da1c3c7ade426f8c, type: 3}
@@ -1152,6 +1157,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1536264152 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 91710688179262940, guid: b54f9b8f7e73cdf4a9dee03c549a3dcb, type: 3}
+  m_PrefabInstance: {fileID: 91710689785848521}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1603823708 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 91710688965343621, guid: b54f9b8f7e73cdf4a9dee03c549a3dcb, type: 3}
@@ -1174,6 +1184,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bab4dd85e671bba44b4670aa3b0f3887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1656329613 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 91710688507071387, guid: b54f9b8f7e73cdf4a9dee03c549a3dcb, type: 3}
+  m_PrefabInstance: {fileID: 91710689785848521}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1764517520 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2791063557996229362, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
@@ -1525,6 +1540,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 91710688549485708, guid: b54f9b8f7e73cdf4a9dee03c549a3dcb, type: 3}
+      propertyPath: pauseMenuUI
+      value: 
+      objectReference: {fileID: 1656329613}
+    - target: {fileID: 91710688549485708, guid: b54f9b8f7e73cdf4a9dee03c549a3dcb, type: 3}
+      propertyPath: optionsMenuUI
+      value: 
+      objectReference: {fileID: 1536264152}
     - target: {fileID: 91710688549485709, guid: b54f9b8f7e73cdf4a9dee03c549a3dcb, type: 3}
       propertyPath: m_Name
       value: Player HUD
@@ -1781,7 +1804,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482269542894, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -1e-45
+      value: 1e-45
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482269542894, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.z
@@ -1829,11 +1852,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482932395901, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000000008492103
+      value: -0.0000000084921
       objectReference: {fileID: 0}
     - target: {fileID: 2018522482932395901, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0000000013780788
+      value: 0.0000000013780783
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
@@ -2022,6 +2045,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 8165736442878897096, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 901472020}
+    - target: {fileID: 8165736442878897096, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: JumpTimeout
       value: 0.2
       objectReference: {fileID: 0}
@@ -2029,6 +2056,14 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 1168804107}
+    - target: {fileID: 8165736442878897096, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: GroundLayers.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8165736442878897096, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: minumumFallForDamage
+      value: -20
+      objectReference: {fileID: 0}
     - target: {fileID: 8165736442878897096, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: animationGroundOffset
       value: 1
