@@ -7,6 +7,7 @@ namespace HeadsUpDisplay
 {
     public class MainMenu : MonoBehaviour
     {
+        public Scene MultiScene;
         public void PlayGame()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
@@ -15,6 +16,11 @@ namespace HeadsUpDisplay
         {
             Debug.Log("Game cant quit in-engine");
             Application.Quit();
+        }
+
+        public void MultiplayerMenu()
+        {
+            SceneManager.LoadScene("MultiplayerTestingMenu");
         }
     }
 }
