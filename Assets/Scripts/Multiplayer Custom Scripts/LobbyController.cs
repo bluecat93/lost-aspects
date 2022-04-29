@@ -139,8 +139,11 @@ public class LobbyController : MonoBehaviour
         {
             foreach (PlayerListItem PlayerListItemScript in PlayerListItems)
             {
-                PlayerListItemScript.PlayerName = player.PlayerName;
-                PlayerListItemScript.SetPlayerValues();
+                if (PlayerListItemScript.ConnectionID == player.ConnectionID)
+                {
+                    PlayerListItemScript.PlayerName = player.PlayerName;
+                    PlayerListItemScript.SetPlayerValues();
+                }
             }
         }
     }
