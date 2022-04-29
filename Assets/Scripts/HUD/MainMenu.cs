@@ -20,7 +20,7 @@ namespace HeadsUpDisplay
 
         public void MultiplayerMenu()
         {
-            SceneManager.LoadScene("MultiplayerTestingMenu");
+            SceneManager.LoadScene(3);
         }
     }
 }
