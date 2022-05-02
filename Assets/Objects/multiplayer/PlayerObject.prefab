@@ -121,10 +121,10 @@ MonoBehaviour:
   sendInterval: 0.05
   syncPosition: 1
   syncRotation: 1
-  syncScale: 0
+  syncScale: 1
   interpolatePosition: 1
   interpolateRotation: 1
-  interpolateScale: 0
+  interpolateScale: 1
   bufferTimeMultiplier: 1
   bufferSizeLimit: 64
   catchupThreshold: 4
