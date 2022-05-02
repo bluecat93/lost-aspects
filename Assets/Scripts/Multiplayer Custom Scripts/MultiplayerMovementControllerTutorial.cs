@@ -19,7 +19,7 @@ public class MultiplayerMovementControllerTutorial : NetworkBehaviour
     {
         if (SceneManager.GetActiveScene().name == SceneName)
         {
-            // used only in places where you want to be changed for everyone in the scene
+            // used only once when scene is active
             if (playerModel.activeSelf == false)
             {
                 SetPosition();
@@ -36,7 +36,7 @@ public class MultiplayerMovementControllerTutorial : NetworkBehaviour
     // help to set up starting position.
     public void SetPosition()
     {
-        transform.position = new Vector3(Random.Range(-5, 5), 0.8f, Random.Range(-15, 7));
+        transform.position = new Vector3(Random.Range(-5f, 5f), 0.8f, Random.Range(-15f, 7f));
     }
 
     public void Movement()
