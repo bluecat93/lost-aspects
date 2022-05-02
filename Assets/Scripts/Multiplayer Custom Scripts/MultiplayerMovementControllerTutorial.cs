@@ -47,6 +47,6 @@ public class MultiplayerMovementControllerTutorial : NetworkBehaviour
         Vector3 moveDirection = new Vector3(xDirection, 0.0f, zDirection);
 
 
-        // transform.position += moveDirection * Speed;
+        transform.position += moveDirection * Speed;
     }
 }
