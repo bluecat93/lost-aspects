@@ -28,6 +28,11 @@ public class PlayerObjectController : NetworkBehaviour
         }
     }
 
+    private void Start()
+    {
+        // makes the game object that this code is assigned to, to not be destroyed when switching scenes.
+        DontDestroyOnLoad(this.gameObject);
+    }
 
     private void PlayerReadyUpdate(bool oldValue, bool NewValue)
     {
@@ -96,7 +101,23 @@ public class PlayerObjectController : NetworkBehaviour
         }
     }
 
+    #region Start Game
+    public void CanStartGame(string SceneName)
+    {
+        // we dont want everyone to be able to run this, only the host needs it.
+        if (hasAuthority)
+        {
+            CmdCanStartGame(SceneName);
+        }
 
+    }
+
+    [Command]
+    public void CmdCanStartGame(string SceneName)
+    {
+        Manager.StartGame(SceneName);
+    }
+    #endregion
 
 
 

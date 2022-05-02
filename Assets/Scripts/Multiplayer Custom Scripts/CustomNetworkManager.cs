@@ -27,13 +27,11 @@ public class CustomNetworkManager : NetworkManager
             // add the player for every single client connected 
             NetworkServer.AddPlayerForConnection(conn, GamePlayerInstance.gameObject);
         }
-
-
-
-
-
     }
 
-
+    public void StartGame(string SceneName)
+    {
+        ServerChangeScene(SceneName);
+    }
 
 }

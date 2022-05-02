@@ -99,24 +99,7 @@ public class LobbyController : MonoBehaviour
             }
         }
 
-        // StartGameButton.interactable = AllReady ? LocalPlayerController.PlayerIdNumber == 1 : false;
-
-        if (AllReady)
-        {
-            if (LocalPlayerController.PlayerIdNumber == 1)
-            {
-                StartGameButton.interactable = true;
-            }
-            else
-            {
-                StartGameButton.interactable = false;
-            }
-        }
-        else
-        {
-            StartGameButton.interactable = false;
-        }
-
+        StartGameButton.interactable = AllReady ? LocalPlayerController.PlayerIdNumber == 1 : false;
     }
 
     //  handle updating list of players
@@ -246,6 +229,11 @@ public class LobbyController : MonoBehaviour
     {
         LocalPlayerObject = GameObject.Find("LocalGamePlayer");
         LocalPlayerController = LocalPlayerObject.GetComponent<PlayerObjectController>();
+    }
+
+    public void StartGame(string SceneName)
+    {
+        LocalPlayerController.CanStartGame(SceneName);
     }
 
 }
