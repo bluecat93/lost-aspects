@@ -14,6 +14,13 @@ public class SteamLobby : MonoBehaviour
     protected Callback<LobbyEnter_t> LobbyEntered;
     #endregion
 
+    #region Lobbies Callbacks
+    protected Callback<LobbyMatchList_t> LobbyList;
+    protected Callback<LobbyDataUpdate_t> LobbyDataUpdated;
+    #endregion
+
+    public List<CSteamID> lobbyIDs = new List<CSteamID>();
+
     #region Variables
     public ulong CurrentLobbyID;
     //IMPORTANT, do not change this const to avoid errors
@@ -44,11 +51,18 @@ public class SteamLobby : MonoBehaviour
         LobbyCreated = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
         JoinRequest = Callback<GameLobbyJoinRequested_t>.Create(OnJoinRequest);
         LobbyEntered = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
+
+        LobbyList = Callback<LobbyMatchList_t>.Create(OnGetLobbyList);
+        LobbyDataUpdated = Callback<LobbyDataUpdate_t>.Create(OnGetLobbyData);
     }
 
     public void HostLobby()
     {
-        SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypeFriendsOnly, manager.maxConnections);
+        // only for friends
+        // SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypeFriendsOnly, manager.maxConnections);
+
+        // public game
+        SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, manager.maxConnections);
     }
 
     private void OnLobbyCreated(LobbyCreated_t callback)
@@ -92,6 +106,43 @@ public class SteamLobby : MonoBehaviour
         manager.StartClient();
         #endregion
     }
+
+    public void JoinLobby(CSteamID lobbyID)
+    {
+        SteamMatchmaking.JoinLobby(lobbyID);
+    }
+
+    public void GetLobbiesList()
+    {
+        if (lobbyIDs.Count > 0)
+        {
+            lobbyIDs.Clear();
+        }
+
+        SteamMatchmaking.AddRequestLobbyListResultCountFilter(60);
+        SteamMatchmaking.RequestLobbyList();
+    }
+
+    void OnGetLobbyList(LobbyMatchList_t result)
+    {
+        if (LobbiesListManager.instance.listOfLobbies.Count > 0)
+        {
+            LobbiesListManager.instance.DestroyLobbies();
+        }
+
+        for (int i = 0; i < result.m_nLobbiesMatching; i++)
+        {
+            CSteamID lobbyID = SteamMatchmaking.GetLobbyByIndex(i);
+            lobbyIDs.Add(lobbyID);
+            SteamMatchmaking.RequestLobbyData(lobbyID);
+        }
+    }
+
+    void OnGetLobbyData(LobbyDataUpdate_t result)
+    {
+        LobbiesListManager.instance.DisplayLobbies(lobbyIDs, result);
+    }
+
     #endregion
 
 }
