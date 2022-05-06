@@ -27,8 +27,8 @@ public class MultiplayerMovementControllerTutorial : NetworkBehaviour
             if (PlayerModel.activeSelf == false)
             {
                 PlayerModel.SetActive(true);
-                SetPosition();
                 PlayerCosmeticsSetup();
+                SetPosition();
             }
             // used only in places you want that the client controls itself.
             if (hasAuthority)
