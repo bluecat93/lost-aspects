@@ -23,17 +23,16 @@ public class MultiplayerMovementControllerTutorial : NetworkBehaviour
     {
         if (SceneManager.GetActiveScene().name == SceneName)
         {
-
+            // used only once when scene is active
+            if (PlayerModel.activeSelf == false)
+            {
+                PlayerModel.SetActive(true);
+                SetPosition();
+                PlayerCosmeticsSetup();
+            }
             // used only in places you want that the client controls itself.
             if (hasAuthority)
             {
-                // used only once when scene is active
-                if (PlayerModel.activeSelf == false)
-                {
-                    PlayerModel.SetActive(true);
-                    SetPosition();
-                    PlayerCosmeticsSetup();
-                }
                 Movement();
             }
         }
