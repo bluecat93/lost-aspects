@@ -23,18 +23,18 @@ public class MultiplayerMovementControllerTutorial : NetworkBehaviour
     {
         if (SceneManager.GetActiveScene().name == SceneName)
         {
-            // used only once when scene is active
+            // Used only once when scene is active
             if (PlayerModel.activeSelf == false)
             {
                 PlayerModel.SetActive(true);
                 PlayerCosmeticsSetup();
-                // SetPosition();
             }
+            // Sets the initial position of the player object
             if (transform.position == Vector3.zero)
             {
                 SetPosition();
             }
-            // used only in places you want that the client controls itself.
+            // Used only in places you want that the client controls itself.
             if (hasAuthority)
             {
                 Movement();
