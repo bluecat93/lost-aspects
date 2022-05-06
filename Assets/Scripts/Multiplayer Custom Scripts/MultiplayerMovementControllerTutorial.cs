@@ -28,6 +28,10 @@ public class MultiplayerMovementControllerTutorial : NetworkBehaviour
             {
                 PlayerModel.SetActive(true);
                 PlayerCosmeticsSetup();
+                // SetPosition();
+            }
+            if (transform.position == Vector3.zero)
+            {
                 SetPosition();
             }
             // used only in places you want that the client controls itself.
