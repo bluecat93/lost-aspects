@@ -12,6 +12,11 @@ public class PlayerObjectController : NetworkBehaviour
     [SyncVar] public ulong PlayerSteamID;
     [SyncVar(hook = nameof(PlayerNameUpdate))] public string PlayerName;
     [SyncVar(hook = nameof(PlayerReadyUpdate))] public bool Ready;
+
+
+    #region Cosmetics
+    [SyncVar(hook = nameof(SendPlayerColor))] public int playerColor;
+    #endregion
     #endregion
 
     private CustomNetworkManager manager;
@@ -119,6 +124,30 @@ public class PlayerObjectController : NetworkBehaviour
     }
     #endregion
 
+    #region Cosmetics
+    public void SendPlayerColor(int oldValue, int newValue)
+    {
+        // host
+        if (isServer)
+        {
+            playerColor = newValue;
+        }
+        // client, the other check is to reduce latency
+        if (isClient && (oldValue != newValue))
+        {
+            UpdateColor(newValue);
+        }
+    }
+    void UpdateColor(int message)
+    {
+        playerColor = message;
+    }
 
+    [Command]
+    public void UpdatePlayerColor(int newValue)
+    {
+        SendPlayerColor(playerColor, newValue);
+    }
+    #endregion
 
 }

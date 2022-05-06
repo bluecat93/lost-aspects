@@ -72,6 +72,7 @@ MonoBehaviour:
   PlayerSteamID: 0
   PlayerName: 
   Ready: 0
+  playerColor: 0
 --- !u!136 &6060155204583453026
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -101,7 +102,17 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   Speed: 0.1
-  playerModel: {fileID: 8351240408375349511}
+  PlayerModel: {fileID: 8351240408375349511}
+  PlayerMesh: {fileID: 3421468801350008248}
+  PlayerColors:
+  - {fileID: 2100000, guid: fd557350c80bfec4483cd511341988cc, type: 2}
+  - {fileID: 2100000, guid: 3e7fd9966d8f0b041a1ffde3b58ac71e, type: 2}
+  - {fileID: 2100000, guid: b5e50f017625e1f4daa8991a99169656, type: 2}
+  - {fileID: 2100000, guid: 1ef559488b81dc144979b93d334e2c2c, type: 2}
+  - {fileID: 2100000, guid: f3f06ff6d20b2e64084fa9b7ce4fafdb, type: 2}
+  - {fileID: 2100000, guid: c7f38e77458aef746a561992bc66a4a2, type: 2}
+  - {fileID: 2100000, guid: 059024ac7426339428b887fb1cb69104, type: 2}
+  - {fileID: 2100000, guid: 9a35ed79f7a49d440812ec146d2c50c6, type: 2}
   SceneName: GameMultiplayerTutorial
 --- !u!114 &5525993921384246683
 MonoBehaviour:

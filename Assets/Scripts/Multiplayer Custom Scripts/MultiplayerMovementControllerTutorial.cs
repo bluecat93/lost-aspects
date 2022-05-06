@@ -7,12 +7,16 @@ using UnityEngine.SceneManagement;
 public class MultiplayerMovementControllerTutorial : NetworkBehaviour
 {
     public float Speed = 0.1f;
-    public GameObject playerModel;
+    public GameObject PlayerModel;
+
+    public MeshRenderer PlayerMesh;
+    public Material[] PlayerColors;
+
     public string SceneName;
 
     private void Start()
     {
-        playerModel.SetActive(false);
+        PlayerModel.SetActive(false);
     }
 
     private void Update()
@@ -20,10 +24,11 @@ public class MultiplayerMovementControllerTutorial : NetworkBehaviour
         if (SceneManager.GetActiveScene().name == SceneName)
         {
             // used only once when scene is active
-            if (playerModel.activeSelf == false)
+            if (PlayerModel.activeSelf == false)
             {
                 SetPosition();
-                playerModel.SetActive(true);
+                PlayerModel.SetActive(true);
+                PlayerCosmeticsSetup();
             }
             // used only in places you want that the client controls itself.
             if (hasAuthority)
@@ -48,5 +53,10 @@ public class MultiplayerMovementControllerTutorial : NetworkBehaviour
 
 
         transform.position += moveDirection * Speed;
+    }
+
+    public void PlayerCosmeticsSetup()
+    {
+        PlayerMesh.material = PlayerColors[GetComponent<PlayerObjectController>().playerColor];
     }
 }
