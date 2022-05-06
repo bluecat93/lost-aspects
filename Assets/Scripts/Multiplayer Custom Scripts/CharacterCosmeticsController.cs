@@ -17,6 +17,8 @@ public class CharacterCosmeticsController : MonoBehaviour
         currentColorIndex = PlayerPrefs.GetInt("CurrentColorIndex", 0);
         currentColorImage.color = playerColors[currentColorIndex].color;
         CurrentColorText.text = playerColors[currentColorIndex].name;
+        GetComponent<LobbyController>().LocalPlayerController.ChangeColor(currentColorIndex);
+
     }
 
     public void NextColor()
@@ -26,6 +28,8 @@ public class CharacterCosmeticsController : MonoBehaviour
         PlayerPrefs.SetInt("currentColorIndex", currentColorIndex);
         currentColorImage.color = playerColors[currentColorIndex].color;
         CurrentColorText.text = playerColors[currentColorIndex].name;
+
+        GetComponent<LobbyController>().LocalPlayerController.ChangeColor(currentColorIndex);
     }
 
     public void PreviousColor()
@@ -35,5 +39,7 @@ public class CharacterCosmeticsController : MonoBehaviour
         PlayerPrefs.SetInt("currentColorIndex", currentColorIndex);
         currentColorImage.color = playerColors[currentColorIndex].color;
         CurrentColorText.text = playerColors[currentColorIndex].name;
+
+        GetComponent<LobbyController>().LocalPlayerController.ChangeColor(currentColorIndex);
     }
 }

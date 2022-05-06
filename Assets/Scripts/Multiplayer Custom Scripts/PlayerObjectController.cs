@@ -125,6 +125,21 @@ public class PlayerObjectController : NetworkBehaviour
     #endregion
 
     #region Cosmetics
+
+    public void ChangeColor(int newValue)
+    {
+        if (hasAuthority)
+        {
+            CmdUpdatePlayerColor(newValue);
+        }
+    }
+
+    [Command]
+    public void CmdUpdatePlayerColor(int newValue)
+    {
+        SendPlayerColor(playerColor, newValue);
+    }
+
     public void SendPlayerColor(int oldValue, int newValue)
     {
         // host
@@ -143,11 +158,7 @@ public class PlayerObjectController : NetworkBehaviour
         playerColor = message;
     }
 
-    [Command]
-    public void UpdatePlayerColor(int newValue)
-    {
-        SendPlayerColor(playerColor, newValue);
-    }
+
     #endregion
 
 }
