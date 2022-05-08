@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/StavTesting.unity
     guid: e3776abbeddee474393d33190508f56a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MultiplayerScenes/MultiplayerMenu.unity
     guid: 750a9e53026322e41833508a7c718887
   - enabled: 1
