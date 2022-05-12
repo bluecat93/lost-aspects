@@ -75,7 +75,6 @@ namespace Player
                 AnimatePlayer();
             }
         }
-        [Command]
         private void CmdKeyPressChecks()
         {
             this.forwardPressed = Input.GetKey(KeyCode.W);
