@@ -228,9 +228,9 @@ GameObject:
   - component: {fileID: 2083292142}
   - component: {fileID: 2083292141}
   - component: {fileID: 2083292140}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
