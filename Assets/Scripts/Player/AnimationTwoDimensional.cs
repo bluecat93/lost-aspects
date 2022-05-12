@@ -54,12 +54,11 @@ namespace Player
         // Start is called before the first frame update
         void Start()
         {
-            if (hasAuthority)
-            {
-                // Variables for refactoring
-                velocityZHash = Animator.StringToHash("VelocityZ");
-                velocityXHash = Animator.StringToHash("VelocityX");
-            }
+
+            // Variables for refactoring
+            velocityZHash = Animator.StringToHash("VelocityZ");
+            velocityXHash = Animator.StringToHash("VelocityX");
+
 
         }
 
