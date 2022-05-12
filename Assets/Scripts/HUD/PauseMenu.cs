@@ -41,7 +41,7 @@ namespace HeadsUpDisplay
             Time.timeScale = 1f;
             // Debug.Log("time is now:" + Time.deltaTime);
             isGamePaused = false;
-            Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
+            // Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
         }
 
         public void Pause()
@@ -51,7 +51,7 @@ namespace HeadsUpDisplay
             Time.timeScale = 0f;
             // Debug.Log("time is now:"+Time.deltaTime);
             isGamePaused = true;
-            Cursor.lockState = CursorLockMode.None;
+            // Cursor.lockState = CursorLockMode.None;
         }
 
         public void Options()
