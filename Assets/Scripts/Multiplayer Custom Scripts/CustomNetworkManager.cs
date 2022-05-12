@@ -19,10 +19,12 @@ public class CustomNetworkManager : NetworkManager
             // instantiate player controller
             PlayerObjectController GamePlayerInstance = Instantiate(GamePlayerPrefab);
 
+            SteamLobby sl = new SteamLobby();
+
             // player data
             GamePlayerInstance.ConnectionID = conn.connectionId;
             GamePlayerInstance.PlayerIdNumber = GamePlayers.Count + 1;
-            GamePlayerInstance.PlayerSteamID = (ulong)SteamMatchmaking.GetLobbyMemberByIndex((CSteamID)SteamLobby.Instance.CurrentLobbyID, GamePlayers.Count);
+            GamePlayerInstance.PlayerSteamID = (ulong)SteamMatchmaking.GetLobbyMemberByIndex((CSteamID)sl.Instance.CurrentLobbyID, GamePlayers.Count);
 
             // add the player for every single client connected 
             NetworkServer.AddPlayerForConnection(conn, GamePlayerInstance.gameObject);
