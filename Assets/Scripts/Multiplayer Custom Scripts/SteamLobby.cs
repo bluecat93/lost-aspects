@@ -7,7 +7,21 @@ using UnityEngine.UI;
 
 public class SteamLobby : MonoBehaviour
 {
-    public static SteamLobby Instance;
+
+    private SteamLobby _instance = null;
+
+    public SteamLobby Instance
+    {
+        get
+        {
+            if (this._instance == null)
+            {
+                this._instance = this;
+            }
+            return this._instance;
+        }
+    }
+
     #region Callbacks
     protected Callback<LobbyCreated_t> LobbyCreated;
     protected Callback<GameLobbyJoinRequested_t> JoinRequest;
