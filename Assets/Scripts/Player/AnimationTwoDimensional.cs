@@ -10,11 +10,11 @@ namespace Player
         float velocityZ = 0.0f;
         float velocityX = 0.0f;
 
-        bool forwardPressed = false;
-        bool leftPressed = false;
-        bool rightPressed = false;
-        bool backPressed = false;
-        bool dashPressed = false;
+        [SyncVar] bool forwardPressed = false;
+        [SyncVar] bool leftPressed = false;
+        [SyncVar] bool rightPressed = false;
+        [SyncVar] bool backPressed = false;
+        [SyncVar] bool dashPressed = false;
 
         public float acceleration = 2.0f;
         public float deceleration = 2.0f;
@@ -65,17 +65,18 @@ namespace Player
         // Update is called once per frame
         void Update()
         {
-            if (ThrdPrsnMvmnt.PlayerModel.activeSelf != false && hasAuthority)
+            if (ThrdPrsnMvmnt.PlayerModel.activeSelf != false)
             {
                 // checks when dash is pressed and changes maximum velocity if true
                 float currentMaxVelocity = dashPressed ? maxDashVelocity : maxRunVelocity;
-                KeyPressChecks();
+                CmdKeyPressChecks();
                 MovementChecks(currentMaxVelocity);
                 MovementDeceleration(currentMaxVelocity);
-                CmdAnimatePlayer();
+                AnimatePlayer();
             }
         }
-        private void KeyPressChecks()
+        [Command]
+        private void CmdKeyPressChecks()
         {
             this.forwardPressed = Input.GetKey(KeyCode.W);
             this.leftPressed = Input.GetKey(KeyCode.A);
@@ -119,8 +120,7 @@ namespace Player
 
         }
 
-        [Command]
-        private void CmdAnimatePlayer()
+        private void AnimatePlayer()
         {
             this.Anmtr.SetFloat(velocityZHash, velocityZ);
             this.Anmtr.SetFloat(velocityXHash, velocityX);
