@@ -7,8 +7,8 @@ namespace Player
 {
     public class AnimationTwoDimensional : NetworkBehaviour
     {
-        [SyncVar] float velocityZ = 0.0f;
-        [SyncVar] float velocityX = 0.0f;
+        float velocityZ = 0.0f;
+        float velocityX = 0.0f;
 
         bool forwardPressed = false;
         bool leftPressed = false;
@@ -22,8 +22,8 @@ namespace Player
         public float maxBackWalkVelocity = -1f;
         public float maxDashVelocity = 2.0f;
 
-        [SyncVar] int velocityZHash;
-        [SyncVar] int velocityXHash;
+        int velocityZHash;
+        int velocityXHash;
 
         Animator _animator;
 
@@ -73,7 +73,7 @@ namespace Player
                 KeyPressChecks();
                 MovementChecks(currentMaxVelocity);
                 MovementDeceleration(currentMaxVelocity);
-                AnimatePlayer();
+                CmdAnimatePlayer();
             }
         }
         private void KeyPressChecks()
@@ -119,7 +119,9 @@ namespace Player
             }
 
         }
-        private void AnimatePlayer()
+
+        [Command]
+        private void CmdAnimatePlayer()
         {
             this.Anmtr.SetFloat(velocityZHash, velocityZ);
             this.Anmtr.SetFloat(velocityXHash, velocityX);
