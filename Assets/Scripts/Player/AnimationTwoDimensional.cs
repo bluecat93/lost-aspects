@@ -5,10 +5,10 @@ using Mirror;
 
 namespace Player
 {
-    public class AnimationTwoDimensional : MonoBehaviour
+    public class AnimationTwoDimensional : NetworkBehaviour
     {
-        float velocityZ = 0.0f;
-        float velocityX = 0.0f;
+        [SyncVar] float velocityZ = 0.0f;
+        [SyncVar] float velocityX = 0.0f;
 
         bool forwardPressed = false;
         bool leftPressed = false;
@@ -22,8 +22,8 @@ namespace Player
         public float maxBackWalkVelocity = -1f;
         public float maxDashVelocity = 2.0f;
 
-        int velocityZHash;
-        int velocityXHash;
+        [SyncVar] int velocityZHash;
+        [SyncVar] int velocityXHash;
 
         Animator _animator;
 
@@ -54,17 +54,19 @@ namespace Player
         // Start is called before the first frame update
         void Start()
         {
-
-            // Variables for refactoring
-            velocityZHash = Animator.StringToHash("VelocityZ");
-            velocityXHash = Animator.StringToHash("VelocityX");
+            if (hasAuthority)
+            {
+                // Variables for refactoring
+                velocityZHash = Animator.StringToHash("VelocityZ");
+                velocityXHash = Animator.StringToHash("VelocityX");
+            }
 
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (ThrdPrsnMvmnt.PlayerModel.activeSelf != false)
+            if (ThrdPrsnMvmnt.PlayerModel.activeSelf != false && hasAuthority)
             {
                 // checks when dash is pressed and changes maximum velocity if true
                 float currentMaxVelocity = dashPressed ? maxDashVelocity : maxRunVelocity;

@@ -210,8 +210,6 @@ namespace Player
                         this.HandleMovement();
                     }
                 }
-
-
             }
         }
 
