@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 namespace Player
 {
-    public class AnimationTwoDimensional : MonoBehaviour
+    public class AnimationTwoDimensional : NetworkBehaviour
     {
         float velocityZ = 0.0f;
         float velocityX = 0.0f;
@@ -37,23 +38,42 @@ namespace Player
             }
         }
 
+        ThirdPersonMovement _ThirdPersonMovement;
+
+        private ThirdPersonMovement ThrdPrsnMvmnt
+        {
+            get
+            {
+                if (this._ThirdPersonMovement == null)
+                    this._ThirdPersonMovement = GetComponent<ThirdPersonMovement>();
+
+                return this._ThirdPersonMovement;
+            }
+        }
+
         // Start is called before the first frame update
         void Start()
         {
-            // Variables for refactoring
-            velocityZHash = Animator.StringToHash("VelocityZ");
-            velocityXHash = Animator.StringToHash("VelocityX");
+            if (hasAuthority)
+            {
+                // Variables for refactoring
+                velocityZHash = Animator.StringToHash("VelocityZ");
+                velocityXHash = Animator.StringToHash("VelocityX");
+            }
         }
 
         // Update is called once per frame
         void Update()
         {
-            // checks when dash is pressed and changes maximum velocity if true
-            float currentMaxVelocity = dashPressed ? maxDashVelocity : maxRunVelocity;
-            KeyPressChecks();
-            MovementChecks(currentMaxVelocity);
-            MovementDeceleration(currentMaxVelocity);
-            AnimatePlayer();
+            if (ThrdPrsnMvmnt.PlayerModel.activeSelf != false && hasAuthority)
+            {
+                // checks when dash is pressed and changes maximum velocity if true
+                float currentMaxVelocity = dashPressed ? maxDashVelocity : maxRunVelocity;
+                KeyPressChecks();
+                MovementChecks(currentMaxVelocity);
+                MovementDeceleration(currentMaxVelocity);
+                AnimatePlayer();
+            }
         }
         private void KeyPressChecks()
         {

@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeadsUpDisplay;
+using UnityEngine.SceneManagement;
+using Mirror;
 
 namespace Player
 {
-    public class ThirdPersonMovement : MonoBehaviour
+    public class ThirdPersonMovement : NetworkBehaviour
     {
         #region serializable fields
 
@@ -42,6 +44,14 @@ namespace Player
         [Header("Animation Variables")]
         [Tooltip("When to start landing animation")]
         [SerializeField] private float animationGroundOffset = -0.8f;
+
+        [Header("Needed for multiplayer")]
+        [Tooltip("The name of the scene the player will be active")]
+        public string SceneName;
+        [Tooltip("The gameobject of the player named: Camera and HUD")]
+        public GameObject CameraAndHUD;
+        [Tooltip("the player model object")]
+        public GameObject PlayerModel;
 
 
         #endregion
@@ -157,19 +167,47 @@ namespace Player
             this.CapsuleColliderStartingHeight = this.CpslCollider.height;
 
             // Locking cursor to not show it while moving.
-            Cursor.lockState = CursorLockMode.Locked;
+            // Cursor.lockState = CursorLockMode.Locked;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (!HeadsUpDisplay.PauseMenu.isGamePaused && this.PlyrStats.IsAlive())
+            if (SceneManager.GetActiveScene().name == SceneName)
             {
-                this.HandleCrouchInput();
-                this.HandleJump();
-                this.GroundedCheck();
-                this.HandleDodgeInput();
-                this.HandleMovement();
+
+                // Used only once when scene is active
+                if (PlayerModel.activeSelf == false)
+                {
+                    PlayerModel.SetActive(true);
+                    CameraAndHUD.SetActive(true);
+
+                    // Locking cursor to not show it while moving.
+                    Cursor.lockState = CursorLockMode.Locked;
+
+                    //TODO add player cosmetic setup when we will have one.
+                    //PlayerCosmeticsSetup();
+                }
+                // Sets the initial position of the player object
+                if (transform.position == Vector3.zero)
+                {
+                    // TODO add player starting positions.
+                    // SetPosition();
+                }
+                // Used only in places you want that the client controls itself.
+                if (hasAuthority)
+                {
+                    if (!HeadsUpDisplay.PauseMenu.isGamePaused && this.PlyrStats.IsAlive())
+                    {
+                        this.HandleCrouchInput();
+                        this.HandleJump();
+                        this.GroundedCheck();
+                        this.HandleDodgeInput();
+                        this.HandleMovement();
+                    }
+                }
+
+
             }
         }
 
