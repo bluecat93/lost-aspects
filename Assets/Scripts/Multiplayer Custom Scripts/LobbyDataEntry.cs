@@ -14,14 +14,12 @@ public class LobbyDataEntry : MonoBehaviour
 
     public void SetLobbyData()
     {
-        lobbyNameText.text = lobbyName == string.Empty ? "Empty" : lobbyName;
+        lobbyNameText.text = lobbyName == "" ? "Empty" : lobbyName;
     }
 
     // links to button
     public void JoinLobby()
     {
-        SteamLobby sl = new SteamLobby();
-
-        sl.Instance.JoinLobby(lobbyID);
+        SteamLobby.Instance.JoinLobby(lobbyID);
     }
 }
