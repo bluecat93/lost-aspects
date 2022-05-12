@@ -180,13 +180,17 @@ namespace Player
                 if (PlayerModel.activeSelf == false)
                 {
                     PlayerModel.SetActive(true);
-                    CameraAndHUD.SetActive(true);
+                    if (hasAuthority)
+                    {
+                        CameraAndHUD.SetActive(true);
 
-                    // Locking cursor to not show it while moving.
-                    Cursor.lockState = CursorLockMode.Locked;
+                        // Locking cursor to not show it while moving.
+                        Cursor.lockState = CursorLockMode.Locked;
 
-                    //TODO add player cosmetic setup when we will have one.
-                    //PlayerCosmeticsSetup();
+
+                        //TODO add player cosmetic setup when we will have one.
+                        //PlayerCosmeticsSetup();
+                    }
                 }
                 // Sets the initial position of the player object
                 if (transform.position == Vector3.zero)
