@@ -83,10 +83,10 @@ namespace Player
 
         private void KeyPressChecks()
         {
-            this.forwardPressed = Input.GetKey(KeyCode.W);
-            this.leftPressed = Input.GetKey(KeyCode.A);
-            this.rightPressed = Input.GetKey(KeyCode.D);
-            this.backPressed = Input.GetKey(KeyCode.S);
+            this.forwardPressed = Input.GetAxis("Vertical") > 0;
+            this.leftPressed = Input.GetAxis("Horizontal") < 0;
+            this.rightPressed = Input.GetAxis("Horizontal") > 0;
+            this.backPressed = Input.GetAxis("Vertical") < 0;
             this.dashPressed = Input.GetKey(KeyCode.LeftShift);
         }
         private void MovementChecks(float currentMaxVelocity)
