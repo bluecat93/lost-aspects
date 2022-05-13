@@ -14,7 +14,7 @@ public class LobbyDataEntry : MonoBehaviour
 
     public void SetLobbyData()
     {
-        lobbyNameText.text = lobbyName == string.Empty ? "Empty" : lobbyName;
+        lobbyNameText.text = lobbyName == "" ? "Empty" : lobbyName;
     }
 
     // links to button

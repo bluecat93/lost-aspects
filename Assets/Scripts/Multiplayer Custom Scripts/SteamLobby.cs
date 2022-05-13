@@ -41,10 +41,10 @@ public class SteamLobby : MonoBehaviour
         {
             return;
         }
-        // if (Instance == null)
-        // {
-        //     Instance = this;
-        // }
+        if (Instance == null)
+        {
+            Instance = this;
+        }
 
         manager = GetComponent<CustomNetworkManager>();
 
