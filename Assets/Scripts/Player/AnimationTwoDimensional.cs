@@ -71,7 +71,7 @@ namespace Player
                 float currentMaxVelocity = dashPressed ? maxDashVelocity : maxRunVelocity;
                 if (hasAuthority)
                 {
-                    CmdKeyPressChecks();
+                    KeyPressChecks();
                 }
                 MovementChecks(currentMaxVelocity);
                 MovementDeceleration(currentMaxVelocity);
@@ -79,8 +79,8 @@ namespace Player
             }
         }
 
-        [Command]
-        private void CmdKeyPressChecks()
+
+        private void KeyPressChecks()
         {
             this.forwardPressed = Input.GetKey(KeyCode.W);
             this.leftPressed = Input.GetKey(KeyCode.A);
