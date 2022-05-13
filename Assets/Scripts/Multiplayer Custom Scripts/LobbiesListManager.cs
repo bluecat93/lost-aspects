@@ -36,9 +36,7 @@ public class LobbiesListManager : MonoBehaviour
 
         lobbiesMenu.SetActive(true);
 
-        SteamLobby sl = new SteamLobby();
-
-        sl.Instance.GetLobbiesList();
+        SteamLobby.Instance.GetLobbiesList();
     }
 
     public void BackToMenu()

@@ -20,8 +20,6 @@ public class LobbyDataEntry : MonoBehaviour
     // links to button
     public void JoinLobby()
     {
-        SteamLobby sl = new SteamLobby();
-
-        sl.Instance.JoinLobby(lobbyID);
+        SteamLobby.Instance.JoinLobby(lobbyID);
     }
 }

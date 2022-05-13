@@ -10,11 +10,11 @@ namespace Player
         float velocityZ = 0.0f;
         float velocityX = 0.0f;
 
-        [SyncVar] bool forwardPressed = false;
-        [SyncVar] bool leftPressed = false;
-        [SyncVar] bool rightPressed = false;
-        [SyncVar] bool backPressed = false;
-        [SyncVar] bool dashPressed = false;
+        bool forwardPressed = false;
+        bool leftPressed = false;
+        bool rightPressed = false;
+        bool backPressed = false;
+        bool dashPressed = false;
 
         public float acceleration = 2.0f;
         public float deceleration = 2.0f;
