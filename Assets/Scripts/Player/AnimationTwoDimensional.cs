@@ -65,18 +65,19 @@ namespace Player
         // Update is called once per frame
         void Update()
         {
-
-            if (hasAuthority)
+            if (ThrdPrsnMvmnt.PlayerModel.activeSelf != false)
             {
-                // checks when dash is pressed and changes maximum velocity if true
-                float currentMaxVelocity = dashPressed ? maxDashVelocity : maxRunVelocity;
+                if (hasAuthority)
+                {
+                    // checks when dash is pressed and changes maximum velocity if true
+                    float currentMaxVelocity = dashPressed ? maxDashVelocity : maxRunVelocity;
 
-                KeyPressChecks();
-                MovementChecks(currentMaxVelocity);
-                MovementDeceleration(currentMaxVelocity);
-                AnimatePlayer();
+                    KeyPressChecks();
+                    MovementChecks(currentMaxVelocity);
+                    MovementDeceleration(currentMaxVelocity);
+                    AnimatePlayer();
+                }
             }
-
         }
 
 
