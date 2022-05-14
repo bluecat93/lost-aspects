@@ -19,26 +19,26 @@ namespace Player
     {
         [Header("Health Variables")]
         [Tooltip("Health character starts with")]
-        [SerializeField] private int maxHealth = 100;
+        [SerializeField] private int maxHealth = 100; // can see: all clients + can change: all clients and server
         [Tooltip("Health character currently has")]
-        [SerializeField] private int currentHealth;
-        private bool isAlive = true;
+        [SerializeField] private int currentHealth; // can see: all clients + can change: all clients and server
+        private bool isAlive = true; // can see: all + can change: client
 
         [Header("Stamina Variables")]
         [Tooltip("Stamina character starts with")]
-        [SerializeField] private int maxStamina = 100;
+        [SerializeField] private int maxStamina = 100; // can see: client + can change: everyone 
         [Tooltip("Stamina character currently has")]
-        [SerializeField] private int currentStamina;
+        [SerializeField] private int currentStamina; // can see: client + can change: client + server
 
         [Header("Stamina Recharge Variables")]
         [Tooltip("When to start regenerating stamina")]
-        [SerializeField] private float regenStartTime = 2f;
-        [Tooltip("How fast stamina recharges")]
-        [SerializeField] private int regenRate = 1;
+        [SerializeField] private float regenStartTime = 2f; // can see: client + can change: client
+        [Tooltip("How much stamina recharges per tick")]
+        [SerializeField] private int regenRate = 1; // can see: client + can change: client
         [Tooltip("How often stamina recharges, lower is better")]
-        [SerializeField] private float regenTick = 0.1f;
+        [SerializeField] private float regenTick = 0.1f; // can see: client + can change: everyone
         [Tooltip("How often stamina recharges when hungry")]
-        [SerializeField] private float regenWhenHungry = 0.5f;
+        [SerializeField] private float regenWhenHungry = 0.5f;  // can see: client + can change: client
 
         // Check if currently regenning
         private Coroutine isRegen;
@@ -48,55 +48,55 @@ namespace Player
 
         [Header("Basic Movement Variables")]
         [Tooltip("The character's base movement speed")]
-        [SerializeField] private float movementSpeed = 5.0f;
+        [SerializeField] private float movementSpeed = 5.0f; // can see: client + can change: everyone
         [Tooltip("Acceleration and deceleration")]
-        [SerializeField] private float speedChangeRate = 10.0f;
+        [SerializeField] private float speedChangeRate = 10.0f; // can see: client + can change: client
 
         [Header("Dashing Variables")]
         [Tooltip("The speed multiplier when sprinting")]
-        [SerializeField] private float dashModifier = 1.5f;
+        [SerializeField] private float dashModifier = 1.5f; // can see: client + can change: client
 
         [Header("Jumping Variables")]
         [Tooltip("The higher this field, the higher the jump")]
-        [SerializeField] private float jumpHeight = 5f;
+        [SerializeField] private float jumpHeight = 5f; // can see: client + can change: everyone
 
         [Header("Dodging Variables")]
         [Tooltip("The speed of the character while dodgeing")]
-        [SerializeField] private float dodgeSpeed = 10f;
+        [SerializeField] private float dodgeSpeed = 10f; // can see: client + can change: everyone
         [Tooltip("The time (in seconds) it takes for the character to dodge (from start to finish)")]
-        [SerializeField] private float dodgeTime = 0.5f;
+        [SerializeField] private float dodgeTime = 0.5f; // can see: client + can change: client
         [Tooltip("How much stamina a roll takes")]
-        [SerializeField] private int dodgeCost = -50;
+        [SerializeField] private int dodgeCost = -50; // can see: client + can change: client
 
         [Header("Hunger Variables")]
         [Tooltip("Hunger when character is full")]
-        [SerializeField] private int maxHunger = 100;
+        [SerializeField] private int maxHunger = 100; // can see: client + can change: client
         [Tooltip("Characters current hunger rating")]
-        [SerializeField] private int currentHunger;
+        [SerializeField] private int currentHunger; // can see: client + can change: client
         [Tooltip("Start lowering hunger")]
-        [SerializeField] private float hungerStartTime = 5.0f;
+        [SerializeField] private float hungerStartTime = 5.0f; // can see: client + can change: client
         [Tooltip("How often to lower hunger")]
-        [SerializeField] private float hungerRepeatTime = 10.0f;
+        [SerializeField] private float hungerRepeatTime = 10.0f; // can see: client + can change: client
 
         private bool isHungry = false;
 
         [Header("UI Bars")]
         [Tooltip("Bar that displays character health")]
-        [SerializeField] private BarScript healthBar;
+        [SerializeField] private BarScript healthBar; // can see: client + can change: client
         [Tooltip("Bar that displays character hunger")]
-        [SerializeField] private BarScript hungerBar;
+        [SerializeField] private BarScript hungerBar; // can see: client + can change: client
         [Tooltip("Bar that displays character stamina")]
-        [SerializeField] private BarScript staminaBar;
+        [SerializeField] private BarScript staminaBar; // can see: client + can change: client
 
         [Header("Game objects")]
         [Tooltip("Game over screen")]
-        [SerializeField] private GameObject gameOverUI;
+        [SerializeField] private GameObject gameOverUI; // can see: client + can change: client
         [Tooltip("Camera that follows player")]
-        [SerializeField] private GameObject thirdPersonCamera;
+        [SerializeField] private GameObject thirdPersonCamera;  // can see: client + can change: client
 
         [Header("Other variables")]
         [Tooltip("Reduce fall damage")]
-        [SerializeField] private int fallDamageReduction = 0;
+        [SerializeField] private int fallDamageReduction = 0; // can see: client + can change: everyone
 
 
         private ThirdPersonMovement _thirdPersonMovement;
