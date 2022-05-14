@@ -10,10 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8355888873339006567}
   - component: {fileID: 1351138013468785571}
-  - component: {fileID: 1496732971721262044}
+  - component: {fileID: 2031424117577626474}
   - component: {fileID: 5525993921384246683}
   - component: {fileID: 6650152804603411120}
   - component: {fileID: 5472717303520896591}
+  - component: {fileID: 1496732971721262044}
   - component: {fileID: 2955836663175862522}
   - component: {fileID: 8771323154067867548}
   - component: {fileID: 3644515974131198857}
@@ -58,7 +59,7 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 2891c089311b487419dfb59246af9d12
   hasSpawned: 0
---- !u!114 &1496732971721262044
+--- !u!114 &2031424117577626474
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -67,17 +68,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 988022295743780139}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c293d7d139b3c4c46a4956e054d1d0ed, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.1
-  ConnectionID: 0
-  PlayerIdNumber: 0
-  PlayerSteamID: 0
-  PlayerName: 
-  Ready: 0
-  playerColor: 0
+  syncInterval: 0.08
+  clientAuthority: 1
+  animator: {fileID: 3103411175904020008}
 --- !u!114 &5525993921384246683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,6 +141,26 @@ CapsuleCollider:
   m_Height: 1.8667967
   m_Direction: 1
   m_Center: {x: -0.007931709, y: 0.91660154, z: 0.00000333786}
+--- !u!114 &1496732971721262044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988022295743780139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c293d7d139b3c4c46a4956e054d1d0ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  ConnectionID: 0
+  PlayerIdNumber: 0
+  PlayerSteamID: 0
+  PlayerName: 
+  Ready: 0
+  playerColor: 0
 --- !u!114 &2955836663175862522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -760,5 +777,10 @@ GameObject:
 --- !u!4 &3103411176977317025 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8165736442223772231, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+  m_PrefabInstance: {fileID: 6504057689067257574}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &3103411175904020008 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8165736441150503118, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
   m_PrefabInstance: {fileID: 6504057689067257574}
   m_PrefabAsset: {fileID: 0}
