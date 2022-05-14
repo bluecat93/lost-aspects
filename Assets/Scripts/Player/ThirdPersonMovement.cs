@@ -50,8 +50,7 @@ namespace Player
         public string SceneName;
         [Tooltip("The gameobject of the player named: Camera and HUD")]
         public GameObject CameraAndHUD;
-        [Tooltip("the player model object")]
-        public GameObject PlayerModel;
+        [HideInInspector] public bool IsExist = false;
 
 
         #endregion
@@ -177,9 +176,9 @@ namespace Player
             {
 
                 // Used only once when scene is active
-                if (PlayerModel.activeSelf == false)
+                if (!IsExist)
                 {
-                    PlayerModel.SetActive(true);
+                    IsExist = true;
                     if (hasAuthority)
                     {
                         CameraAndHUD.SetActive(true);

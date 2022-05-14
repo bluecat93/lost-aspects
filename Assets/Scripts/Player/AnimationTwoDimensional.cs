@@ -65,7 +65,7 @@ namespace Player
         // Update is called once per frame
         void Update()
         {
-            if (ThrdPrsnMvmnt.PlayerModel.activeSelf != false)
+            if (ThrdPrsnMvmnt.IsExist)
             {
                 if (hasAuthority)
                 {
