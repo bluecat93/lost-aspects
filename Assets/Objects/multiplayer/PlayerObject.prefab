@@ -72,7 +72,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.08
+  syncInterval: 0
   clientAuthority: 1
   animator: {fileID: 3103411175904020008}
 --- !u!114 &5525993921384246683
@@ -191,7 +191,7 @@ MonoBehaviour:
   animationGroundOffset: 0.4
   SceneName: GameMultiplayerTutorial
   CameraAndHUD: {fileID: 6972008256323951258}
-  PlayerModel: {fileID: 6972008256323951258}
+  IsExist: 0
 --- !u!114 &8771323154067867548
 MonoBehaviour:
   m_ObjectHideFlags: 0
