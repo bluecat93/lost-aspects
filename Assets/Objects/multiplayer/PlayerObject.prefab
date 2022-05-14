@@ -241,6 +241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83f41c0194bd1314e86162829c87c765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   defaultAnimatorController: {fileID: 9100000, guid: fc21a4cf3c9e0a94da7584f08e7c59b6, type: 2}
 --- !u!114 &1576748231984638541
 MonoBehaviour:
@@ -714,6 +716,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8355888873339006567}
     m_Modifications:
+    - target: {fileID: 5513864077871683739, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8165736442223772231, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: m_RootOrder
       value: 0
