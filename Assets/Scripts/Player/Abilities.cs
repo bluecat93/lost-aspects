@@ -5,11 +5,11 @@ using UnityEngine;
 using Object;
 using UnityEngine.Events;
 using Animation;
-
+using Mirror;
 
 namespace Player
 {
-    public class Abilities : MonoBehaviour
+    public class Abilities : NetworkBehaviour
     {
         [Header("Animations")]
         [Tooltip("The default animator controller.")]
@@ -28,6 +28,19 @@ namespace Player
             }
         }
 
+        ThirdPersonMovement _ThirdPersonMovement;
+
+        private ThirdPersonMovement ThrdPrsnMvmnt
+        {
+            get
+            {
+                if (this._ThirdPersonMovement == null)
+                    this._ThirdPersonMovement = GetComponent<ThirdPersonMovement>();
+
+                return this._ThirdPersonMovement;
+            }
+        }
+
         private EventsHandler _eventHandler;
 
         private bool isEquiped = false;
@@ -35,18 +48,22 @@ namespace Player
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetButtonDown("Equip"))
+            if (ThrdPrsnMvmnt.IsExist && hasAuthority)
             {
-                if (isEquiped)
+                if (Input.GetButtonDown("Equip"))
                 {
-                    unequipWeapon();
+                    if (isEquiped)
+                    {
+                        unequipWeapon();
+                    }
+                    else
+                    {
+                        EquipWeapon();
+                    }
+                    isEquiped = !isEquiped;
                 }
-                else
-                {
-                    EquipWeapon();
-                }
-                isEquiped = !isEquiped;
             }
+
         }
 
         //Equip or unequip a weapon. NOTE: this will only work with one weapon type. if we will have more than we have to insantiate them in the right positions by getting the offsets and the like.

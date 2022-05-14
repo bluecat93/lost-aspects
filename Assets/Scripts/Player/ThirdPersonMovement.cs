@@ -187,8 +187,9 @@ namespace Player
                         // Cursor.lockState = CursorLockMode.Locked;
 
 
-                        //TODO add player cosmetic setup when we will have one.
-                        //PlayerCosmeticsSetup();
+                        // TODO add player cosmetic setup when we will have one.
+                        // PlayerCosmeticsSetup();
+
                     }
                 }
                 // Sets the initial position of the player object

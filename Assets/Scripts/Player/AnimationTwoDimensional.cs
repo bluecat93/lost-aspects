@@ -65,18 +65,17 @@ namespace Player
         // Update is called once per frame
         void Update()
         {
-            if (ThrdPrsnMvmnt.IsExist)
+            if (ThrdPrsnMvmnt.IsExist && hasAuthority)
             {
-                if (hasAuthority)
-                {
-                    // checks when dash is pressed and changes maximum velocity if true
-                    float currentMaxVelocity = dashPressed ? maxDashVelocity : maxRunVelocity;
 
-                    KeyPressChecks();
-                    MovementChecks(currentMaxVelocity);
-                    MovementDeceleration(currentMaxVelocity);
-                    AnimatePlayer();
-                }
+                // checks when dash is pressed and changes maximum velocity if true
+                float currentMaxVelocity = dashPressed ? maxDashVelocity : maxRunVelocity;
+
+                KeyPressChecks();
+                MovementChecks(currentMaxVelocity);
+                MovementDeceleration(currentMaxVelocity);
+                AnimatePlayer();
+
             }
         }
 
@@ -87,6 +86,7 @@ namespace Player
             this.leftPressed = Input.GetAxis("Horizontal") < 0;
             this.rightPressed = Input.GetAxis("Horizontal") > 0;
             this.backPressed = Input.GetAxis("Vertical") < 0;
+            // TODO change from Keycode to the actual name of sprint
             this.dashPressed = Input.GetKey(KeyCode.LeftShift);
         }
         private void MovementChecks(float currentMaxVelocity)
