@@ -48,19 +48,12 @@ namespace Player
         // Update is called once per frame
         void Update()
         {
+            // only the active client can enter this if because of hasAuthority
             if (ThrdPrsnMvmnt.IsExist && hasAuthority)
             {
                 if (Input.GetButtonDown("Equip"))
                 {
-                    if (isEquiped)
-                    {
-                        unequipWeapon();
-                    }
-                    else
-                    {
-                        EquipWeapon();
-                    }
-                    isEquiped = !isEquiped;
+                    CmdEquip();
                 }
             }
 
@@ -81,6 +74,29 @@ namespace Player
             Functions.SetAnimatorController(Anmtor, this.defaultAnimatorController);
 
         }
+
+        // This function is called from client who clicked on equip button and is runed by server.
+        [Command]
+        private void CmdEquip()
+        {
+            RpcEquip();
+        }
+
+        // This function is called from server (and is used in the Cmd function above) and is runed by all clients including the server.
+        [ClientRpc]
+        public void RpcEquip()
+        {
+            if (isEquiped)
+            {
+                unequipWeapon();
+            }
+            else
+            {
+                EquipWeapon();
+            }
+            isEquiped = !isEquiped;
+        }
+
 
         #endregion
 
