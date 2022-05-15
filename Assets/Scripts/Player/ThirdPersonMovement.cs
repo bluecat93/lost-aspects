@@ -429,7 +429,7 @@ namespace Player
         IEnumerator DodgeCoroutine()
         {
 
-            PlyrStats.ChangeStamina(PlyrStats.GetDodgeCost());
+            PlyrStats.RestoreStamina(PlyrStats.GetDodgeCost());
             float startTime = Time.time;
             this.IsRolling = true;
             this.PlayerAnim.SetTrigger("Roll");

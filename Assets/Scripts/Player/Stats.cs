@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeadsUpDisplay;
+using Mirror;
 
 namespace Player
 {
@@ -15,14 +16,14 @@ namespace Player
     /// <param name="currentHunger"> players current hunger </param>
     /// <param name="healthBar"> assign the script of the health bar in the player hud </param>
     /// <param name="hungerBar"> assign the script of the hunger bar in the player hud </param>
-    public class Stats : MonoBehaviour
+    public class Stats : NetworkBehaviour
     {
         [Header("Health Variables")]
         [Tooltip("Health character starts with")]
         [SerializeField] private int maxHealth = 100; // can see: all clients + can change: all clients and server
         [Tooltip("Health character currently has")]
         [SerializeField] private int currentHealth; // can see: all clients + can change: all clients and server
-        private bool isAlive = true; // can see: all + can change: client
+        private bool isAlive = true; // can see: all clients + can change: client
 
         [Header("Stamina Variables")]
         [Tooltip("Stamina character starts with")]
@@ -34,9 +35,9 @@ namespace Player
         [Tooltip("When to start regenerating stamina")]
         [SerializeField] private float regenStartTime = 2f; // can see: client + can change: client
         [Tooltip("How much stamina recharges per tick")]
-        [SerializeField] private int regenRate = 1; // can see: client + can change: client
-        [Tooltip("How often stamina recharges, lower is better")]
-        [SerializeField] private float regenTick = 0.1f; // can see: client + can change: everyone
+        [SerializeField] private int regenRateAmount = 1; // can see: client + can change: client
+        [Tooltip("How often stamina recharges, lower is better. Can't go lower than 0.01")]
+        [SerializeField] private float regenRate = 0.1f; // can see: client + can change: everyone
         [Tooltip("How often stamina recharges when hungry")]
         [SerializeField] private float regenWhenHungry = 0.5f;  // can see: client + can change: client
 
@@ -118,45 +119,122 @@ namespace Player
         void Start()
         {
             this.currentHealth = this.maxHealth;
-            this.healthBar.SetMax(this.maxHealth);
+            this.currentHunger = this.maxHunger;
+            this.currentStamina = this.maxStamina;
+
             this.isAlive = true;
 
-            this.currentHunger = this.maxHunger;
-            this.hungerBar.SetMax(this.maxHunger);
+            regenRateWhenFull = regenRate;
 
-            this.currentStamina = this.maxStamina;
-            this.staminaBar.SetMax(this.maxStamina);
+            if (hasAuthority)
+            {
+                // UI stuff is only interesting for the active client
+                this.healthBar.SetMax(this.maxHealth);
+                this.hungerBar.SetMax(this.maxHunger);
+                this.staminaBar.SetMax(this.maxStamina);
 
-            regenRateWhenFull = regenTick;
-
-            InvokeRepeating("GettingHungry", this.hungerStartTime, this.hungerRepeatTime);
-            InvokeRepeating("CheckHunger", 0.5f, 0.5f);
+                // hunger stuff is only interesting for the active client
+                InvokeRepeating("GettingHungry", this.hungerStartTime, this.hungerRepeatTime);
+                InvokeRepeating("CheckHunger", 0.5f, 0.5f);
+            }
         }
 
         // Update is called once per frame
         void Update()
         {
             // Button to test death
-            if (Input.GetKeyDown(KeyCode.P))
+            // if (Input.GetKeyDown(KeyCode.P))
+            // {
+            //     this.currentHealth = 0;
+            // }
+
+            if (this.currentHealth <= 0 && hasAuthority)
             {
-                this.currentHealth = 0;
-            }
-            if (this.currentHealth <= 0)
-            {
-                this.isAlive = false;
+                CmdKilled(); // sends the death to everyone
 
                 this.gameOverUI.SetActive(true);
-                Cursor.lockState = CursorLockMode.None;
+
+                // TODO restore cursor locks
+                // Cursor.lockState = CursorLockMode.None;
             }
 
+        }
+
+        public void Respawn()
+        {
+            if (hasAuthority)
+            {
+                this.gameOverUI.SetActive(false);
+                this.respawn = FindObjectOfType<RespawnScript>();
+                this.respawn.RespawnPlayer();
+                Heal(maxHealth);
+                Eat();
+                this.thirdPersonCamera.SetActive(true);
+                this.isAlive = true;
+                // Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
+            }
+        }
+
+        #region Health Functions
+
+        // changes current health to the new value.
+        public void ChangeHealth(int newValue)
+        {
+            if (isClient)
+            {
+                // client needs to call server so he can change the health for everyone.
+                CmdHealthChanged(newValue);
+
+            }
+            if (isServer)
+            {
+                // server needs to call all cients to change the health for everyone
+                RpcHealthChanged(newValue);
+            }
+        }
+
+        private void ChangeHealthForEveryone(int newValue)
+        {
+            this.currentHealth = newValue;
+            this.currentHealth = currentHealth > maxHealth ? maxHealth : currentHealth;
+            this.currentHealth = currentHealth < 0 ? 0 : currentHealth;
+
+            if (hasAuthority)
+            {
+                this.healthBar.SetCurrent(currentHealth);
+            }
+        }
+
+        // changes max health to the new value.
+        public void ChangeMaxHealth(int newValue)
+        {
+            if (isClient)
+            {
+                // client needs to call server so he can change the health for everyone.
+                CmdMaxHealthChanged(newValue);
+
+            }
+            if (isServer)
+            {
+                // server needs to call all cients to change the health for everyone
+                RpcMaxHealthChanged(newValue);
+            }
+        }
+
+        private void ChangeMaxHealthForEveryone(int newValue)
+        {
+            this.maxHealth = newValue;
+            if (hasAuthority)
+            {
+                this.healthBar.SetMax(maxHealth);
+            }
         }
 
         public void TakeDamage(int damage, bool isBlockable = true)
         {
             if (this.currentHealth > 0 && ((isBlockable && !this.ThrdPrsonMvmt.IsRolling) || (!isBlockable)))
             {
-                this.currentHealth -= damage;
-                this.healthBar.SetCurrent(currentHealth);
+                ChangeHealth(this.currentHealth - damage);
             }
         }
 
@@ -165,55 +243,84 @@ namespace Player
             this.TakeDamage(damage * 100 / this.maxHealth, isBlockable);
         }
 
-        void GettingHungry()
+        public void Heal(int amount)
         {
-            if (this.currentHunger > 0)
+            ChangeHealth(this.currentHealth + amount);
+        }
+
+        #endregion
+
+        #region Hunger Functions
+
+        private void GettingHungry()
+        {
+            if (hasAuthority)
             {
-                this.currentHunger--;
-                this.hungerBar.SetCurrent(this.currentHunger);
+                if (this.currentHunger > 0)
+                {
+                    this.currentHunger--;
+                    this.hungerBar.SetCurrent(this.currentHunger);
+                }
             }
         }
 
-        void CheckHunger()
+        private void CheckHunger()
         {
-            if (this.currentHunger == 0) // how we know if character is hungry
+            if (hasAuthority)
             {
-                this.isHungry = true;
-                regenTick = regenWhenHungry;
-            }
-            else
-            {
-                this.isHungry = false;
-                regenTick = regenRateWhenFull;
+                if (this.currentHunger == 0) // how we know if character is hungry
+                {
+                    this.isHungry = true;
+                    regenRate = regenWhenHungry;
+                }
+                else
+                {
+                    this.isHungry = false;
+                    regenRate = regenRateWhenFull;
+                }
             }
         }
 
-        public void Respawn()
-        {
-            this.gameOverUI.SetActive(false);
-            this.respawn = FindObjectOfType<RespawnScript>();
-            this.respawn.RespawnPlayer();
-            Heal();
-            Eat();
-            this.thirdPersonCamera.SetActive(true);
-            this.isAlive = true;
-            Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
-        }
-        public void Heal()
-        {
-            this.currentHealth = this.maxHealth;
-            this.healthBar.SetCurrent(this.maxHealth);
-        }
         public void Eat()
         {
-            this.currentHunger = this.maxHunger;
-            this.hungerBar.SetCurrent(this.maxHunger);
+            if (hasAuthority)
+            {
+                this.currentHunger = this.maxHunger;
+                this.hungerBar.SetCurrent(this.maxHunger);
+            }
         }
 
-        public void ChangeStamina(int amount)
+        #endregion
+
+        #region Stamina Functions
+
+        public void RestoreStamina(int amount)
         {
+
+            if (isServer)
+            {
+                RpcRestoreStamina(amount);
+            }
+            else if (isClient)
+            {
+                // client can't change this stat unless it has authority.
+                if (hasAuthority)
+                {
+                    RestoreStaminaWithAuthority(amount);
+                }
+
+            }
+        }
+
+        private void RestoreStaminaWithAuthority(int amount)
+        {
+            if (!hasAuthority)
+                return;
+
             this.currentStamina += amount;
             this.currentStamina = this.currentStamina > this.maxStamina ? this.maxStamina : this.currentStamina;
+            this.currentStamina = this.currentStamina < 0 ? 0 : this.currentStamina;
+
             this.staminaBar.SetCurrent(this.currentStamina);
             if (this.currentStamina < this.maxStamina)
             {
@@ -223,6 +330,32 @@ namespace Player
             }
         }
 
+        public void FasterRegenRate(float amount)
+        {
+            if (isClient)
+            {
+                if (hasAuthority)
+                {
+                    FasterRegenRateWithAuthority(amount);
+                }
+                else
+                {
+                    CmdFasterRegenRate(amount);
+                }
+            }
+            else if (isServer)
+            {
+                RpcFasterRegenRate(amount);
+            }
+        }
+
+        private void FasterRegenRateWithAuthority(float amount)
+        {
+            if (!hasAuthority)
+                return;
+            regenRate -= amount;
+            regenRate = regenRate < 0.01f ? 0.01f : regenRate;
+        }
         private IEnumerator RegenStamina()
         {
             // Debug.Log("regenning stamina");
@@ -232,14 +365,154 @@ namespace Player
             while (this.currentStamina < this.maxStamina)
             {
                 // Debug.Log("regenning stamina");
-                this.currentStamina += this.regenRate;
+                this.currentStamina += this.regenRateAmount;
                 this.staminaBar.SetCurrent(this.currentStamina);
-                yield return new WaitForSeconds(this.regenTick);
+                yield return new WaitForSeconds(this.regenRate);
             }
             this.isRegen = null;
         }
 
-        #region Getters and Setters
+        public void IncreaseMaxStamina(int amount)
+        {
+            if (isClient)
+            {
+                if (hasAuthority)
+                {
+                    IncreaseMaxStaminaWithAuthority(amount);
+                }
+                else
+                {
+                    CmdIncreaseMaxStamina(amount);
+                }
+            }
+            else if (isServer)
+            {
+                RpcIncreaseMaxStamina(amount);
+            }
+        }
+
+        private void IncreaseMaxStaminaWithAuthority(int amount)
+        {
+            if (!hasAuthority)
+                return;
+            this.maxStamina = maxStamina + amount;
+            this.staminaBar.SetMax(maxStamina);
+        }
+        #endregion
+
+        #region Movement
+
+        public void IncreaseMovementSpeed(float amount)
+        {
+            if (isClient)
+            {
+                if (hasAuthority)
+                {
+                    IncreaseMovementSpeedWithAuthority(amount);
+                }
+                else
+                {
+                    CmdIncreaseMovementSpeed(amount);
+                }
+            }
+            else if (isServer)
+            {
+                RpcIncreaseMovementSpeed(amount);
+            }
+        }
+
+        private void IncreaseMovementSpeedWithAuthority(float amount)
+        {
+            if (!hasAuthority)
+                return;
+            movementSpeed += amount;
+        }
+
+        public void IncreaseDodgeSpeed(float amount)
+        {
+            if (isClient)
+            {
+                if (hasAuthority)
+                {
+                    IncreaseDodgeSpeedWithAuthority(amount);
+                }
+                else
+                {
+                    CmdIncreaseDodgeSpeed(amount);
+                }
+            }
+            else if (isServer)
+            {
+                RpcIncreaseDodgeSpeed(amount);
+            }
+        }
+
+        private void IncreaseDodgeSpeedWithAuthority(float amount)
+        {
+            if (!hasAuthority)
+                return;
+            dodgeSpeed += amount;
+        }
+
+        public void IncreaseJumpHeight(float amount)
+        {
+            if (isClient)
+            {
+                if (hasAuthority)
+                {
+                    IncreaseJumpHeightWithAuthority(amount);
+                }
+                else
+                {
+                    CmdIncreaseJumpHeight(amount);
+                }
+            }
+            else if (isServer)
+            {
+                RpcIncreaseJumpHeight(amount);
+            }
+        }
+
+        private void IncreaseJumpHeightWithAuthority(float amount)
+        {
+            if (!hasAuthority)
+                return;
+            jumpHeight += amount;
+        }
+
+        #endregion
+
+        #region fallDamage
+
+        public void IncreaseFallDamageReduction(int amount)
+        {
+            if (isClient)
+            {
+                if (hasAuthority)
+                {
+                    IncreaseFallDamageReductionWithAuthority(amount);
+                }
+                else
+                {
+                    CmdIncreaseFallDamageReduction(amount);
+                }
+            }
+            else if (isServer)
+            {
+                RpcIncreaseFallDamageReduction(amount);
+            }
+        }
+
+        private void IncreaseFallDamageReductionWithAuthority(int amount)
+        {
+            if (!hasAuthority)
+                return;
+
+            fallDamageReduction += amount;
+        }
+        #endregion
+
+        #region Getters
 
         public int GetCurrentStamina()
         {
@@ -291,18 +564,151 @@ namespace Player
             return this.isAlive;
         }
 
-        public void SetMovementSpeed(float movementSpeed)
+        #endregion
+
+        #region Cmds
+        // [Command] is for a CLIENT telling the SERVER to run this method.
+
+        [Command]
+        private void CmdIncreaseJumpHeight(float amount)
         {
-            this.movementSpeed = movementSpeed;
+            RpcIncreaseJumpHeight(amount);
+        }
+
+        [Command]
+        private void CmdIncreaseDodgeSpeed(float amount)
+        {
+            RpcIncreaseDodgeSpeed(amount);
+        }
+
+        [Command]
+        private void CmdIncreaseMovementSpeed(float amount)
+        {
+            RpcIncreaseMovementSpeed(amount);
+        }
+
+        [Command]
+        private void CmdIncreaseFallDamageReduction(int amount)
+        {
+            RpcIncreaseFallDamageReduction(amount);
+        }
+
+        [Command]
+        private void CmdFasterRegenRate(float amount)
+        {
+            RpcFasterRegenRate(amount);
+        }
+
+        [Command]
+        private void CmdIncreaseMaxStamina(int amount)
+        {
+            RpcIncreaseMaxStamina(amount);
+        }
+
+        [Command]
+        private void CmdMaxHealthChanged(int newValue)
+        {
+            RpcMaxHealthChanged(newValue);
+        }
+
+        [Command]
+        private void CmdHealthChanged(int newValue)
+        {
+            RpcHealthChanged(newValue);
+        }
+
+        [Command]
+        private void CmdKilled()
+        {
+            RpcKilled();
+        }
+        #endregion
+
+        #region Rpcs
+        // [ClientRpc] is for a SERVER telling ALL CLIENTS to run this method.
+
+        [ClientRpc]
+        private void RpcIncreaseJumpHeight(float amount)
+        {
+            if (hasAuthority)
+            {
+                IncreaseJumpHeightWithAuthority(amount);
+            }
+        }
+
+        [ClientRpc]
+        private void RpcIncreaseDodgeSpeed(float amount)
+        {
+            if (hasAuthority)
+            {
+                IncreaseDodgeSpeedWithAuthority(amount);
+            }
+        }
+
+        [ClientRpc]
+        private void RpcIncreaseMovementSpeed(float amount)
+        {
+            if (hasAuthority)
+            {
+                IncreaseMovementSpeedWithAuthority(amount);
+            }
+        }
+
+        [ClientRpc]
+        private void RpcIncreaseFallDamageReduction(int amount)
+        {
+            if (hasAuthority)
+            {
+                IncreaseFallDamageReductionWithAuthority(amount);
+            }
+        }
+
+        [ClientRpc]
+        private void RpcFasterRegenRate(float amount)
+        {
+            if (hasAuthority)
+            {
+                FasterRegenRateWithAuthority(amount);
+            }
+        }
+
+        [ClientRpc]
+        private void RpcIncreaseMaxStamina(int amount)
+        {
+            if (hasAuthority)
+            {
+                IncreaseMaxStaminaWithAuthority(amount);
+            }
+        }
+
+        [ClientRpc]
+        private void RpcRestoreStamina(int amount)
+        {
+            if (hasAuthority)
+            {
+                RestoreStaminaWithAuthority(amount);
+            }
+        }
+
+        [ClientRpc]
+        private void RpcMaxHealthChanged(int newValue)
+        {
+            ChangeMaxHealthForEveryone(newValue);
+        }
+
+        [ClientRpc]
+        private void RpcHealthChanged(int newValue)
+        {
+            ChangeHealthForEveryone(newValue);
+        }
+
+        [ClientRpc]
+        private void RpcKilled()
+        {
+            this.isAlive = false;
         }
 
         #endregion
 
-
-        // public void RechargeStamina()
-        // {
-        //     if (this.currentStamina != this.maxStamina)
-        //         ChangeStamina(RechargeRate);
-        // }
     }
 }

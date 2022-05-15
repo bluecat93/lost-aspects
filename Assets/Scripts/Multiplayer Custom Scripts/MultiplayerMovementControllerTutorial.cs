@@ -6,6 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class MultiplayerMovementControllerTutorial : NetworkBehaviour
 {
+
+    // Notes:
+    // [Command] - is for a CLIENT telling the SERVER to run this method.
+    // [ClientRpc] - is for a SERVER telling ALL CLIENTS to run this method.
+    // [Server] - means the code can only be run on the SERVER.
+    // [SyncVar] - forces the SERVER value of the variable to ALL CLIENTS
+    // hasAuthority - boolean that is set to true if the current client has the authority on that object (meaning true if its the current player character)
+
+
     public float Speed = 0.1f;
     public GameObject PlayerModel;
 

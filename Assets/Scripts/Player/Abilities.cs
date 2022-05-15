@@ -84,7 +84,7 @@ namespace Player
 
         // This function is called from server (and is used in the Cmd function above) and is runed by all clients including the server.
         [ClientRpc]
-        public void RpcEquip()
+        private void RpcEquip()
         {
             if (isEquiped)
             {

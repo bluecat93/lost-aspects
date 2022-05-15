@@ -204,13 +204,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03d51f7b1ed1aa045a99e2f38c6d2840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   maxHealth: 100
   currentHealth: 0
   maxStamina: 100
   currentStamina: 0
   regenStartTime: 0.3
-  regenRate: 1
-  regenTick: 0.03
+  regenRateAmount: 1
+  regenRate: 0.1
   regenWhenHungry: 0.5
   movementSpeed: 5
   speedChangeRate: 10
