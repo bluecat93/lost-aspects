@@ -64,6 +64,7 @@ namespace Object
             if (Input.GetButtonDown("Swing") && !this.isAttacking)
             {
                 this.Anmtor.SetInteger("Attack Number", currentAttackIndex + 1);
+                // TODO setTrigger now needs to be called from network animator and not animator.
                 this.Anmtor.SetTrigger("Attack");
             }
         }

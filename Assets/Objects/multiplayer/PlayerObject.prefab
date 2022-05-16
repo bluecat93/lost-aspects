@@ -191,6 +191,7 @@ MonoBehaviour:
   animationGroundOffset: 0.4
   SceneName: GameMultiplayerTutorial
   CameraAndHUD: {fileID: 6972008256323951258}
+  networkAnimator: {fileID: 2999575707473168961}
   IsExist: 0
 --- !u!114 &8771323154067867548
 MonoBehaviour:

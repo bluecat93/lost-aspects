@@ -50,6 +50,8 @@ namespace Player
         public string SceneName;
         [Tooltip("The gameobject of the player named: Camera and HUD")]
         public GameObject CameraAndHUD;
+        [Tooltip("Network animator")]
+        [SerializeField] private NetworkAnimator NetworkAnim;
         [HideInInspector] public bool IsExist = false;
 
 
@@ -432,7 +434,10 @@ namespace Player
             PlyrStats.RestoreStamina(PlyrStats.GetDodgeCost());
             float startTime = Time.time;
             this.IsRolling = true;
-            this.PlayerAnim.SetTrigger("Roll");
+
+            // TODO setTrigger now needs to be called from network animator and not animator.
+            this.NetworkAnim.SetTrigger("Roll");
+            // this.PlayerAnim.SetTrigger("Roll");
 
             while (Time.time < startTime + PlyrStats.GetDodgeTime())
             {
