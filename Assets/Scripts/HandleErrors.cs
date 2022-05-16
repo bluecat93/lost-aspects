@@ -11,5 +11,6 @@ public class HandleErrors : MonoBehaviour
     {
         // TODO figure out how to disable this error
         anim.SetTrigger("triggerName");
+        // BLA
     }
 }
