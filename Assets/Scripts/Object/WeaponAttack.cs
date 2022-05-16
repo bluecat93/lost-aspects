@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Animation;
+using Mirror;
 
 namespace Object
 {
@@ -17,6 +18,7 @@ namespace Object
         [SerializeField] private int weaponBaseAttackDamage;
         [Tooltip("The damage modifiers of each weapon attack. If you have X attacks this array has to be in the size of X.")]
         [SerializeField] private float[] attackDamageModifier;
+
 
         private bool isAttacking;
         private int currentAttackIndex;
@@ -46,6 +48,20 @@ namespace Object
             }
         }
 
+        private NetworkAnimator _NetworkAnimator;
+
+        private NetworkAnimator NetworkAnim
+        {
+            get
+            {
+                if (this._NetworkAnimator == null)
+                    this._NetworkAnimator = GetComponentInParent<NetworkAnimator>();
+
+                return this._NetworkAnimator;
+            }
+        }
+
+
         void Awake()
         {
             this.EvntHndlr.OnAttackEventTrigger.AddListener(SetAttackParamaters);
@@ -64,8 +80,9 @@ namespace Object
             if (Input.GetButtonDown("Swing") && !this.isAttacking)
             {
                 this.Anmtor.SetInteger("Attack Number", currentAttackIndex + 1);
-                // TODO setTrigger now needs to be called from network animator and not animator.
-                this.Anmtor.SetTrigger("Attack");
+                // setTrigger now needs to be called from network animator and not animator.
+                this.NetworkAnim.SetTrigger("Attack");
+                // this.Anmtor.SetTrigger("Attack");
             }
         }
 
