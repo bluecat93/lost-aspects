@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -435,8 +436,10 @@ namespace Player
             float startTime = Time.time;
             this.IsRolling = true;
 
-            // TODO setTrigger now needs to be called from network animator and not animator.
-            this.NetworkAnim.SetTrigger("Roll");
+            // SetTrigger now needs to be called from network animator and not animator.
+            // this.NetworkAnim.SetTrigger("Roll");
+            HandleErrors.NetworkAnimatorSetTrigger(this.NetworkAnim, "Roll");
+
             // this.PlayerAnim.SetTrigger("Roll");
 
             while (Time.time < startTime + PlyrStats.GetDodgeTime())
