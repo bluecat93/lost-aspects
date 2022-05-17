@@ -204,7 +204,9 @@ namespace Player
                 // Used only in places you want that the client controls itself.
                 if (hasAuthority)
                 {
-                    if (!HeadsUpDisplay.PauseMenu.isGamePaused && this.PlyrStats.IsAlive())
+                    // TODO only active that in single player
+                    // if (!HeadsUpDisplay.PauseMenu.isGamePaused)
+                    if (this.PlyrStats.IsAlive())
                     {
                         this.HandleCrouchInput();
                         this.HandleJump();

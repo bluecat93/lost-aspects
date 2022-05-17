@@ -10,7 +10,7 @@ namespace HeadsUpDisplay
     public class PauseMenu : NetworkBehaviour
     {
 
-        public static bool isGamePaused = false;
+        public bool isGamePaused = false;
         public GameObject pauseMenuUI;
         public GameObject optionsMenuUI;
 
@@ -19,13 +19,14 @@ namespace HeadsUpDisplay
         // Update is called once per frame
         void Start()
         {
-            // TODO only active that it in single player
+            // TODO only active that in single player
             // Time.timeScale = 1f;
         }
         void Update()
         {
             if (hasAuthority)
             {
+                // TODO change keycode to an actual name
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     if (isGamePaused)
@@ -80,16 +81,27 @@ namespace HeadsUpDisplay
             }
         }
 
-        public void QuitGame()
+        public void BackFromOptions()
         {
             if (hasAuthority)
             {
-                isGamePaused = false;
+                this.pauseMenuUI.SetActive(true);
+                this.optionsMenuUI.SetActive(false);
+            }
+        }
+
+        public void QuitGame()
+        {
+            // TODO quit game should destroy player and reset everything back to when you just run the game for the first time.
+            if (hasAuthority)
+            {
+                Debug.Log("Quit game is on a work in progress.");
+                // isGamePaused = false;
 
                 // TODO only active that in single player
-                Time.timeScale = 1f;
+                // Time.timeScale = 1f;
 
-                SceneManager.LoadScene(quitButton);
+                // SceneManager.LoadScene(quitButton);
             }
         }
     }
