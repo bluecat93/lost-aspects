@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Mirror;
 
 
 namespace HeadsUpDisplay
 {
-    public class PauseMenu : MonoBehaviour
+    public class PauseMenu : NetworkBehaviour
     {
 
         public static bool isGamePaused = false;
@@ -18,53 +19,78 @@ namespace HeadsUpDisplay
         // Update is called once per frame
         void Start()
         {
-            Time.timeScale = 1f;
+            // TODO only active that it in single player
+            // Time.timeScale = 1f;
         }
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (hasAuthority)
             {
-                if (isGamePaused)
+                if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    Resume();
-                }
-                else
-                {
-                    Pause();
+                    if (isGamePaused)
+                    {
+                        Resume();
+                    }
+                    else
+                    {
+                        Pause();
+                    }
                 }
             }
         }
         public void Resume()
         {
-            this.pauseMenuUI.SetActive(false);
-            this.optionsMenuUI.SetActive(false);
-            Time.timeScale = 1f;
-            // Debug.Log("time is now:" + Time.deltaTime);
-            isGamePaused = false;
-            // Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
+            if (hasAuthority)
+            {
+                this.pauseMenuUI.SetActive(false);
+                this.optionsMenuUI.SetActive(false);
+
+                // TODO only active that in single player
+                // Time.timeScale = 1f;
+
+                // Debug.Log("time is now:" + Time.deltaTime);
+                isGamePaused = false;
+                // Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
+            }
         }
 
         public void Pause()
         {
-            this.optionsMenuUI.SetActive(false);
-            this.pauseMenuUI.SetActive(true);
-            Time.timeScale = 0f;
-            // Debug.Log("time is now:"+Time.deltaTime);
-            isGamePaused = true;
-            // Cursor.lockState = CursorLockMode.None;
+            if (hasAuthority)
+            {
+                this.optionsMenuUI.SetActive(false);
+                this.pauseMenuUI.SetActive(true);
+
+                // TODO only active that in single player
+                // Time.timeScale = 0f;
+
+                // Debug.Log("time is now:"+Time.deltaTime);
+                isGamePaused = true;
+                // Cursor.lockState = CursorLockMode.None;
+            }
         }
 
         public void Options()
         {
-            this.pauseMenuUI.SetActive(false);
-            this.optionsMenuUI.SetActive(true);
+            if (hasAuthority)
+            {
+                this.pauseMenuUI.SetActive(false);
+                this.optionsMenuUI.SetActive(true);
+            }
         }
 
         public void QuitGame()
         {
-            isGamePaused = false;
-            Time.timeScale = 1f;
-            SceneManager.LoadScene(quitButton);
+            if (hasAuthority)
+            {
+                isGamePaused = false;
+
+                // TODO only active that in single player
+                Time.timeScale = 1f;
+
+                SceneManager.LoadScene(quitButton);
+            }
         }
     }
 }
