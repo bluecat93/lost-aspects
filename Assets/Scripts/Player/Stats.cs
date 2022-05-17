@@ -18,6 +18,7 @@ namespace Player
     /// <param name="hungerBar"> assign the script of the hunger bar in the player hud </param>
     public class Stats : NetworkBehaviour
     {
+        #region Variables
         [Header("Health Variables")]
         [Tooltip("Health character starts with")]
         [SerializeField] private int maxHealth = 100; // can see: all clients + can change: all clients and server
@@ -115,6 +116,8 @@ namespace Player
 
         RespawnScript respawn;
 
+        #endregion
+
         // Start is called before the first frame update
         void Start()
         {
@@ -148,6 +151,7 @@ namespace Player
             //     this.currentHealth = 0;
             // }
 
+            // Check death
             if (this.currentHealth <= 0 && hasAuthority)
             {
                 CmdKilled(); // sends the death to everyone
