@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Mirror;
 
 
-public class AiMovement : MonoBehaviour
+public class AiMovement : NetworkBehaviour
 {
     private Vector3 currentObjective;
 
