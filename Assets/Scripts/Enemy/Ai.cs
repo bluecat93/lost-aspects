@@ -146,6 +146,7 @@ namespace Enemy
                     break;
 
                 case State.Reseting:
+                    this.Target = null;
                     this.AiMvmnt.MoveTo(this.startingPosition);
                     this.EnmyStts.Heal(this.EnmyStts.GetMaxHealth());
                     if (this.AiMvmnt.ReachedPosition())
