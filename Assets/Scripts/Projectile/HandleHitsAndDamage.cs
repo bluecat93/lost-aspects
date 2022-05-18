@@ -33,9 +33,10 @@ namespace Projectile
             Destroy(gameObject, deathTimer);
         }
 
-        [Server]
-        private void TriggerStay(Collider other)
+        // Run on all tags that can be hit by the projectile. If found one then do the damage. In any case, destroy the object after
+        private void OnTriggerStay(Collider other)
         {
+
             // Debug.Log("collided with: " + other + "\tand its tag is: " + other.tag);
             foreach (Type type in hitList)
             {
@@ -82,21 +83,9 @@ namespace Projectile
                     }
                 }
             }
-        }
-
-        // Run on all tags that can be hit by the projectile. If found one then do the damage. In any case, destroy the object after
-        private void OnTriggerStay(Collider other)
-        {
-
-            TriggerStay(other);
 
         }
 
-        [Command]
-        private void CmdTriggerStay(GameObject other)
-        {
-            TriggerStay(other.GetComponent<Collider>());
-        }
         public void setDamage(int damage)
         {
             this.damage = damage;
