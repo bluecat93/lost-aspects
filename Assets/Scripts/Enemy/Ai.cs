@@ -116,14 +116,31 @@ namespace Enemy
 
             if (isServer)
             {
-                // Debug.Log("Running on server!!!");
-                isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
-                this.Anmtr.SetInteger("State", (int)state);
-
-                HandleDeath();
-                HandleStateMachine();
+                ServerUpdate();
             }
 
+            if (isClient)
+            {
+                CmdServerUpdate();
+            }
+
+        }
+
+        [Command]
+        void CmdServerUpdate()
+        {
+            ServerUpdate();
+        }
+
+        [Server]
+        void ServerUpdate()
+        {
+            // Debug.Log("Running on server!!!");
+            isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
+            this.Anmtr.SetInteger("State", (int)state);
+
+            HandleDeath();
+            HandleStateMachine();
         }
 
         private void HandleStateMachine()
