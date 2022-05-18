@@ -89,7 +89,7 @@ namespace Enemy
             }
         }
 
-        private GameObject Target = null;
+        [SyncVar] private GameObject Target = null;
 
         #endregion
         private void Awake()
@@ -119,17 +119,6 @@ namespace Enemy
                 ServerUpdate();
             }
 
-            if (isClient)
-            {
-                CmdServerUpdate();
-            }
-
-        }
-
-        [Command]
-        void CmdServerUpdate()
-        {
-            ServerUpdate();
         }
 
         [Server]
