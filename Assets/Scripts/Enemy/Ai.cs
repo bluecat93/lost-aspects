@@ -109,18 +109,19 @@ namespace Enemy
         // Update is called once per frame
         void Update()
         {
-            if (isClient)
-            {
-                Debug.Log("Running on client!!!");
-            }
-            isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
-            this.Anmtr.SetInteger("State", (int)state);
+            // if (isClient)
+            // {
+            //     Debug.Log("Running on client!!!");
+            // }
 
-            HandleDeath();
-            HandleStateMachine();
             if (isServer)
             {
-                Debug.Log("Running on server!!!");
+                // Debug.Log("Running on server!!!");
+                isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
+                this.Anmtr.SetInteger("State", (int)state);
+
+                HandleDeath();
+                HandleStateMachine();
             }
 
         }

@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4253487655556523008, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
+      propertyPath: sceneId
+      value: 3717800754
+      objectReference: {fileID: 0}
     - target: {fileID: 7087518949622995595, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
       propertyPath: m_Name
       value: Ranged Enemy
