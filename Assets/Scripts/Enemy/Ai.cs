@@ -37,24 +37,6 @@ namespace Enemy
         //bool isStartAttack - true if its the start of the attack animation or false if its the end of the attack animation.
         [HideInInspector] public UnityEvent<int, bool> attackEvent;
 
-
-        //Player stuff
-        private GameObject player;
-
-        private Player.Stats _playerStats;
-
-        private Player.Stats PlyrStts
-        {
-            get
-            {
-                if (this._playerStats == null)
-                    this._playerStats = player.GetComponent<Player.Stats>();
-
-                return this._playerStats;
-            }
-        }
-
-
         private AiMovement _aiMovement;
 
         private AiMovement AiMvmnt
@@ -106,6 +88,8 @@ namespace Enemy
             }
         }
 
+        private GameObject Target = null;
+
         #endregion
         private void Awake()
         {
@@ -118,7 +102,6 @@ namespace Enemy
             this.EvntHndlr.OnAttackEventTrigger.AddListener(AttackEvent);
             this.startingPosition = transform.position;
             this.roamPosition = GetRoamingPosition();
-            this.player = GameObject.FindGameObjectWithTag("Player");
             currentAttack = 1;
         }
 
@@ -149,7 +132,7 @@ namespace Enemy
                 case State.Attacking:
                     break;
                 case State.Chasing:
-                    this.AiMvmnt.MoveTo(player.transform.position);
+                    this.AiMvmnt.MoveTo(Target.transform.position);
                     AttackTarget();
                     StopChasing();
                     break;
@@ -164,6 +147,7 @@ namespace Enemy
 
                 case State.Reseting:
                     this.AiMvmnt.MoveTo(this.startingPosition);
+                    this.EnmyStts.Heal(this.EnmyStts.GetMaxHealth());
                     if (this.AiMvmnt.ReachedPosition())
                     {
                         this.state = State.Roaming;
@@ -179,7 +163,7 @@ namespace Enemy
                 this.state = State.Dead;
                 if (!this.deadOnlyOnce)
                 {
-                    this.currentDeathTimer = Time.time + this.EnmyStts.getDeathTimer();
+                    this.currentDeathTimer = Time.time + this.EnmyStts.GetDeathTimer();
                 }
                 this.deadOnlyOnce = true;
             }
@@ -203,7 +187,32 @@ namespace Enemy
 
         private void FindTarget()
         {
-            if (Vector3.Distance(transform.position, player.transform.position) <= this.EnmyStts.getSightDistance())
+            // get all colliders in range.
+            Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, EnmyStts.GetSightDistance());
+            // running on all colliders in range
+            foreach (Collider hitCollider in hitColliders)
+            {
+                // found a target
+                if (hitCollider.gameObject.CompareTag("Player"))
+                {
+                    // found only one target
+                    if (Target == null)
+                    {
+                        Target = hitCollider.gameObject;
+                    }
+                    // found multiple targets, choosing the closest.
+                    else
+                    {
+                        if (Vector3.Distance(this.transform.position, Target.transform.position) >
+                        Vector3.Distance(this.transform.position, hitCollider.gameObject.transform.position))
+                        {
+                            Target = hitCollider.gameObject;
+                        }
+                    }
+                }
+            }
+
+            if (Target != null)
             {
                 this.state = State.Chasing;
             }
@@ -212,8 +221,8 @@ namespace Enemy
         private void AttackTarget()
         {
             // rotate towords player
-            LookAtObject(player);
-            if (Vector3.Distance(transform.position, player.transform.position) <= this.EnmyStts.getAttackDistance())
+            LookAtObject(Target);
+            if (Vector3.Distance(transform.position, Target.transform.position) <= this.EnmyStts.GetAttackDistance())
             {
                 this.Anmtr.SetBool("InAttackRange", true);
                 this.AiMvmnt.StopMoving();
@@ -232,7 +241,7 @@ namespace Enemy
 
         private void StopChasing()
         {
-            if (Vector3.Distance(transform.position, player.transform.position) > this.EnmyStts.getMaxFollowDistance())
+            if (Vector3.Distance(transform.position, Target.transform.position) > this.EnmyStts.GetMaxFollowDistance())
             {
                 this.state = State.Reseting;
             }
@@ -245,7 +254,9 @@ namespace Enemy
 
         public Player.Stats getPlayerStats()
         {
-            return this.PlyrStts;
+            if (this.Target == null)
+                return null;
+            return this.Target.GetComponent<Player.Stats>();
         }
 
         public void AttackEvent(bool isAttacking)
@@ -254,13 +265,15 @@ namespace Enemy
             // finished attack animation.
             if (!isAttacking)
             {
-                this.currentAttack = (this.currentAttack == this.EnmyStts.getNumberOfAttacks()) ? 1 : this.currentAttack + 1;
+                this.currentAttack = (this.currentAttack == this.EnmyStts.GetNumberOfAttacks()) ? 1 : this.currentAttack + 1;
             }
         }
 
         public GameObject GetAttackingPlayer()
         {
-            return player;
+            if (this.Target == null)
+                return null;
+            return Target;
         }
 
     }

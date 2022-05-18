@@ -51,34 +51,38 @@ namespace Enemy
         public void Heal(int heal)
         {
             this.currentHealth += heal;
-            if (this.currentHealth > this.maxHealth)
-                this.currentHealth = this.maxHealth;
+            this.currentHealth = this.currentHealth > this.maxHealth ? this.maxHealth : this.currentHealth;
         }
 
-        public float getDeathTimer()
+        public float GetDeathTimer()
         {
             return this.deathTimer;
         }
-        public float getMaxFollowDistance()
+        public float GetMaxFollowDistance()
         {
             return this.maxFollowDistance;
         }
-        public float getSightDistance()
+        public float GetSightDistance()
         {
             return this.sightDistance;
         }
-        public float getAttackDistance()
+        public float GetAttackDistance()
         {
             return this.attackDistance;
         }
-        public int getAttackDamage()
+        public int GetAttackDamage()
         {
             return this.attackDamage;
         }
 
-        public int getNumberOfAttacks()
+        public int GetNumberOfAttacks()
         {
             return this.numberOfAttacks;
+        }
+
+        public int GetMaxHealth()
+        {
+            return this.maxHealth;
         }
 
     }

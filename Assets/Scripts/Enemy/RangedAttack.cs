@@ -41,7 +41,7 @@ namespace Enemy
                     // Add forces to projectile
                     currentProjectile.GetComponent<Rigidbody>().AddForce(shootDirection.normalized * projectileSpeed, ForceMode.Impulse);
                     // Add damage to the projectile
-                    int damage = (int)(this.EnmyStts.getAttackDamage() * damageModifier);
+                    int damage = (int)(this.EnmyStts.GetAttackDamage() * damageModifier);
                     currentProjectile.GetComponent<Projectile.HandleHitsAndDamage>().setDamage(damage);
                 }
             }
