@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 namespace Projectile
 {
-    public class HandleHitsAndDamage : MonoBehaviour
+    public class HandleHitsAndDamage : NetworkBehaviour
     {
         // The tag list types that can be interactable.
         enum Type
@@ -35,49 +36,52 @@ namespace Projectile
         // Run on all tags that can be hit by the projectile. If found one then do the damage. In any case, destroy the object after
         private void OnTriggerStay(Collider other)
         {
-            // Debug.Log("collided with: " + other + "\tand its tag is: " + other.tag);
-            foreach (Type type in hitList)
+            if (isServer)
             {
-                // Convert the type enum to tag.
-                string tag = type.ToString();
-                if (other.gameObject.tag.Equals(tag))
+                // Debug.Log("collided with: " + other + "\tand its tag is: " + other.tag);
+                foreach (Type type in hitList)
                 {
-                    if (!attackOnlyOnce)
+                    // Convert the type enum to tag.
+                    string tag = type.ToString();
+                    if (other.gameObject.tag.Equals(tag))
                     {
-                        attackOnlyOnce = true;
-                        // Got a hit with something the projectile can hit.
-                        if (tag.Equals("Player"))
+                        if (!attackOnlyOnce)
                         {
-                            other.GetComponent<Player.Stats>().TakeDamage(damage);
-                        }
-                        else if (tag.Equals("Enemy"))
-                        {
-                            other.GetComponent<Enemy.Stats>().TakeDamage(damage);
-                        }
-                        else if (tag.Equals("Equipable"))
-                        {
-                            other.GetComponentInParent<Player.Stats>().TakeDamage(damage);
+                            attackOnlyOnce = true;
+                            // Got a hit with something the projectile can hit.
+                            if (tag.Equals("Player"))
+                            {
+                                other.GetComponent<Player.Stats>().TakeDamage(damage);
+                            }
+                            else if (tag.Equals("Enemy"))
+                            {
+                                other.GetComponent<Enemy.Stats>().TakeDamage(damage);
+                            }
+                            else if (tag.Equals("Equipable"))
+                            {
+                                other.GetComponentInParent<Player.Stats>().TakeDamage(damage);
+                            }
                         }
                     }
                 }
-            }
-            // After got a hit with anything do this: 
-            foreach (Type type in destructionOnHitList)
-            {
-                if (other.tag.Equals(type.ToString()))
+                // After got a hit with anything do this: 
+                foreach (Type type in destructionOnHitList)
                 {
-                    if (type == Type.Player)
+                    if (other.tag.Equals(type.ToString()))
                     {
-                        evadeDestruction = other.GetComponent<Player.ThirdPersonMovement>().IsRolling;
-                    }
-                    else if (type == Type.Equipable)
-                    {
-                        evadeDestruction = other.GetComponentInParent<Player.ThirdPersonMovement>().IsRolling;
-                    }
-                    if (!evadeDestruction)
-                    {
-                        // Destroy game object now.
-                        Destroy(gameObject, 0);
+                        if (type == Type.Player)
+                        {
+                            evadeDestruction = other.GetComponent<Player.ThirdPersonMovement>().IsRolling;
+                        }
+                        else if (type == Type.Equipable)
+                        {
+                            evadeDestruction = other.GetComponentInParent<Player.ThirdPersonMovement>().IsRolling;
+                        }
+                        if (!evadeDestruction)
+                        {
+                            // Destroy game object now.
+                            Destroy(gameObject, 0);
+                        }
                     }
                 }
             }
