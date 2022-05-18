@@ -18,6 +18,7 @@ namespace Enemy
             EnmyAi.attackEvent.AddListener(AttackEvent);
             this.attackOnlyOnce = false;
         }
+
         private void OnTriggerStay(Collider other)
         {
             if (other.gameObject.tag == "Player" && this.attackOnlyOnce && isAttacking)

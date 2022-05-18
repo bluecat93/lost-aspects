@@ -33,58 +33,69 @@ namespace Projectile
             Destroy(gameObject, deathTimer);
         }
 
-        // Run on all tags that can be hit by the projectile. If found one then do the damage. In any case, destroy the object after
-        private void OnTriggerStay(Collider other)
+        [Server]
+        private void TriggerStay(Collider other)
         {
-            if (isServer)
+            // Debug.Log("collided with: " + other + "\tand its tag is: " + other.tag);
+            foreach (Type type in hitList)
             {
-                // Debug.Log("collided with: " + other + "\tand its tag is: " + other.tag);
-                foreach (Type type in hitList)
+                // Convert the type enum to tag.
+                string tag = type.ToString();
+                if (other.gameObject.tag.Equals(tag))
                 {
-                    // Convert the type enum to tag.
-                    string tag = type.ToString();
-                    if (other.gameObject.tag.Equals(tag))
+                    if (!attackOnlyOnce)
                     {
-                        if (!attackOnlyOnce)
+                        attackOnlyOnce = true;
+                        // Got a hit with something the projectile can hit.
+                        if (tag.Equals("Player"))
                         {
-                            attackOnlyOnce = true;
-                            // Got a hit with something the projectile can hit.
-                            if (tag.Equals("Player"))
-                            {
-                                other.GetComponent<Player.Stats>().TakeDamage(damage);
-                            }
-                            else if (tag.Equals("Enemy"))
-                            {
-                                other.GetComponent<Enemy.Stats>().TakeDamage(damage);
-                            }
-                            else if (tag.Equals("Equipable"))
-                            {
-                                other.GetComponentInParent<Player.Stats>().TakeDamage(damage);
-                            }
+                            other.GetComponent<Player.Stats>().TakeDamage(damage);
                         }
-                    }
-                }
-                // After got a hit with anything do this: 
-                foreach (Type type in destructionOnHitList)
-                {
-                    if (other.tag.Equals(type.ToString()))
-                    {
-                        if (type == Type.Player)
+                        else if (tag.Equals("Enemy"))
                         {
-                            evadeDestruction = other.GetComponent<Player.ThirdPersonMovement>().IsRolling;
+                            other.GetComponent<Enemy.Stats>().TakeDamage(damage);
                         }
-                        else if (type == Type.Equipable)
+                        else if (tag.Equals("Equipable"))
                         {
-                            evadeDestruction = other.GetComponentInParent<Player.ThirdPersonMovement>().IsRolling;
-                        }
-                        if (!evadeDestruction)
-                        {
-                            // Destroy game object now.
-                            Destroy(gameObject, 0);
+                            other.GetComponentInParent<Player.Stats>().TakeDamage(damage);
                         }
                     }
                 }
             }
+            // After got a hit with anything do this: 
+            foreach (Type type in destructionOnHitList)
+            {
+                if (other.tag.Equals(type.ToString()))
+                {
+                    if (type == Type.Player)
+                    {
+                        evadeDestruction = other.GetComponent<Player.ThirdPersonMovement>().IsRolling;
+                    }
+                    else if (type == Type.Equipable)
+                    {
+                        evadeDestruction = other.GetComponentInParent<Player.ThirdPersonMovement>().IsRolling;
+                    }
+                    if (!evadeDestruction)
+                    {
+                        // Destroy game object now.
+                        Destroy(gameObject, 0);
+                    }
+                }
+            }
+        }
+
+        // Run on all tags that can be hit by the projectile. If found one then do the damage. In any case, destroy the object after
+        private void OnTriggerStay(Collider other)
+        {
+
+            TriggerStay(other);
+
+        }
+
+        [Command]
+        private void CmdTriggerStay(GameObject other)
+        {
+            TriggerStay(other.GetComponent<Collider>());
         }
         public void setDamage(int damage)
         {

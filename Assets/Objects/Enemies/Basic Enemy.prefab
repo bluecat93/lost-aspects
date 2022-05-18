@@ -1359,6 +1359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackNumber: 1
   damageModifier: 1
+  attackColider: {fileID: 7087518948799078300}
 --- !u!1 &7087518948809189306
 GameObject:
   m_ObjectHideFlags: 0
@@ -2183,6 +2184,7 @@ GameObject:
   - component: {fileID: 7087518949622995594}
   - component: {fileID: 7087518949622995701}
   - component: {fileID: 7087518949622995700}
+  - component: {fileID: 4253487655556523008}
   m_Layer: 0
   m_Name: Basic Enemy
   m_TagString: Enemy
@@ -2239,6 +2241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7192a0c014ca6dc478982d37b9dde382, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   attackEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -2254,6 +2258,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36395b6e127150d49b9f0fde3931d4c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
 --- !u!114 &7087518949622995594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2304,6 +2310,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4253487655556523008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7087518949622995595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 05dda3682bb0ae54da1c3c7ade426f8c
+  hasSpawned: 0
 --- !u!1 &7087518949638229635
 GameObject:
   m_ObjectHideFlags: 0
