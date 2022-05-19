@@ -170,7 +170,7 @@ namespace Player
             {
                 this.gameOverUI.SetActive(false);
                 this.respawn = FindObjectOfType<RespawnScript>();
-                this.respawn.RespawnPlayer();
+                this.respawn.RespawnPlayer(this.gameObject);
                 Heal(maxHealth);
                 Eat();
                 this.thirdPersonCamera.SetActive(true);
@@ -340,7 +340,7 @@ namespace Player
                 }
                 else
                 {
-                    Debug.Log("ran FasterRegenRate from client without authority. call this function from server instead.");
+                    Debug.LogWarning("ran FasterRegenRate from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)
@@ -382,7 +382,7 @@ namespace Player
                 }
                 else
                 {
-                    Debug.Log("ran IncreaseMaxStamina from client without authority. call this function from server instead.");
+                    Debug.LogWarning("ran IncreaseMaxStamina from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)
@@ -412,7 +412,7 @@ namespace Player
                 }
                 else
                 {
-                    Debug.Log("ran IncreaseMovementSpeed from client without authority. call this function from server instead.");
+                    Debug.LogWarning("ran IncreaseMovementSpeed from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)
@@ -438,7 +438,7 @@ namespace Player
                 }
                 else
                 {
-                    Debug.Log("ran IncreaseDodgeSpeed from client without authority. call this function from server instead.");
+                    Debug.LogWarning("ran IncreaseDodgeSpeed from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)
@@ -464,7 +464,7 @@ namespace Player
                 }
                 else
                 {
-                    Debug.Log("ran IncreaseJumpHeight from client without authority. call this function from server instead.");
+                    Debug.LogWarning("ran IncreaseJumpHeight from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)
@@ -494,7 +494,7 @@ namespace Player
                 }
                 else
                 {
-                    Debug.Log("ran IncreaseFallDamageReduction from client without authority. call this function from server instead.");
+                    Debug.LogWarning("ran IncreaseFallDamageReduction from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)

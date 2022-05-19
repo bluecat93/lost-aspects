@@ -6,12 +6,11 @@ namespace Player
 {
     public class RespawnScript : MonoBehaviour
     {
-        [SerializeField] private Transform player;
         [SerializeField] private Transform respawnPoint;
 
-        public void RespawnPlayer()
+        public void RespawnPlayer(GameObject player)
         {
-            this.player.transform.position = this.respawnPoint.transform.position;
+            player.transform.position = this.respawnPoint.transform.position;
             Physics.SyncTransforms();
         }
     }
