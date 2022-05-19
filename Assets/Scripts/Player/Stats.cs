@@ -188,9 +188,14 @@ namespace Player
             if (isClient)
             {
                 if (hasAuthority)
+                {
                     // Client needs to call server so he can change the health for everyone. 
                     CmdHealthChanged(newValue);
-
+                }
+                else
+                {
+                    Debug.LogWarning("ran ChangeHealth from client without authority. call this function from server instead.");
+                }
             }
             if (isServer)
             {
@@ -219,9 +224,14 @@ namespace Player
             if (isClient)
             {
                 if (hasAuthority)
+                {
                     // client needs to call server so he can change the health for everyone.
                     CmdMaxHealthChanged(newValue);
-
+                }
+                else
+                {
+                    Debug.LogWarning("ran ChangeMaxHealth from client without authority. call this function from server instead.");
+                }
             }
             if (isServer)
             {
