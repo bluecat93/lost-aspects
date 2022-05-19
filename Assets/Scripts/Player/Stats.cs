@@ -182,30 +182,34 @@ namespace Player
         #region Health Functions
 
         // changes current health to the new value.
+        // to change someone else's health, call this function from server.
         public void ChangeHealth(int newValue)
         {
             if (isClient)
             {
-                // client needs to call server so he can change the health for everyone.
-                CmdHealthChanged(newValue);
+                if (hasAuthority)
+                    // Client needs to call server so he can change the health for everyone. 
+                    CmdHealthChanged(newValue);
 
             }
             if (isServer)
             {
-                // server needs to call all cients to change the health for everyone
-                RpcHealthChanged(newValue);
+                changeHealthOnServer(newValue);
             }
         }
 
-        private void ChangeHealthForEveryone(int newValue)
+        private void changeHealthOnServer(int newValue)
         {
             this.currentHealth = newValue;
             this.currentHealth = currentHealth > maxHealth ? maxHealth : currentHealth;
             this.currentHealth = currentHealth < 0 ? 0 : currentHealth;
 
-            if (hasAuthority)
+            // Server is calling this function for everyone.
+            RpcChangeHealthWithAuthority(currentHealth);
+
+            if (this.currentHealth == 0)
             {
-                this.healthBar.SetCurrent(currentHealth);
+                RpcKilled();
             }
         }
 
@@ -214,23 +218,15 @@ namespace Player
         {
             if (isClient)
             {
-                // client needs to call server so he can change the health for everyone.
-                CmdMaxHealthChanged(newValue);
+                if (hasAuthority)
+                    // client needs to call server so he can change the health for everyone.
+                    CmdMaxHealthChanged(newValue);
 
             }
             if (isServer)
             {
                 // server needs to call all cients to change the health for everyone
-                RpcMaxHealthChanged(newValue);
-            }
-        }
-
-        private void ChangeMaxHealthForEveryone(int newValue)
-        {
-            this.maxHealth = newValue;
-            if (hasAuthority)
-            {
-                this.healthBar.SetMax(maxHealth);
+                RpcMaxHealthChangedWithAuthority(newValue);
             }
         }
 
@@ -344,7 +340,7 @@ namespace Player
                 }
                 else
                 {
-                    CmdFasterRegenRate(amount);
+                    Debug.Log("ran FasterRegenRate from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)
@@ -386,7 +382,7 @@ namespace Player
                 }
                 else
                 {
-                    CmdIncreaseMaxStamina(amount);
+                    Debug.Log("ran IncreaseMaxStamina from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)
@@ -416,7 +412,7 @@ namespace Player
                 }
                 else
                 {
-                    CmdIncreaseMovementSpeed(amount);
+                    Debug.Log("ran IncreaseMovementSpeed from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)
@@ -442,7 +438,7 @@ namespace Player
                 }
                 else
                 {
-                    CmdIncreaseDodgeSpeed(amount);
+                    Debug.Log("ran IncreaseDodgeSpeed from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)
@@ -468,7 +464,7 @@ namespace Player
                 }
                 else
                 {
-                    CmdIncreaseJumpHeight(amount);
+                    Debug.Log("ran IncreaseJumpHeight from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)
@@ -498,7 +494,7 @@ namespace Player
                 }
                 else
                 {
-                    CmdIncreaseFallDamageReduction(amount);
+                    Debug.Log("ran IncreaseFallDamageReduction from client without authority. call this function from server instead.");
                 }
             }
             else if (isServer)
@@ -612,13 +608,13 @@ namespace Player
         [Command]
         private void CmdMaxHealthChanged(int newValue)
         {
-            RpcMaxHealthChanged(newValue);
+            RpcMaxHealthChangedWithAuthority(newValue);
         }
 
         [Command]
         private void CmdHealthChanged(int newValue)
         {
-            RpcHealthChanged(newValue);
+            changeHealthOnServer(newValue);
         }
 
         [Command]
@@ -630,6 +626,20 @@ namespace Player
 
         #region Rpcs
         // [ClientRpc] is for a SERVER telling ALL CLIENTS to run this method.
+
+        [ClientRpc]
+        private void RpcChangeHealthWithAuthority(int newCurrentHealth)
+        {
+            this.currentHealth = newCurrentHealth;
+            if (hasAuthority)
+            {
+                this.healthBar.SetCurrent(newCurrentHealth);
+            }
+            else
+            {
+
+            }
+        }
 
         [ClientRpc]
         private void RpcIncreaseJumpHeight(float amount)
@@ -695,15 +705,23 @@ namespace Player
         }
 
         [ClientRpc]
-        private void RpcMaxHealthChanged(int newValue)
+        private void RpcMaxHealthChangedWithAuthority(int newValue)
         {
-            ChangeMaxHealthForEveryone(newValue);
+            this.maxHealth = newValue;
+            if (hasAuthority)
+            {
+                this.healthBar.SetMax(newValue);
+            }
+            else
+            {
+
+            }
         }
 
         [ClientRpc]
         private void RpcHealthChanged(int newValue)
         {
-            ChangeHealthForEveryone(newValue);
+            RpcChangeHealthWithAuthority(newValue);
         }
 
         [ClientRpc]

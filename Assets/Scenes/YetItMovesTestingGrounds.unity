@@ -128,17 +128,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8165736442223772231, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
   m_PrefabInstance: {fileID: 8165736442242936851}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &24113750 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8165736442223772229, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
-  m_PrefabInstance: {fileID: 8165736442242936851}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 901472019}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03d51f7b1ed1aa045a99e2f38c6d2840, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &416869798 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 91710689907986287, guid: b54f9b8f7e73cdf4a9dee03c549a3dcb, type: 3}
@@ -157,6 +146,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4253487655556523008, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
+      propertyPath: sceneId
+      value: 696856726
+      objectReference: {fileID: 0}
     - target: {fileID: 7087518949622995595, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
       propertyPath: m_Name
       value: Ranged Enemy (2)
@@ -448,6 +441,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4253487655556523008, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
+      propertyPath: sceneId
+      value: 617455905
+      objectReference: {fileID: 0}
     - target: {fileID: 7087518949622995595, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
       propertyPath: m_Name
       value: Ranged Enemy
@@ -609,6 +606,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4253487655556523008, guid: 11adb47c068518b409245e5bf5337340, type: 3}
+      propertyPath: sceneId
+      value: 3009297510
+      objectReference: {fileID: 0}
     - target: {fileID: 7087518949622995595, guid: 11adb47c068518b409245e5bf5337340, type: 3}
       propertyPath: m_Name
       value: Advanced Enemy
@@ -662,11 +663,6 @@ PrefabInstance:
 --- !u!1 &901472019 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8165736442878897092, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
-  m_PrefabInstance: {fileID: 8165736442242936851}
-  m_PrefabAsset: {fileID: 0}
---- !u!143 &901472020 stripped
-CharacterController:
-  m_CorrespondingSourceObject: {fileID: 8165736442878897098, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
   m_PrefabInstance: {fileID: 8165736442242936851}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &939546401 stripped
@@ -763,6 +759,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4253487655556523008, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
+      propertyPath: sceneId
+      value: 337634701
+      objectReference: {fileID: 0}
     - target: {fileID: 7087518949622995595, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
       propertyPath: m_Name
       value: Ranged Enemy (4)
@@ -942,6 +942,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4253487655556523008, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
+      propertyPath: sceneId
+      value: 4001345739
+      objectReference: {fileID: 0}
     - target: {fileID: 7087518949622995595, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
       propertyPath: m_Name
       value: Ranged Enemy (3)
@@ -1302,6 +1306,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4253487655556523008, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
+      propertyPath: sceneId
+      value: 594895179
+      objectReference: {fileID: 0}
     - target: {fileID: 7087518949622995595, guid: bbb89dee0aea3a642820a2a688a9745f, type: 3}
       propertyPath: m_Name
       value: Ranged Enemy (1)
@@ -1583,7 +1591,7 @@ PrefabInstance:
     - target: {fileID: 91710689269891485, guid: b54f9b8f7e73cdf4a9dee03c549a3dcb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 24113750}
+      objectReference: {fileID: 0}
     - target: {fileID: 433029749515856942, guid: b54f9b8f7e73cdf4a9dee03c549a3dcb, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -1696,15 +1704,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2018522481346331819, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.32
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2018522481346331819, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.98
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2018522481346331819, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.33
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2018522481346331819, guid: 70b23c2b3a8b2c74f9cd556a8db018c9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1867,6 +1875,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4253487655556523008, guid: 05dda3682bb0ae54da1c3c7ade426f8c, type: 3}
+      propertyPath: sceneId
+      value: 159120104
+      objectReference: {fileID: 0}
     - target: {fileID: 6531915824985885473, guid: 05dda3682bb0ae54da1c3c7ade426f8c, type: 3}
       propertyPath: OnAttackEventTrigger.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -2047,7 +2059,7 @@ PrefabInstance:
     - target: {fileID: 8165736442878897096, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: controller
       value: 
-      objectReference: {fileID: 901472020}
+      objectReference: {fileID: 0}
     - target: {fileID: 8165736442878897096, guid: 8a445ccb8e25a0f459dbfd6d507edca2, type: 3}
       propertyPath: JumpTimeout
       value: 0.2
