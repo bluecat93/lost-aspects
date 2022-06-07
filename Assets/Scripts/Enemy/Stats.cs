@@ -28,7 +28,7 @@ namespace Enemy
         [Tooltip("The minimum distance it takes for the enemy to start the attack animation on the character")]
         [SerializeField] private float attackDistance = 5f;
 
-        [SyncVar(hook = nameof(LogCheck))] private int currentHealth;
+        [SyncVar] private int currentHealth;
         private float invulnerabilityFrame = 0f;
 
         // Start is called before the first frame update
@@ -36,17 +36,24 @@ namespace Enemy
         {
             this.currentHealth = this.maxHealth;
         }
-        private void LogCheck(int newValue, int oldValue)
-        {
-            if (isClient)
-            {
-                Debug.Log("this is client, enemy had: " + oldValue + " health\nnow he has: " + newValue + " health\nhas authority?: " + hasAuthority);
-            }
-            if (isServer)
-            {
-                Debug.Log("i though this only happens on client wtf???");
-            }
-        }
+
+
+        // NOTE: Was using it to test hook. saving this for later use of hook since it works.
+        // this is how a hook is called: [SyncVar(hook = nameof(LogCheck))]
+
+        // private void LogCheck(int oldValue, int newValue)
+        // {
+        //     if (isClient)
+        //     {
+        //         Debug.Log("this is client, enemy had: " + oldValue + " health\nnow he has: " + newValue + " health\nhas authority?: " + hasAuthority);
+        //     }
+        //     if (isServer)
+        //     {
+
+        //     }
+        // }
+
+
         public bool isEnemyAlive()
         {
             return this.currentHealth >= 0;

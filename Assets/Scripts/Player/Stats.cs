@@ -196,6 +196,7 @@ namespace Player
                 {
                     Debug.LogWarning("ran ChangeHealth from client without authority. call this function from server instead.");
                 }
+
             }
             if (isServer)
             {
@@ -205,9 +206,9 @@ namespace Player
 
         private void changeHealthOnServer(int newValue)
         {
+            newValue = newValue > maxHealth ? maxHealth : newValue;
+            newValue = newValue < 0 ? 0 : newValue;
             this.currentHealth = newValue;
-            this.currentHealth = currentHealth > maxHealth ? maxHealth : currentHealth;
-            this.currentHealth = currentHealth < 0 ? 0 : currentHealth;
 
             // Server is calling this function for everyone.
             RpcChangeHealthWithAuthority(currentHealth);
@@ -232,6 +233,7 @@ namespace Player
                 {
                     Debug.LogWarning("ran ChangeMaxHealth from client without authority. call this function from server instead.");
                 }
+
             }
             if (isServer)
             {
@@ -242,9 +244,12 @@ namespace Player
 
         public void TakeDamage(int damage, bool isBlockable = true)
         {
-            if (this.currentHealth > 0 && ((isBlockable && !this.ThrdPrsonMvmt.IsRolling) || (!isBlockable)))
+            if (hasAuthority)
             {
-                ChangeHealth(this.currentHealth - damage);
+                if (this.currentHealth > 0 && ((isBlockable && !this.ThrdPrsonMvmt.IsRolling) || (!isBlockable)))
+                {
+                    ChangeHealth(this.currentHealth - damage);
+                }
             }
         }
 
@@ -255,7 +260,10 @@ namespace Player
 
         public void Heal(int amount)
         {
-            ChangeHealth(this.currentHealth + amount);
+            if (hasAuthority)
+            {
+                ChangeHealth(this.currentHealth + amount);
+            }
         }
 
         #endregion
