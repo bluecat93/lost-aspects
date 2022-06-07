@@ -157,7 +157,7 @@ namespace Enemy
                     this.AiMvmnt.MoveTo(transform.position);
                     if (this.currentDeathTimer <= Time.time)
                     {
-                        transform.gameObject.SetActive(false);
+                        RpcKillEnemy();
                     }
                     break;
 
@@ -173,6 +173,12 @@ namespace Enemy
             }
         }
 
+        [ClientRpc]
+        private void RpcKillEnemy()
+        {
+            // TODO maybe destory this later instead of inactive.
+            transform.gameObject.SetActive(false);
+        }
         private void HandleDeath()
         {
             if (!this.EnmyStts.isEnemyAlive())
