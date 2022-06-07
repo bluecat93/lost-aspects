@@ -36,7 +36,7 @@ namespace Enemy
         {
             this.currentHealth = this.maxHealth;
         }
-        private void LogCheck(int oldValue, int newValue)
+        private void LogCheck(int newValue, int oldValue)
         {
             if (isClient)
             {
