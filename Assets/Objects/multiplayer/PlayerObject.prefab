@@ -313,7 +313,7 @@ MonoBehaviour:
   GroundedRadius: 0.5
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 9
+    m_Bits: 8
   JumpTimeout: 0.5
   FallTimeout: 0.15
   TerminalVelocity: -50
