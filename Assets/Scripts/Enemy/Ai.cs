@@ -26,7 +26,7 @@ namespace Enemy
 
         private Vector3 startingPosition;
         private Vector3 roamPosition;
-        private State state;
+        [SyncVar] private State state;
 
         private float currentDeathTimer;
         private bool deadOnlyOnce = false;
