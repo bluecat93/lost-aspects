@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 namespace Enemy
 {
-    public class Stats : MonoBehaviour
+    public class Stats : NetworkBehaviour
     {
         [Header("Health and Survivability")]
         [Tooltip("The maximum health of the enemy")]
@@ -27,7 +28,7 @@ namespace Enemy
         [Tooltip("The minimum distance it takes for the enemy to start the attack animation on the character")]
         [SerializeField] private float attackDistance = 5f;
 
-        private int currentHealth;
+        [SyncVar(hook = nameof(LogCheck))] private int currentHealth;
         private float invulnerabilityFrame = 0f;
 
         // Start is called before the first frame update
@@ -35,12 +36,46 @@ namespace Enemy
         {
             this.currentHealth = this.maxHealth;
         }
-
+        private void LogCheck(int oldValue, int newValue)
+        {
+            if (isClient)
+            {
+                Debug.Log("this is client, enemy had: " + oldValue + " health\nnow he has: " + newValue + " health\nhas authority?: " + hasAuthority);
+            }
+            if (isServer)
+            {
+                Debug.Log("i though this only happens on client wtf???");
+            }
+        }
         public bool isEnemyAlive()
         {
             return this.currentHealth >= 0;
         }
         public void TakeDamage(int damage)
+        {
+            if (isServer)
+            {
+                TakeDamageFromServer(damage);
+            }
+            if (isClient)
+            {
+                if (hasAuthority)
+                {
+                    CmdTakeDamge(damage);
+                }
+                else
+                {
+                    // the stats will change by the attacking player anyway so you can do nothing here.
+                }
+            }
+        }
+
+        [Command]
+        private void CmdTakeDamge(int damage)
+        {
+            TakeDamageFromServer(damage);
+        }
+        private void TakeDamageFromServer(int damage)
         {
             if (this.invulnerabilityFrame < Time.time)
             {
