@@ -1359,7 +1359,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackNumber: 1
   damageModifier: 1
-  attackColider: {fileID: 7087518948799078300}
 --- !u!1 &7087518948809189306
 GameObject:
   m_ObjectHideFlags: 0
@@ -2185,6 +2184,8 @@ GameObject:
   - component: {fileID: 7087518949622995701}
   - component: {fileID: 7087518949622995700}
   - component: {fileID: 4253487655556523008}
+  - component: {fileID: -8736464959549941806}
+  - component: {fileID: -4117033186617458045}
   m_Layer: 0
   m_Name: Basic Enemy
   m_TagString: Enemy
@@ -2272,6 +2273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f28fd8a7e260b24469b258242696ae04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   maxHealth: 20
   invulnerabilityFrameAmount: 0.3
   deathTimer: 5
@@ -2327,6 +2330,56 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 05dda3682bb0ae54da1c3c7ade426f8c
   hasSpawned: 0
+--- !u!114 &-8736464959549941806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7087518949622995595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  animator: {fileID: 7087518949530276217}
+--- !u!114 &-4117033186617458045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7087518949622995595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  sendInterval: 0.05
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  bufferTimeMultiplier: 1
+  bufferSizeLimit: 64
+  catchupThreshold: 4
+  catchupMultiplier: 0.1
+  onlySyncOnChange: 1
+  bufferResetMultiplier: 5
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
 --- !u!1 &7087518949638229635
 GameObject:
   m_ObjectHideFlags: 0

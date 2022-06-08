@@ -125,8 +125,8 @@ namespace Enemy
         void ServerUpdate()
         {
             // Debug.Log("Running on server!!!");
-            isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName("Attacking");
-            this.Anmtr.SetInteger("State", (int)state);
+            isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName(Finals.AttackingAnimation);
+            this.Anmtr.SetInteger(Finals.StateAnimation, (int)state);
 
             HandleDeath();
             HandleStateMachine();
@@ -216,7 +216,7 @@ namespace Enemy
             foreach (Collider hitCollider in hitColliders)
             {
                 // found a target
-                if (hitCollider.gameObject.CompareTag("Player"))
+                if (hitCollider.gameObject.CompareTag(Finals.PlayerTag))
                 {
                     // found only one target
                     if (Target == null)
