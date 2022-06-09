@@ -14,7 +14,7 @@ public class CustomNetworkManager : NetworkManager
 
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
-        if (SceneManager.GetActiveScene().name == "Lobby")
+        if (SceneManager.GetActiveScene().name == Finals.MULTIPLAYER_LOBBY)
         {
             // instantiate player controller
             PlayerObjectController GamePlayerInstance = Instantiate(GamePlayerPrefab);

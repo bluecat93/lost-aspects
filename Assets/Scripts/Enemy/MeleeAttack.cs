@@ -21,7 +21,7 @@ namespace Enemy
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.gameObject.tag == "Player" && this.attackOnlyOnce && isAttacking)
+            if (other.gameObject.tag == Finals.PLAYER && this.attackOnlyOnce && isAttacking)
             {
                 this.EnmyAi.getPlayerStats().TakeDamage((int)(this.EnmyStts.GetAttackDamage() * damageModifier));
                 this.attackOnlyOnce = false;

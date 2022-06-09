@@ -132,6 +132,7 @@ public class LobbyController : MonoBehaviour
     {
         foreach (PlayerObjectController player in Manager.GamePlayers)
         {
+            // TODO
             #region maybe add all this to a function?
             GameObject NewPlayerItem = Instantiate(PlayerListItemPrefab) as GameObject;
             PlayerListItem NewPlayerItemScript = NewPlayerItem.GetComponent<PlayerListItem>();
@@ -227,7 +228,7 @@ public class LobbyController : MonoBehaviour
 
     public void FindLocalPlayer()
     {
-        LocalPlayerObject = GameObject.Find("LocalGamePlayer");
+        LocalPlayerObject = GameObject.Find(Finals.LOCAL_GAME_PLAYER);
         LocalPlayerController = LocalPlayerObject.GetComponent<PlayerObjectController>();
     }
 

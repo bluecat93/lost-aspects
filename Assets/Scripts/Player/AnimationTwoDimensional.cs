@@ -54,12 +54,9 @@ namespace Player
         // Start is called before the first frame update
         void Start()
         {
-
             // Variables for refactoring
-            velocityZHash = Animator.StringToHash("VelocityZ");
-            velocityXHash = Animator.StringToHash("VelocityX");
-
-
+            velocityZHash = Animator.StringToHash(Finals.VELOCITY_Z);
+            velocityXHash = Animator.StringToHash(Finals.VELOCITY_X);
         }
 
         // Update is called once per frame
@@ -67,7 +64,6 @@ namespace Player
         {
             if (ThrdPrsnMvmnt.IsExist && hasAuthority)
             {
-
                 // checks when dash is pressed and changes maximum velocity if true
                 float currentMaxVelocity = dashPressed ? maxDashVelocity : maxRunVelocity;
 
@@ -82,10 +78,10 @@ namespace Player
 
         private void KeyPressChecks()
         {
-            this.forwardPressed = Input.GetAxis("Vertical") > 0;
-            this.leftPressed = Input.GetAxis("Horizontal") < 0;
-            this.rightPressed = Input.GetAxis("Horizontal") > 0;
-            this.backPressed = Input.GetAxis("Vertical") < 0;
+            this.forwardPressed = Input.GetAxis(Finals.VERTICAL_MOVEMENT) > 0;
+            this.leftPressed = Input.GetAxis(Finals.HORIZONTAL_MOVEMENT) < 0;
+            this.rightPressed = Input.GetAxis(Finals.HORIZONTAL_MOVEMENT) > 0;
+            this.backPressed = Input.GetAxis(Finals.VERTICAL_MOVEMENT) < 0;
             // TODO change from Keycode to the actual name of sprint
             this.dashPressed = Input.GetKey(KeyCode.LeftShift);
         }

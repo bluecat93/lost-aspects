@@ -14,7 +14,7 @@ namespace HeadsUpDisplay
         public GameObject pauseMenuUI;
         public GameObject optionsMenuUI;
 
-        string quitButton = "MainMenu";
+        // string quitButton = "MainMenu";
 
         // Update is called once per frame
         void Start()

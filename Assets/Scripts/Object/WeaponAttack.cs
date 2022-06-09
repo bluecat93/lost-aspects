@@ -77,18 +77,18 @@ namespace Object
         void Update()
         {
             // float attacking = Input.GetAxisRaw("Swing");
-            if (Input.GetButtonDown("Swing") && !this.isAttacking)
+            if (Input.GetButtonDown(Finals.ATTACK) && !this.isAttacking)
             {
-                this.Anmtor.SetInteger("Attack Number", currentAttackIndex + 1);
+                this.Anmtor.SetInteger(Finals.ATTACK_NUMBER_PLAYER, currentAttackIndex + 1);
                 // setTrigger now needs to be called from network animator and not animator.
-                this.NetworkAnim.SetTrigger("Attack");
+                this.NetworkAnim.SetTrigger(Finals.ATTACK_PLAYER);
                 // this.Anmtor.SetTrigger("Attack");
             }
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.tag == "Enemy" && this.isAttacking)
+            if (other.gameObject.tag == Finals.ENEMY && this.isAttacking)
             {
                 //enemy was hit
                 Transform enemy = other.gameObject.transform;

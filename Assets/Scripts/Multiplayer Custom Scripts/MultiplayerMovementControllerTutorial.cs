@@ -60,8 +60,8 @@ public class MultiplayerMovementControllerTutorial : NetworkBehaviour
 
     public void Movement()
     {
-        float xDirection = Input.GetAxis("Horizontal");
-        float zDirection = Input.GetAxis("Vertical");
+        float xDirection = Input.GetAxis(Finals.HORIZONTAL_MOVEMENT);
+        float zDirection = Input.GetAxis(Finals.VERTICAL_MOVEMENT);
 
         Vector3 moveDirection = new Vector3(xDirection, 0.0f, zDirection);
 

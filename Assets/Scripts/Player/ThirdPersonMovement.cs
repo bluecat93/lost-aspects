@@ -228,8 +228,8 @@ namespace Player
             // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
             // if there is no input, set the target speed to 0
 
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");
+            float horizontal = Input.GetAxisRaw(Finals.HORIZONTAL_MOVEMENT);
+            float vertical = Input.GetAxisRaw(Finals.VERTICAL_MOVEMENT);
 
             if (!this.IsMoving) targetSpeed = 0.0f;
 
@@ -274,7 +274,7 @@ namespace Player
 
 
             // rotate to face camera direction
-            if (Input.GetAxisRaw("Camera Unlocked") == 0)
+            if (Input.GetAxisRaw(Finals.CAMERA_UNLOCKED) == 0)
             {
                 transform.rotation = new Quaternion(0.0f, playerCamera.rotation.y, 0.0f, playerCamera.rotation.w);
             }
@@ -298,13 +298,13 @@ namespace Player
             Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
             IsGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
             if (IsGrounded)
-                PlayerAnim.SetBool("isGrounded", true);
+                PlayerAnim.SetBool(Finals.IS_GROUNDED, true);
             else
-                PlayerAnim.SetBool("isGrounded", false);
+                PlayerAnim.SetBool(Finals.IS_GROUNDED, false);
 
             Vector3 landingSphereAnim = new Vector3(transform.position.x, transform.position.y - animationGroundOffset, transform.position.z);
             if (Physics.CheckSphere(landingSphereAnim, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore))
-                PlayerAnim.SetBool("isGrounded", true);
+                PlayerAnim.SetBool(Finals.IS_GROUNDED, true);
 
             // update animator if using character
             // if (_hasAnimator)
@@ -320,8 +320,8 @@ namespace Player
                 // reset the fall timeout timer
                 FallTimeoutDelta = FallTimeout;
 
-                this.PlayerAnim.SetBool("isJumping", false);
-                this.PlayerAnim.SetBool("isFalling", false);
+                this.PlayerAnim.SetBool(Finals.IS_JUMPING, false);
+                this.PlayerAnim.SetBool(Finals.IS_FALLING, false);
 
                 // update animator if using character
                 // if (_hasAnimator)
@@ -347,8 +347,8 @@ namespace Player
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     VerticalVelocity = Mathf.Sqrt(PlyrStats.GetJumpHeight() * -2f * Physics.gravity.y);
 
-                    PlayerAnim.SetBool("isJumping", true);
-                    PlayerAnim.SetBool("isGrounded", false);
+                    PlayerAnim.SetBool(Finals.IS_JUMPING, true);
+                    PlayerAnim.SetBool(Finals.IS_GROUNDED, false);
                     //PlayerAnim.SetBool("isGrounded", false);
 
                     // update animator if using character
@@ -376,7 +376,7 @@ namespace Player
                 }
                 else
                 {
-                    PlayerAnim.SetBool("isFalling", true);
+                    PlayerAnim.SetBool(Finals.IS_FALLING, true);
                     // update animator if using character
                     // if (_hasAnimator)
                     // {
@@ -395,20 +395,20 @@ namespace Player
         // Eden ref: please annotate this function
         private void HandleCrouchInput()
         {
-            if (Input.GetButtonDown("Crouch") && !this.IsCrouching)
+            if (Input.GetButtonDown(Finals.CROUCH) && !this.IsCrouching)
             {
                 // Debug.Log("Crouch on");
-                this.PlayerAnim.SetBool("Crouching", true);
+                this.PlayerAnim.SetBool(Finals.CROUCHING, true);
                 this.IsCrouching = true;
                 this.controller.height = this.PlayerStartHeight * 0.5f;
                 this.controller.center = new Vector3(this.controller.center.x, this.heightChange, this.controller.center.z);
                 this.CpslCollider.height = this.CapsuleColliderStartingHeight / 2;
 
             }
-            else if (Input.GetButtonDown("Crouch") && this.IsCrouching)
+            else if (Input.GetButtonDown(Finals.CROUCH) && this.IsCrouching)
             {
                 // Debug.Log("Crouch off");
-                this.PlayerAnim.SetBool("Crouching", false);
+                this.PlayerAnim.SetBool(Finals.CROUCHING, false);
                 this.IsCrouching = false;
                 this.controller.height = this.PlayerStartHeight;
                 this.controller.center = new Vector3(controller.center.x, this.ColliderStartHeight, controller.center.z);
@@ -419,7 +419,7 @@ namespace Player
         // Eden ref: please annotate this function
         private void HandleDodgeInput()
         {
-            if (Input.GetButtonDown("Dodge") && !this.IsRolling && this.IsGrounded && PlyrStats.GetCurrentStamina() >= Mathf.Abs(PlyrStats.GetDodgeCost()))
+            if (Input.GetButtonDown(Finals.DODGE) && !this.IsRolling && this.IsGrounded && PlyrStats.GetCurrentStamina() >= Mathf.Abs(PlyrStats.GetDodgeCost()))
             {
                 StartCoroutine(DodgeCoroutine());
             }
@@ -439,7 +439,7 @@ namespace Player
             this.IsRolling = true;
 
             // SetTrigger now needs to be called from network animator and not animator.
-            this.NetworkAnim.SetTrigger("Roll");
+            this.NetworkAnim.SetTrigger(Finals.ROLL);
 
             // this.PlayerAnim.SetTrigger("Roll");
 

@@ -125,8 +125,8 @@ namespace Enemy
         void ServerUpdate()
         {
             // Debug.Log("Running on server!!!");
-            isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName(Finals.AttackingAnimation);
-            this.Anmtr.SetInteger(Finals.StateAnimation, (int)state);
+            isAttacking = this.Anmtr.GetCurrentAnimatorStateInfo(0).IsName(Finals.ATTACK_ENEMY);
+            this.Anmtr.SetInteger(Finals.STATE, (int)state);
 
             HandleDeath();
             HandleStateMachine();
@@ -216,7 +216,7 @@ namespace Enemy
             foreach (Collider hitCollider in hitColliders)
             {
                 // found a target
-                if (hitCollider.gameObject.CompareTag(Finals.PlayerTag))
+                if (hitCollider.gameObject.CompareTag(Finals.PLAYER))
                 {
                     // found only one target
                     if (Target == null)
@@ -247,18 +247,18 @@ namespace Enemy
             LookAtObject(Target);
             if (Vector3.Distance(transform.position, Target.transform.position) <= this.EnmyStts.GetAttackDistance())
             {
-                this.Anmtr.SetBool("InAttackRange", true);
+                this.Anmtr.SetBool(Finals.ATTACK_RANGE_BOOLEAN, true);
                 this.AiMvmnt.StopMoving();
                 // used for animations only
                 this.state = State.Attacking;
-                this.Anmtr.SetInteger("AttackNumber", this.currentAttack);
-                this.Anmtr.SetInteger("State", (int)this.state);
+                this.Anmtr.SetInteger(Finals.ATTACK_NUMBER_ENEMY, this.currentAttack);
+                this.Anmtr.SetInteger(Finals.STATE, (int)this.state);
                 this.state = State.Chasing;
 
             }
             else
             {
-                this.Anmtr.SetBool("InAttackRange", false);
+                this.Anmtr.SetBool(Finals.ATTACK_RANGE_BOOLEAN, false);
             }
         }
 

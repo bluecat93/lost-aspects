@@ -18,7 +18,7 @@ namespace Projectile
 
         [Tooltip("Time in seconds untill the projectile will disappear")]
         [SerializeField] private float deathTimer;
-        [Tooltip("The type of who this projectile can deal damage to")]
+        [Tooltip("The type of who this projectile can deal damage to. If you want this projectile to hit terrain then talk to YetItMoves first.")]
         [SerializeField] List<Type> hitList;
         [Tooltip("The type of who this projectile will be destoyed by when hit.")]
         [SerializeField] List<Type> destructionOnHitList;
@@ -48,15 +48,15 @@ namespace Projectile
                     {
                         attackOnlyOnce = true;
                         // Got a hit with something the projectile can hit.
-                        if (tag.Equals("Player"))
+                        if (tag.Equals(Finals.PLAYER))
                         {
                             other.GetComponent<Player.Stats>().TakeDamage(damage);
                         }
-                        else if (tag.Equals("Enemy"))
+                        else if (tag.Equals(Finals.ENEMY))
                         {
                             other.GetComponent<Enemy.Stats>().TakeDamage(damage);
                         }
-                        else if (tag.Equals("Equipable"))
+                        else if (tag.Equals(Finals.EQUIPABLE))
                         {
                             other.GetComponentInParent<Player.Stats>().TakeDamage(damage);
                         }

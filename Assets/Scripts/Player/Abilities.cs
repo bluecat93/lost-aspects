@@ -51,7 +51,7 @@ namespace Player
             // only the active client can enter this if because of hasAuthority
             if (ThrdPrsnMvmnt.IsExist && hasAuthority)
             {
-                if (Input.GetButtonDown("Equip"))
+                if (Input.GetButtonDown(Finals.EQUIP))
                 {
                     CmdEquip();
                 }
