@@ -245,6 +245,8 @@ namespace Enemy
             if (Target != null)
             {
                 this.state = State.Chasing;
+                this.Anmtr.SetInteger(Finals.STATE, (int)this.state);
+                this.Anmtr.SetBool(Finals.ATTACK_RANGE_BOOLEAN, false);
             }
         }
 
