@@ -148,9 +148,16 @@ namespace Enemy
                 case State.Attacking:
                     break;
                 case State.Chasing:
-                    this.AiMvmnt.MoveTo(Target.transform.position);
-                    AttackTarget();
-                    StopChasing();
+                    if (Target != null)
+                    {
+                        this.AiMvmnt.MoveTo(Target.transform.position);
+                        AttackTarget();
+                        StopChasing();
+                    }
+                    else
+                    {
+                        this.state = State.Reseting;
+                    }
                     break;
 
                 case State.Dead:
