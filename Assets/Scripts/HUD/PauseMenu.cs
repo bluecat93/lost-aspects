@@ -92,10 +92,11 @@ namespace HeadsUpDisplay
 
         public void QuitGame()
         {
-            // TODO quit game should destroy player and reset everything back to when you just run the game for the first time.
             if (hasAuthority)
             {
-                Debug.Log("Quit game is on a work in progress.");
+                PlayerObjectController playerObjectController = GetComponentInParent<PlayerObjectController>();
+                playerObjectController.LeaveLobby();
+                // Debug.Log("Quit game is on a work in progress.");
                 // isGamePaused = false;
 
                 // TODO only active that in single player
