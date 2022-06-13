@@ -5,6 +5,7 @@ using Mirror;
 using Steamworks;
 using UnityEngine.UI;
 
+
 public class SteamLobby : MonoBehaviour
 {
     public static SteamLobby Instance;
@@ -61,6 +62,9 @@ public class SteamLobby : MonoBehaviour
         // only for friends
         // SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypeFriendsOnly, manager.maxConnections);
 
+        if (manager == null)
+            manager = GetComponent<CustomNetworkManager>();
+
         // public game
         SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, manager.maxConnections);
     }
@@ -110,6 +114,11 @@ public class SteamLobby : MonoBehaviour
     public void JoinLobby(CSteamID lobbyID)
     {
         SteamMatchmaking.JoinLobby(lobbyID);
+    }
+
+    public void LeaveLobby(CSteamID lobbyID)
+    {
+        SteamMatchmaking.LeaveLobby(lobbyID);
     }
 
     public void GetLobbiesList()

@@ -158,6 +158,17 @@ public class PlayerObjectController : NetworkBehaviour
         playerColor = message;
     }
 
+    public void LeaveLobby()
+    {
+        if (isServer)
+        {
+            Manager.StopHost();
+        }
+        else if (isClient)
+        {
+            Manager.StopClient();
+        }
+    }
 
     #endregion
 

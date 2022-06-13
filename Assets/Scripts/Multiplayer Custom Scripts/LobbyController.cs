@@ -5,6 +5,8 @@ using Mirror;
 using Steamworks;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.SceneManagement;
+
 
 public class LobbyController : MonoBehaviour
 {
@@ -80,6 +82,15 @@ public class LobbyController : MonoBehaviour
         {
             ReadyButtonText.text = "Ready";
         }
+    }
+
+    public void LeaveLobby()
+    {
+        LocalPlayerObject.GetComponent<PlayerObjectController>().LeaveLobby();
+
+        // TODO do i need this?
+        // CurrentLobbyID = Manager.GetComponent<SteamLobby>().CurrentLobbyID;
+        // Manager.GetComponent<SteamLobby>().LeaveLobby(new CSteamID(CurrentLobbyID));
     }
 
     public void CheckIfAllReady()

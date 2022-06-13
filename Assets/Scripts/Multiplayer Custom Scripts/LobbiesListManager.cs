@@ -69,10 +69,6 @@ public class LobbiesListManager : MonoBehaviour
                 listOfLobbies.Add(createdItem);
             }
         }
-        for (int i = 0; i < lobbyIDs.Count; i++)
-        {
-
-        }
     }
 
     public void DestroyLobbies()

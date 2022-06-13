@@ -24,11 +24,11 @@ public class Finals : MonoBehaviour
     public const string IS_FALLING = "isFalling";
     public const string CROUCHING = "Crouching";
     public const string ROLL = "Roll";
-
     #endregion
 
     #region Scenes
     public const string MULTIPLAYER_LOBBY = "Lobby";
+    public const string MAIN_MENU = "MainMenu";
     #endregion
 
     #region Game Objects
