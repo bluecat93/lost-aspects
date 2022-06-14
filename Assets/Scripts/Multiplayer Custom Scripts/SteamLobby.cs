@@ -65,8 +65,16 @@ public class SteamLobby : MonoBehaviour
         if (manager == null)
             manager = GetComponent<CustomNetworkManager>();
 
+
         // public game
         SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, manager.maxConnections);
+    }
+
+    public void SinglePlayer()
+    {
+        if (manager == null)
+            manager = GetComponent<CustomNetworkManager>();
+        SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePrivate, 1);
     }
 
     private void OnLobbyCreated(LobbyCreated_t callback)

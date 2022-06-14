@@ -96,13 +96,11 @@ namespace HeadsUpDisplay
             {
                 PlayerObjectController playerObjectController = GetComponentInParent<PlayerObjectController>();
                 playerObjectController.LeaveLobby();
-                // Debug.Log("Quit game is on a work in progress.");
+
                 // isGamePaused = false;
 
                 // TODO only active that in single player
                 // Time.timeScale = 1f;
-
-                // SceneManager.LoadScene(quitButton);
             }
         }
     }

@@ -170,7 +170,6 @@ public class LobbyController : MonoBehaviour
             // checking if we are not allready in the list
             if (!PlayerListItems.Any(b => b.ConnectionID == player.ConnectionID))
             {
-                #region maybe add all this to a function?
                 GameObject NewPlayerItem = Instantiate(PlayerListItemPrefab) as GameObject;
                 PlayerListItem NewPlayerItemScript = NewPlayerItem.GetComponent<PlayerListItem>();
 
@@ -184,7 +183,6 @@ public class LobbyController : MonoBehaviour
                 NewPlayerItem.transform.localScale = Vector3.one;
 
                 PlayerListItems.Add(NewPlayerItemScript);
-                #endregion
             }
         }
     }
@@ -245,6 +243,16 @@ public class LobbyController : MonoBehaviour
 
     public void StartGame(string SceneName)
     {
+        if (PlayerListItems.Count == 1)
+        {
+            Debug.Log("Starting game with " + PlayerListItems.Count + " player");
+
+        }
+        else
+        {
+            Debug.Log("Starting game with " + PlayerListItems.Count + " players");
+
+        }
         LocalPlayerController.CanStartGame(SceneName);
     }
 
