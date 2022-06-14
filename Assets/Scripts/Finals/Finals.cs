@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Finals : MonoBehaviour
+public static class Finals
 {
     #region Tags
     public const string PLAYER = "Player";
@@ -43,9 +43,5 @@ public class Finals : MonoBehaviour
     public const string CAMERA_UNLOCKED = "Camera Unlocked";
     public const string CROUCH = "Crouch";
     public const string DODGE = "Dodge";
-
     #endregion
-
-
-
 }
