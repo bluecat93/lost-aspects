@@ -10,17 +10,20 @@ namespace HeadsUpDisplay
     public class PauseMenu : NetworkBehaviour
     {
 
-        public bool isGamePaused = false;
+        private bool isGamePaused = false;
         public GameObject pauseMenuUI;
         public GameObject optionsMenuUI;
+        public bool SinglePlayer = false;
 
         // string quitButton = "MainMenu";
 
         // Update is called once per frame
         void Start()
         {
-            // TODO only active that in single player
-            // Time.timeScale = 1f;
+            if (SinglePlayer)
+            {
+                Time.timeScale = 1f;
+            }
         }
         void Update()
         {
@@ -47,8 +50,10 @@ namespace HeadsUpDisplay
                 this.pauseMenuUI.SetActive(false);
                 this.optionsMenuUI.SetActive(false);
 
-                // TODO only active that in single player
-                // Time.timeScale = 1f;
+                if (SinglePlayer)
+                {
+                    Time.timeScale = 1f;
+                }
 
                 // Debug.Log("time is now:" + Time.deltaTime);
                 isGamePaused = false;
@@ -64,9 +69,10 @@ namespace HeadsUpDisplay
                 this.pauseMenuUI.SetActive(true);
 
                 // TODO only active that in single player
-                // Time.timeScale = 0f;
-
-                // Debug.Log("time is now:"+Time.deltaTime);
+                if (SinglePlayer)
+                {
+                    Time.timeScale = 0f;
+                }
                 isGamePaused = true;
                 // Cursor.lockState = CursorLockMode.None;
             }

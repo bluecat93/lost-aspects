@@ -246,12 +246,11 @@ public class LobbyController : MonoBehaviour
         if (PlayerListItems.Count == 1)
         {
             Debug.Log("Starting game with " + PlayerListItems.Count + " player");
-
+            LocalPlayerObject.GetComponent<HeadsUpDisplay.PauseMenu>().SinglePlayer = true;
         }
         else
         {
             Debug.Log("Starting game with " + PlayerListItems.Count + " players");
-
         }
         LocalPlayerController.CanStartGame(SceneName);
     }
