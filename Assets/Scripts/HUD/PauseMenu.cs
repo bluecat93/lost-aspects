@@ -15,8 +15,6 @@ namespace HeadsUpDisplay
         public GameObject optionsMenuUI;
         public bool SinglePlayer = false;
 
-        // string quitButton = "MainMenu";
-
         // Update is called once per frame
         void Start()
         {
@@ -67,8 +65,6 @@ namespace HeadsUpDisplay
             {
                 this.optionsMenuUI.SetActive(false);
                 this.pauseMenuUI.SetActive(true);
-
-                // TODO only active that in single player
                 if (SinglePlayer)
                 {
                     Time.timeScale = 0f;
@@ -100,13 +96,13 @@ namespace HeadsUpDisplay
         {
             if (hasAuthority)
             {
+                if (SinglePlayer)
+                {
+                    Time.timeScale = 1f;
+                }
+                isGamePaused = false;
                 PlayerObjectController playerObjectController = GetComponentInParent<PlayerObjectController>();
                 playerObjectController.LeaveLobby();
-
-                // isGamePaused = false;
-
-                // TODO only active that in single player
-                // Time.timeScale = 1f;
             }
         }
     }
