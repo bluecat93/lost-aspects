@@ -43,5 +43,11 @@ public static class Finals
     public const string CAMERA_UNLOCKED = "Camera Unlocked";
     public const string CROUCH = "Crouch";
     public const string DODGE = "Dodge";
+    public const string USE = "Use";
+    #endregion
+
+    #region Inventory
+    public const int DEFAULT_MAX_STACK = 64;
+    public const float ITEM_PICKUP_TIME = 2f;
     #endregion
 }
