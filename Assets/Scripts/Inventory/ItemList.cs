@@ -8,7 +8,7 @@ namespace Inventory
     [Serializable]
     public class ItemList
     {
-        [Tooltip("Do not use negative numbers as IDs")]
+        [Tooltip("Do not use negative numbers or zero as IDs")]
         [SerializeField] private int ID;
         [SerializeField] private bool isConsumable;
         [SerializeField] private bool isEquipable;

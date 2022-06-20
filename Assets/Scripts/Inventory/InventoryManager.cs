@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+
 namespace Inventory
 {
     public class InventoryManager : MonoBehaviour
@@ -84,6 +85,15 @@ namespace Inventory
             return false;
         }
 
+        public void SwapItems(int index1, int index2)
+        {
+            if (index1 > 0 && index2 > 0 && index1 < InventorySize && index2 < InventorySize)
+            {
+                ItemInsideInventory temp = Items[index1];
+                Items[index1] = Items[index2];
+                Items[index2] = temp;
+            }
+        }
     }
 
 }
