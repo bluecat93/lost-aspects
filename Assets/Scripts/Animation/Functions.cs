@@ -26,6 +26,9 @@ namespace Animation
         public static void SetAnimatorController(Animator animator, RuntimeAnimatorController newAnimatorController)
         {
             animator.runtimeAnimatorController = newAnimatorController as RuntimeAnimatorController;
+
+            // fixes T stance bug
+            animator.Update(0);
         }
     }
 }
