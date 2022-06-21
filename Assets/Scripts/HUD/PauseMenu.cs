@@ -9,11 +9,12 @@ namespace HeadsUpDisplay
 {
     public class PauseMenu : NetworkBehaviour
     {
-
-        private bool isGamePaused = false;
+        private bool InInventory = false;
+        private bool InPauseMenu = false;
         public GameObject pauseMenuUI;
         public GameObject optionsMenuUI;
-        public bool SinglePlayer = false;
+        public GameObject InventoryMenuUI;
+        [HideInInspector] public bool SinglePlayer = false;
 
         // Update is called once per frame
         void Start()
@@ -27,53 +28,45 @@ namespace HeadsUpDisplay
         {
             if (hasAuthority)
             {
-                // TODO change keycode to an actual name
-                if (Input.GetKeyDown(KeyCode.Escape))
+
+                if (Input.GetButtonDown(Finals.OPEN_MENU))
                 {
-                    if (isGamePaused)
-                    {
-                        Resume();
-                    }
-                    else
-                    {
-                        Pause();
-                    }
+                    Pause();
+                }
+                if (Input.GetButtonDown(Finals.INVENTORY))
+                {
+                    Inventory();
                 }
             }
         }
-        public void Resume()
+
+        private void Inventory()
         {
-            if (hasAuthority)
-            {
-                this.pauseMenuUI.SetActive(false);
-                this.optionsMenuUI.SetActive(false);
+            InInventory = !InInventory;
 
-                if (SinglePlayer)
-                {
-                    Time.timeScale = 1f;
-                }
-
-                // Debug.Log("time is now:" + Time.deltaTime);
-                isGamePaused = false;
-                // Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
-            }
+            this.InventoryMenuUI.SetActive(InInventory);
         }
 
-        public void Pause()
+        private void Pause()
         {
-            if (hasAuthority)
-            {
-                this.optionsMenuUI.SetActive(false);
-                this.pauseMenuUI.SetActive(true);
-                if (SinglePlayer)
-                {
-                    Time.timeScale = 0f;
-                }
-                isGamePaused = true;
-                // Cursor.lockState = CursorLockMode.None;
-            }
+            this.optionsMenuUI.SetActive(false);
+
+            InPauseMenu = !InPauseMenu;
+            this.pauseMenuUI.SetActive(InPauseMenu);
+            SetGamePause(InPauseMenu);
         }
 
+        private void SetGamePause(bool setPause)
+        {
+            if (SinglePlayer)
+            {
+                Time.timeScale = setPause ? 0f : 1f;
+            }
+
+            // Cursor.lockState = setPause ? CursorLockMode.None : CursorLockMode.Locked;
+        }
+
+        // used with UI button
         public void Options()
         {
             if (hasAuthority)
@@ -83,6 +76,7 @@ namespace HeadsUpDisplay
             }
         }
 
+        // used with UI button
         public void BackFromOptions()
         {
             if (hasAuthority)
@@ -92,15 +86,14 @@ namespace HeadsUpDisplay
             }
         }
 
+        // used with UI button
         public void QuitGame()
         {
             if (hasAuthority)
             {
-                if (SinglePlayer)
-                {
-                    Time.timeScale = 1f;
-                }
-                isGamePaused = false;
+                InPauseMenu = false;
+                SetGamePause(InPauseMenu);
+
                 PlayerObjectController playerObjectController = GetComponentInParent<PlayerObjectController>();
                 playerObjectController.LeaveLobby();
             }

@@ -8,18 +8,15 @@ namespace Inventory
     [Serializable]
     public class ItemList
     {
-        [Tooltip("Do not use negative numbers or zero as IDs")]
-        [SerializeField] private int ID;
+        // instead of using ID, we will use the item's index as ID.
+        // [Tooltip("Do not use negative numbers or zero as IDs")]
+        // [SerializeField] private int ID;
         [SerializeField] private bool isConsumable;
         [SerializeField] private bool isEquipable;
         [SerializeField] private int maxStack = Finals.DEFAULT_MAX_STACK;
         [Tooltip("The picture that will show in canvas in a sprite format")]
         [SerializeField] private Sprite sprite;
 
-        public int GetID()
-        {
-            return ID;
-        }
         public bool IsConsumable()
         {
             return isConsumable;

@@ -44,6 +44,8 @@ public static class Finals
     public const string CROUCH = "Crouch";
     public const string DODGE = "Dodge";
     public const string USE = "Use";
+    public const string OPEN_MENU = "Open Menu";
+    public const string INVENTORY = "Inventory";
     #endregion
 
     #region Inventory
