@@ -12,13 +12,29 @@ namespace Inventory
         {
             public int ID = -1;
             public int count = 1;
+
+            public override string ToString()
+            {
+                return "ID = " + ID + "\tcount = " + count;
+            }
         }
 
         #region variables
         [SerializeField] private int InventorySize;
-        public InventoryIndex inventoryIndex;
+        private InventoryIndex _inventoryIndex;
 
-        private List<ItemInsideInventory> Items;
+        private InventoryIndex InventoryIndexList
+        {
+            get
+            {
+                if (this._inventoryIndex == null)
+                    this._inventoryIndex = GameObject.Find(Finals.ITEM_INDEX).GetComponent<InventoryIndex>();
+
+                return this._inventoryIndex;
+            }
+        }
+
+        private List<ItemInsideInventory> Items = new List<ItemInsideInventory>();
 
         #endregion
 
@@ -30,9 +46,11 @@ namespace Inventory
             {
                 if (ID == item.ID)
                 {
-                    if (item.count < inventoryIndex.GetItemByID(item.ID).GetMaxStack())
+                    if (item.count < InventoryIndexList.GetItemByID(item.ID).GetMaxStack())
                     {
                         item.count++;
+                        //TODO remove this log
+                        Debug.Log(string.Join(", ", Items));
                         return true;
                     }
                 }
@@ -48,7 +66,8 @@ namespace Inventory
 
                 // add new stack to inventory
                 Items.Add(item);
-
+                //TODO remove this log
+                Debug.Log(string.Join(", ", Items));
                 return true;
             }
 
@@ -68,7 +87,7 @@ namespace Inventory
             {
                 if (ID == item.ID)
                 {
-                    if (item.count < inventoryIndex.GetItemByID(item.ID).GetMaxStack())
+                    if (item.count < InventoryIndexList.GetItemByID(item.ID).GetMaxStack())
                     {
                         item.count--;
 

@@ -8,19 +8,21 @@ namespace Object
     public class InteractableObject : NetworkBehaviour
     {
         [SerializeField] int ID;
-        private bool IsPickedUp = false;
+        [SyncVar] private bool IsPickedUp = false;
         void OnTriggerStay(Collider other)
         {
-            if (other.tag == Finals.PLAYER && Input.GetKeyDown(Finals.USE) && !IsPickedUp)
+            if (other.tag == Finals.PLAYER && Input.GetButtonDown(Finals.USE) && !IsPickedUp)
             {
                 if (other.GetComponent<Player.Stats>().hasAuthority)
                 {
-                    IsPickedUp = true;
                     bool isItemAdded = other.GetComponent<Inventory.InventoryManager>().AddItem(ID);
+
+                    // if item is added then we remove the item object from the game.
                     if (isItemAdded)
                     {
                         if (isServer)
                         {
+                            IsPickedUp = true;
                             RPCDestroyObjectForEveryone();
                         }
                         else if (isClient)
@@ -40,6 +42,7 @@ namespace Object
         [Command]
         private void CMDDestroyObjectForEveryone()
         {
+            IsPickedUp = true;
             RPCDestroyObjectForEveryone();
         }
         [ClientRpc]
@@ -49,9 +52,8 @@ namespace Object
         }
         private void DestroyObjectForEveryone()
         {
-            IsPickedUp = true;
             // TODO add piuckup animations here
-            Destroy(this, Finals.ITEM_PICKUP_TIME);
+            Destroy(this.gameObject, Finals.ITEM_PICKUP_TIME);
         }
     }
 }

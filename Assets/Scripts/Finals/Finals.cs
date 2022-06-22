@@ -33,6 +33,8 @@ public static class Finals
 
     #region Game Objects
     public const string LOCAL_GAME_PLAYER = "LocalGamePlayer";
+    public const string ITEM_INDEX = "ItemIndex";
+
     #endregion
 
     #region Controls
@@ -50,6 +52,6 @@ public static class Finals
 
     #region Inventory
     public const int DEFAULT_MAX_STACK = 64;
-    public const float ITEM_PICKUP_TIME = 2f;
+    public const float ITEM_PICKUP_TIME = 0.01f;
     #endregion
 }

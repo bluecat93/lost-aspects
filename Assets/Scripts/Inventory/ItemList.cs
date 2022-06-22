@@ -11,6 +11,7 @@ namespace Inventory
         // instead of using ID, we will use the item's index as ID.
         // [Tooltip("Do not use negative numbers or zero as IDs")]
         // [SerializeField] private int ID;
+        [SerializeField] private string name;
         [SerializeField] private bool isConsumable;
         [SerializeField] private bool isEquipable;
         [SerializeField] private int maxStack = Finals.DEFAULT_MAX_STACK;
