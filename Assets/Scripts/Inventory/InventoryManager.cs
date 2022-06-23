@@ -46,6 +46,20 @@ namespace Inventory
             }
         }
 
+        private Player.Stats _playerStats;
+
+        [HideInInspector]
+        private Player.Stats PlayerStats
+        {
+            get
+            {
+                if (this._playerStats == null)
+                    this._playerStats = GetComponent<Player.Stats>();
+
+                return this._playerStats;
+            }
+        }
+
         private List<ItemInsideInventory> Items = new List<ItemInsideInventory>();
 
         void Start()
@@ -105,7 +119,7 @@ namespace Inventory
         }
 
         // remove a single item. return true if item was removed successfuly
-        public bool RemoveItem(int ID)
+        public bool RemoveItemByID(int ID)
         {
             // searching for the item to remove from an existing stack
             for (int i = 0; i < InventorySize; i++)
@@ -130,6 +144,25 @@ namespace Inventory
             }
             return false;
         }
+        public bool RemoveItemByIndex(int index)
+        {
+            ItemInsideInventory item = Items[index];
+
+            if (index >= 0 && index < InventorySize)
+            {
+                item.count--;
+
+                // if stack is empty then we need to remove it from inventory so it wont take up space
+                if (item.count == 0)
+                {
+                    Items[index] = new ItemInsideInventory();
+                }
+
+                return true;
+            }
+            return false;
+        }
+
 
         public bool RemoveItemStack(int index)
         {
@@ -151,6 +184,25 @@ namespace Inventory
                 Items[index1] = item2;
                 Items[index2] = item1;
             }
+        }
+
+        public void Consume(int index)
+        {
+
+            ItemList item = InventoryIndexList.GetItemByID(Items[index].ID);
+            foreach (ConsumableStats stat in item.GetRestorationList())
+            {
+                switch (stat.restorationType)
+                {
+                    case Restoration.Health:
+                        PlayerStats.Heal(stat.amount);
+                        break;
+                    case Restoration.Hunger:
+                        PlayerStats.Eat(stat.amount);
+                        break;
+                }
+            }
+            RemoveItemByIndex(index);
         }
 
         public int GetInventorySize()

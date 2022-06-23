@@ -33,6 +33,7 @@ namespace HeadsUpDisplay
         void Update()
         {
             UpdateSlots();
+            HandleUsedItems();
         }
         private void CreateSlots()
         {
@@ -56,7 +57,7 @@ namespace HeadsUpDisplay
             }
         }
 
-        public void UpdateSlots()
+        private void UpdateSlots()
         {
             // set how every item in the inventory will look like.
             for (int i = 0; i < ItemsDisplayed.Count; i++)
@@ -87,6 +88,15 @@ namespace HeadsUpDisplay
             }
         }
 
+        private void HandleUsedItems()
+        {
+            if (Input.GetButtonDown(Finals.USE_ITEM) &&
+            mouseItem.hoverItem != null &&
+            InventoryManager.InventoryIndexList.GetItemByID(mouseItem.hoverItem.ID).IsConsumable())
+            {
+                InventoryManager.Consume(InventoryManager.GetItems().IndexOf(mouseItem.hoverItem));
+            }
+        }
         private void AddEvent(GameObject obj, EventTriggerType type, UnityAction<BaseEventData> action)
         {
             EventTrigger trigger = obj.GetComponent<EventTrigger>();

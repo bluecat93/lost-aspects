@@ -48,6 +48,7 @@ public static class Finals
     public const string USE = "Use";
     public const string OPEN_MENU = "Open Menu";
     public const string INVENTORY = "Inventory";
+    public const string USE_ITEM = "Use Item From Inventory";
     #endregion
 
     #region Inventory

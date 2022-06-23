@@ -1556,5 +1556,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemIndex
       objectReference: {fileID: 0}
+    - target: {fileID: 5172826726532496899, guid: 81b834fe50fe2e64ab640edd2c56ab43, type: 3}
+      propertyPath: itemList.Array.data[1].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f295915ae48354a4fb12e4e26f26d5e3, type: 3}
+    - target: {fileID: 5172826726532496899, guid: 81b834fe50fe2e64ab640edd2c56ab43, type: 3}
+      propertyPath: itemList.Array.data[1].RestorationList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5172826726532496899, guid: 81b834fe50fe2e64ab640edd2c56ab43, type: 3}
+      propertyPath: itemList.Array.data[1].RestorationList.Array.data[0].amount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5172826726532496899, guid: 81b834fe50fe2e64ab640edd2c56ab43, type: 3}
+      propertyPath: itemList.Array.data[1].RestorationList.Array.data[0].restorationType
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81b834fe50fe2e64ab640edd2c56ab43, type: 3}

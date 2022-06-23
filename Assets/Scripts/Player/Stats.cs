@@ -172,7 +172,7 @@ namespace Player
                 this.respawn = FindObjectOfType<RespawnScript>();
                 this.respawn.RespawnPlayer(this.gameObject);
                 Heal(maxHealth);
-                Eat();
+                Eat(maxHunger);
                 this.thirdPersonCamera.SetActive(true);
                 this.isAlive = true;
                 // Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
@@ -299,12 +299,12 @@ namespace Player
             }
         }
 
-        public void Eat()
+        public void Eat(int amount)
         {
             if (hasAuthority)
             {
-                this.currentHunger = this.maxHunger;
-                this.hungerBar.SetCurrent(this.maxHunger);
+                this.currentHunger = this.currentHunger + amount > this.maxHunger ? this.maxHunger : this.currentHunger + amount;
+                this.hungerBar.SetCurrent(this.currentHunger);
             }
         }
 
