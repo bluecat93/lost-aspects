@@ -18,13 +18,6 @@ namespace Inventory
         public ItemList GetItemByID(int ID)
         {
             return itemList[ID];
-
-            // foreach (ItemList item in itemList)
-            // {
-            //     if (item.GetID() == ID)
-            //         return item;
-            // }
-            // return null;
         }
     }
 }

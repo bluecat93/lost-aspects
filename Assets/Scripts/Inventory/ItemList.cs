@@ -13,7 +13,7 @@ namespace Inventory
         // [SerializeField] private int ID;
         [SerializeField] private string name;
         [SerializeField] private bool isConsumable;
-        [SerializeField] private bool isEquipable;
+        // [SerializeField] private bool isEquipable;
         [SerializeField] private int maxStack = Finals.DEFAULT_MAX_STACK;
         [Tooltip("The picture that will show in canvas in a sprite format")]
         [SerializeField] private Sprite sprite;
@@ -22,10 +22,10 @@ namespace Inventory
         {
             return isConsumable;
         }
-        public bool IsEquipable()
-        {
-            return isEquipable;
-        }
+        // public bool IsEquipable()
+        // {
+        //     return isEquipable;
+        // }
         public int GetMaxStack()
         {
             return maxStack;
