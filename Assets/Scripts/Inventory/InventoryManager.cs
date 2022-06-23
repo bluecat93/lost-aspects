@@ -131,6 +131,17 @@ namespace Inventory
             return false;
         }
 
+        public bool RemoveItemStack(int index)
+        {
+            // searching for the item to remove from an existing stack
+            if (index >= 0 && index < InventorySize)
+            {
+                Items[index] = new ItemInsideInventory();
+                return true;
+            }
+            return false;
+        }
+
         public void SwapItems(ItemInsideInventory item1, ItemInsideInventory item2)
         {
             int index1 = Items.IndexOf(item1);

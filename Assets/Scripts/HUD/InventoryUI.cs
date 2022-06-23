@@ -37,6 +37,9 @@ namespace HeadsUpDisplay
         private void CreateSlots()
         {
             ItemsDisplayed = new List<GameObject>();
+            AddEvent(this.gameObject, EventTriggerType.PointerEnter, delegate { OnEnter(this.gameObject); });
+            AddEvent(this.gameObject, EventTriggerType.PointerExit, delegate { OnExit(this.gameObject); });
+
             for (int i = 0; i < InventoryManager.GetInventorySize(); i++)
             {
                 var obj = Instantiate(InventoryPrefab, Vector3.zero, Quaternion.identity, transform);
@@ -44,7 +47,7 @@ namespace HeadsUpDisplay
                 obj.transform.localScale = new Vector3(ItemSize, ItemSize, ItemSize);
 
                 AddEvent(obj, EventTriggerType.PointerEnter, delegate { OnEnter(obj); });
-                AddEvent(obj, EventTriggerType.PointerExit, delegate { OnExit(obj); });
+                // AddEvent(obj, EventTriggerType.PointerExit, delegate { OnExit(obj); });
                 AddEvent(obj, EventTriggerType.BeginDrag, delegate { OnDragStart(obj); });
                 AddEvent(obj, EventTriggerType.EndDrag, delegate { OnDragEnd(obj); });
                 AddEvent(obj, EventTriggerType.Drag, delegate { OnDrag(obj); });
@@ -99,6 +102,8 @@ namespace HeadsUpDisplay
             int i = ItemsDisplayed.IndexOf(obj);
             if (i >= 0)
                 mouseItem.hoverItem = InventoryManager.GetItems()[i];
+            else
+                mouseItem.hoverItem = null;
         }
 
         public void OnExit(GameObject obj)
@@ -109,35 +114,38 @@ namespace HeadsUpDisplay
 
         public void OnDragStart(GameObject obj)
         {
-            var mouseObject = new GameObject();
-            var rt = mouseObject.AddComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(50, 50);
-            mouseObject.transform.SetParent(transform.parent);
             int i = ItemsDisplayed.IndexOf(obj);
             int ID = InventoryManager.GetItems()[i].ID;
-            if (ID >= 0)
+
+            if (ID > 0)
             {
+                var mouseObject = new GameObject();
+                var rt = mouseObject.AddComponent<RectTransform>();
+                rt.sizeDelta = new Vector2(50, 50);
+                mouseObject.transform.SetParent(transform.parent);
+
                 var img = mouseObject.AddComponent<Image>();
                 img.sprite = InventoryManager.InventoryIndexList.GetItemByID(ID).GetSprite();
                 img.raycastTarget = false;
+
+                mouseItem.obj = mouseObject;
+                mouseItem.item = InventoryManager.GetItems()[i];
             }
-            mouseItem.obj = mouseObject;
-            mouseItem.item = InventoryManager.GetItems()[i];
         }
         public void OnDragEnd(GameObject obj)
         {
             if (mouseItem.hoverObj)
             {
-                InventoryManager.SwapItems(mouseItem.hoverItem, mouseItem.item);
-                // InventoryManager.SwapItems(itemsDisplayed[obj], itemsDisplayed[mouseItem.hoverObj]);
+                if (mouseItem.hoverItem != null)
+                    InventoryManager.SwapItems(mouseItem.hoverItem, mouseItem.item);
             }
             else
             {
-                // TODO think about this one and see what happens first.
-                //inventory.RemoveItem(itemsDisplayed[obj].item);
+                InventoryManager.RemoveItemStack(ItemsDisplayed.IndexOf(obj));
             }
             Destroy(mouseItem.obj);
             mouseItem.item = null;
+            mouseItem.hoverItem = null;
         }
         public void OnDrag(GameObject obj)
         {
