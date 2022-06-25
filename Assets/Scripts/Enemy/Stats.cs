@@ -2,10 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using System;
+
 namespace Enemy
 {
     public class Stats : NetworkBehaviour
     {
+        [Serializable]
+        public class ItemDrop
+        {
+            public int amount;
+            public GameObject itemPrefab;
+        }
+
         [Header("Health and Survivability")]
         [Tooltip("The maximum health of the enemy")]
         [SerializeField] private int maxHealth = 100;
@@ -27,6 +36,9 @@ namespace Enemy
         [SerializeField] private float sightDistance = 10f;
         [Tooltip("The minimum distance it takes for the enemy to start the attack animation on the character")]
         [SerializeField] private float attackDistance = 5f;
+
+        [Header("ItemDrop")]
+        [SerializeField] private List<ItemDrop> itemDrops;
 
         [SyncVar(hook = nameof(LogCheck))] private int currentHealth;
         private float invulnerabilityFrame = 0f;
@@ -127,6 +139,11 @@ namespace Enemy
         public int GetMaxHealth()
         {
             return this.maxHealth;
+        }
+
+        public List<ItemDrop> GetItemDrops()
+        {
+            return itemDrops;
         }
 
     }

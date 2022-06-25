@@ -194,8 +194,30 @@ namespace Enemy
                 if (!this.deadOnlyOnce)
                 {
                     this.currentDeathTimer = Time.time + this.EnmyStts.GetDeathTimer();
+
+                    // spawn item drops
+                    if (isServer)
+                        DropItems();
                 }
                 this.deadOnlyOnce = true;
+
+            }
+        }
+
+        [Server]
+        private void DropItems()
+        {
+            List<Stats.ItemDrop> itemDrops = EnmyStts.GetItemDrops();
+            Object.ItemSpawn itemSpawner = FindObjectOfType<Object.ItemSpawn>();
+            foreach (Stats.ItemDrop item in itemDrops)
+            {
+                for (int i = 0; i < item.amount; i++)
+                {
+                    Debug.Log("ITEM PREFB IS : " + item.itemPrefab);
+
+                    Vector3 ItemPosition = this.transform.position + new Vector3(UnityEngine.Random.value * 2f, 0f, UnityEngine.Random.value * 2f);
+                    itemSpawner.SpawnItem(item.itemPrefab, ItemPosition, this.transform.rotation);
+                }
             }
         }
 

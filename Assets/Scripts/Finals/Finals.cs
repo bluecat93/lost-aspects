@@ -52,7 +52,6 @@ public static class Finals
     #endregion
 
     #region Inventory
-    public const int DEFAULT_MAX_STACK = 64;
     public const float ITEM_PICKUP_TIME = 0.01f;
     #endregion
 }

@@ -16,7 +16,7 @@ namespace Inventory
         [SerializeField] private List<ConsumableStats> RestorationList;
 
         // [SerializeField] private bool isEquipable;
-        [SerializeField] private int maxStack = Finals.DEFAULT_MAX_STACK;
+        [SerializeField] private int maxStack = 10;
         [Tooltip("The picture that will show in canvas in a sprite format")]
         [SerializeField] private Sprite sprite;
 

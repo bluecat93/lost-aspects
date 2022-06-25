@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3770915042023136621}
   - component: {fileID: 5172826726532496899}
+  - component: {fileID: -2239784033207682305}
+  - component: {fileID: 5454045103798944679}
   m_Layer: 0
   m_Name: ItemIndex
   m_TagString: Untagged
@@ -45,17 +47,45 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemList:
   - name: Empty
-    isConsumable: 0
-    isEquipable: 0
+    RestorationList: []
     maxStack: 1
     sprite: {fileID: 0}
   - name: Cube
-    isConsumable: 1
-    isEquipable: 0
+    RestorationList: []
     maxStack: 64
     sprite: {fileID: 21300000, guid: 10bcd1f883e64d446865130d96e831ce, type: 3}
   - name: Sphere
-    isConsumable: 0
-    isEquipable: 0
+    RestorationList: []
     maxStack: 2
     sprite: {fileID: 21300000, guid: d3b48a06a2d12544c9d91e5fbd1b20c8, type: 3}
+--- !u!114 &-2239784033207682305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3770915042023136622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 81b834fe50fe2e64ab640edd2c56ab43
+  hasSpawned: 0
+--- !u!114 &5454045103798944679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3770915042023136622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ef3cac5f7833d4f8e0c61176b9f554, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1

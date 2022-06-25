@@ -2291,6 +2291,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f28fd8a7e260b24469b258242696ae04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   maxHealth: 10
   invulnerabilityFrameAmount: 0.3
   deathTimer: 3
@@ -2299,6 +2301,11 @@ MonoBehaviour:
   maxFollowDistance: 40
   sightDistance: 30
   attackDistance: 20
+  itemDrops:
+  - amount: 2
+    itemPrefab: {fileID: 9202601427476189734, guid: 1a203143431dc5546b53b440cfbbef75, type: 3}
+  - amount: 1
+    itemPrefab: {fileID: 9202601427476189734, guid: 5160070601d3f24438fc8aa33819b00f, type: 3}
 --- !u!136 &7087518949622995701
 CapsuleCollider:
   m_ObjectHideFlags: 0
