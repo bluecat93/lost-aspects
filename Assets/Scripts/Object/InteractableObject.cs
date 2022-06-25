@@ -27,6 +27,10 @@ namespace Object
                         }
                         else if (isClient)
                         {
+                            if (!hasAuthority)
+                            {
+                                netIdentity.AssignClientAuthority(other.GetComponent<Player.Stats>().connectionToClient);
+                            }
                             CMDDestroyObjectForEveryone();
                         }
                     }
