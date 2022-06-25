@@ -11,7 +11,7 @@ namespace Object
         [SyncVar][HideInInspector] public bool IsPickedUp = false;
         void OnTriggerStay(Collider other)
         {
-            if (other.tag == Finals.PLAYER && Input.GetButtonDown(Finals.USE) && !IsPickedUp)
+            if (other.tag == Finals.PLAYER && Input.GetAxis(Finals.USE) != 0 && !IsPickedUp)
             {
                 if (other.GetComponent<Player.Stats>().hasAuthority)
                 {
@@ -27,7 +27,7 @@ namespace Object
                         }
                         else if (isClient)
                         {
-                            // need to give authority over the item for the client (can only be done by the server.) 
+                            // need to give authority over the item for the client (can only be done by the server). 
                             // only then do from server as normal (see above).
                             other.GetComponent<Player.Abilities>().GiveAuthorityForItemPickup(this);
                         }
