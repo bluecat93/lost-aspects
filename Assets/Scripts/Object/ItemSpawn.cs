@@ -11,8 +11,6 @@ namespace Object
         [Server]
         public void SpawnItem(GameObject itemPrefab, Vector3 location, Quaternion rotation)
         {
-            NetworkClient.RegisterPrefab(itemPrefab);
-
             // create object on server only
             GameObject obj = Instantiate(itemPrefab, location, rotation);
 
