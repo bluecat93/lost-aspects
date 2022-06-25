@@ -8,7 +8,7 @@ namespace Object
     public class InteractableObject : NetworkBehaviour
     {
         [SerializeField] int ID;
-        [SyncVar] private bool IsPickedUp = false;
+        [SyncVar][HideInInspector] public bool IsPickedUp = false;
         void OnTriggerStay(Collider other)
         {
             if (other.tag == Finals.PLAYER && Input.GetButtonDown(Finals.USE) && !IsPickedUp)
@@ -27,8 +27,9 @@ namespace Object
                         }
                         else if (isClient)
                         {
+                            // need to give authority over the item for the client (can only be done by the server.) 
+                            // only then do from server as normal (see above).
                             other.GetComponent<Player.Abilities>().GiveAuthorityForItemPickup(this);
-                            CMDDestroyObjectForEveryone();
                         }
                     }
                     else
@@ -40,14 +41,8 @@ namespace Object
             }
         }
 
-        [Command]
-        private void CMDDestroyObjectForEveryone()
-        {
-            IsPickedUp = true;
-            RPCDestroyObjectForEveryone();
-        }
         [ClientRpc]
-        private void RPCDestroyObjectForEveryone()
+        public void RPCDestroyObjectForEveryone()
         {
             DestroyObjectForEveryone();
         }
