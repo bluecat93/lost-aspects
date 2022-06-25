@@ -59,6 +59,26 @@ namespace Player
 
         }
 
+        #region Item Piuckup
+
+        // give authority to client for item pickup
+        public void GiveAuthorityForItemPickup(InteractableObject itemPickupScript)
+        {
+            if (hasAuthority)
+            {
+                CMDRequestAuthority(itemPickupScript, this.connectionToClient);
+            }
+        }
+
+        [Command]
+        public void CMDRequestAuthority(InteractableObject itemPickupScript, NetworkConnectionToClient client)
+        {
+            // give authority of the item to the client who picks up the item.
+            itemPickupScript.netIdentity.AssignClientAuthority(client);
+        }
+
+        #endregion
+
         //Equip or unequip a weapon. NOTE: this will only work with one weapon type. if we will have more than we have to insantiate them in the right positions by getting the offsets and the like.
         #region Weapon Equpiment
         public void EquipWeapon()
