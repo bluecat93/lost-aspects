@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
 
@@ -8,6 +9,7 @@ namespace Inventory
 {
     public class InventoryManager : MonoBehaviour
     {
+        [Serializable]
         public class ItemInsideInventory
         {
             // constructor, ID = 0 meaning its an empty item.

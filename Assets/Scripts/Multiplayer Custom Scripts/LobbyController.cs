@@ -246,7 +246,7 @@ public class LobbyController : MonoBehaviour
         if (PlayerListItems.Count == 1)
         {
             Debug.Log("Starting game with " + PlayerListItems.Count + " player");
-            LocalPlayerObject.GetComponent<HeadsUpDisplay.PauseMenu>().SinglePlayer = true;
+            LocalPlayerObject.GetComponent<HeadsUpDisplay.InGameMenu>().SinglePlayer = true;
         }
         else
         {
