@@ -9,6 +9,7 @@ namespace Object
     {
         [SerializeField] int ID;
         [SyncVar][HideInInspector] public bool IsPickedUp = false;
+        private bool IsClientPickedUp = false;
         void OnTriggerStay(Collider other)
         {
             if (other.tag == Finals.PLAYER && Input.GetAxis(Finals.USE) != 0 && !IsPickedUp)
@@ -25,8 +26,10 @@ namespace Object
                             IsPickedUp = true;
                             RPCDestroyObjectForEveryone();
                         }
-                        else if (isClient)
+                        else if (isClient && !IsClientPickedUp)
                         {
+                            IsClientPickedUp = true;
+                            IsPickedUp = true;
                             // need to give authority over the item for the client (can only be done by the server). 
                             // only then do from server as normal (see above).
                             other.GetComponent<Player.Abilities>().GiveAuthorityForItemPickup(this);
