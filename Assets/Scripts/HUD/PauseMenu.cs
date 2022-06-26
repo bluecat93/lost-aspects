@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Mirror;
-using System;
+
 
 namespace HeadsUpDisplay
 {
-    public class InGameMenu : NetworkBehaviour
+    public class PauseMenu : NetworkBehaviour
     {
         private bool InInventory = false;
-        private bool InCrafting = false;
         private bool InPauseMenu = false;
         public GameObject pauseMenuUI;
         public GameObject optionsMenuUI;
         public GameObject InventoryMenuUI;
-        public GameObject CraftingMenuUI;
         [HideInInspector] public bool SinglePlayer = false;
 
         // Update is called once per frame
@@ -39,17 +37,7 @@ namespace HeadsUpDisplay
                 {
                     Inventory();
                 }
-                if (Input.GetButtonDown(Finals.CRAFTING))
-                {
-                    Crafting();
-                }
             }
-        }
-
-        private void Crafting()
-        {
-            InCrafting = !InCrafting;
-            this.CraftingMenuUI.SetActive(InCrafting);
         }
 
         private void Inventory()
