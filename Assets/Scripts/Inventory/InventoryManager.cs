@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 
 
@@ -9,7 +8,7 @@ namespace Inventory
 {
     public class InventoryManager : MonoBehaviour
     {
-        [Serializable]
+        [System.Serializable]
         public class ItemInsideInventory
         {
             // constructor, ID = 0 meaning its an empty item.
@@ -23,8 +22,8 @@ namespace Inventory
                 this.ID = ID;
                 this.count = count;
             }
-            public int ID { get; }
-            public int count { get; set; }
+            public int ID;
+            public int count;
 
             public override string ToString()
             {
@@ -130,18 +129,16 @@ namespace Inventory
 
                 if (ID == item.ID)
                 {
-                    if (item.count < InventoryIndexList.GetItemByID(item.ID).GetMaxStack())
+
+                    item.count--;
+
+                    // if stack is empty then we need to remove it from inventory so it wont take up space
+                    if (item.count == 0)
                     {
-                        item.count--;
-
-                        // if stack is empty then we need to remove it from inventory so it wont take up space
-                        if (item.count == 0)
-                        {
-                            Items[i] = new ItemInsideInventory();
-                        }
-
-                        return true;
+                        Items[i] = new ItemInsideInventory();
                     }
+
+                    return true;
                 }
             }
             return false;
@@ -155,7 +152,7 @@ namespace Inventory
                 item.count--;
 
                 // if stack is empty then we need to remove it from inventory so it wont take up space
-                if (item.count == 0)
+                if (item.count <= 0)
                 {
                     Items[index] = new ItemInsideInventory();
                 }
@@ -190,7 +187,8 @@ namespace Inventory
 
         public void Consume(int index)
         {
-
+            if (index < 0 || Items[index].ID <= 0)
+                return;
             ItemList item = InventoryIndexList.GetItemByID(Items[index].ID);
             foreach (ConsumableStats stat in item.GetRestorationList())
             {
@@ -214,6 +212,39 @@ namespace Inventory
         public List<ItemInsideInventory> GetItems()
         {
             return Items;
+        }
+
+        public bool IsCraftable(List<ItemInsideInventory> ingridients)
+        {
+            foreach (ItemInsideInventory ingridient in ingridients)
+            {
+                if (!HasItem(ingridient))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// search all items inside inventory if the item count inside inventory is equal or larger than the expected item count then return true.
+        /// </summary>
+        public bool HasItem(ItemInsideInventory item)
+        {
+            int count = 0;
+            foreach (ItemInsideInventory itemInsideInventory in Items)
+            {
+                if (item.ID == itemInsideInventory.ID)
+                {
+                    count += itemInsideInventory.count;
+                }
+
+                if (count >= item.count)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 

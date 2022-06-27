@@ -49,6 +49,10 @@ namespace HeadsUpDisplay
         private void Crafting()
         {
             InCrafting = !InCrafting;
+            if (InCrafting)
+            {
+                GetComponent<Crafting.KnownRecipes>().UpdateRecipes();
+            }
             this.CraftingMenuUI.SetActive(InCrafting);
         }
 

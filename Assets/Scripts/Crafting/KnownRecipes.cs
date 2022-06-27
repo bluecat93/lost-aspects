@@ -1,10 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Inventory;
 
 
 namespace Crafting
 {
+    [System.Serializable]
+    public class Recipe
+    {
+        public List<InventoryManager.ItemInsideInventory> Ingridients;
+        public InventoryManager.ItemInsideInventory CraftedItem;
+    }
     public class KnownRecipes : MonoBehaviour
     {
         #region Variables
@@ -13,6 +20,8 @@ namespace Crafting
         [HideInInspector] public List<Recipe> KnownRecipesList;
         public GameObject RecipePrefab;
         public GameObject RecipeContentView;
+        public Vector3 ScaleOfRecipe;
+        public Vector3 RecipePosition;
         private List<GameObject> RecipiesObjectList;
         #endregion
 
@@ -62,14 +71,16 @@ namespace Crafting
 
             foreach (Recipe recipe in KnownRecipesList)
             {
-                GameObject obj = Instantiate(RecipePrefab);
+                GameObject obj = Instantiate(RecipePrefab) as GameObject;
 
+                obj.transform.SetParent(RecipeContentView.transform);
                 obj.GetComponent<CraftingListItem>().SetData(recipe);
+
+                obj.transform.localScale = ScaleOfRecipe;
+                obj.transform.localPosition = Vector3.zero + RecipePosition;
+
                 RecipiesObjectList.Add(obj);
             }
         }
-
-
-
     }
 }

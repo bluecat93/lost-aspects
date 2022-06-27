@@ -58,6 +58,14 @@ MonoBehaviour:
     RestorationList: []
     maxStack: 2
     sprite: {fileID: 21300000, guid: d3b48a06a2d12544c9d91e5fbd1b20c8, type: 3}
+  - name: CraftedSphere
+    RestorationList:
+    - restorationType: 0
+      amount: 10
+    - restorationType: 1
+      amount: 1
+    maxStack: 1
+    sprite: {fileID: 21300000, guid: 10bcd1f883e64d446865130d96e831ce, type: 3}
 --- !u!114 &-2239784033207682305
 MonoBehaviour:
   m_ObjectHideFlags: 0

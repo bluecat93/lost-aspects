@@ -3,117 +3,100 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Steamworks;
+using Inventory;
 
 namespace Crafting
 {
     public class CraftingListItem : MonoBehaviour
     {
-        public List<GameObject> Ingridients;
+        private Recipe MyRecipe;
+        public List<GameObject> IngridientsObjects;
         public GameObject CraftedItem;
+        private InventoryManager _inventoryManager = null;
+        private InventoryManager InvntryMngr
+        {
+            get
+            {
+                if (_inventoryManager == null)
+                    _inventoryManager = GetComponentInParent<InventoryManager>();
+                return _inventoryManager;
+            }
+        }
         public void SetData(Recipe recipe)
         {
-            for (int i = 0; i < Ingridients.Count; i++)
+            MyRecipe = recipe;
+            for (int i = 0; i < IngridientsObjects.Count; i++)
             {
-                // rest of ingridient will be shown as empty
-                if (recipe.Ingridients.Count <= i)
+                if (recipe.Ingridients.Count > i)
                 {
-
+                    SetSingleItem(IngridientsObjects[i], recipe.Ingridients[i]);
                 }
-
-                // set sprite
-
-                // set item amount
+                // rest of ingridient will be shown as empty
+                else
+                {
+                    SetSingleItem(IngridientsObjects[i], new InventoryManager.ItemInsideInventory());
+                }
             }
+            SetSingleItem(CraftedItem, recipe.CraftedItem);
+        }
+        private void SetSingleItem(GameObject obj, InventoryManager.ItemInsideInventory item)
+        {
+            ItemList itemList = InvntryMngr.InventoryIndexList.GetItemByID(item.ID);
+            obj.GetComponentInChildren<Image>().sprite = itemList.GetSprite();
 
-            // set sprite and item amount for crafted item
+            if (item.ID != 0)
+            {
+                obj.GetComponentInChildren<Text>().text = "" + item.count;
+            }
         }
 
+        // clicked on the craft button.
+        public void Craft()
+        {
+            if (InvntryMngr.IsCraftable(MyRecipe.Ingridients))
+            {
+                // remove all ingridients from inventory
+                foreach (InventoryManager.ItemInsideInventory ingridient in MyRecipe.Ingridients)
+                {
+                    for (int i = 0; i < ingridient.count; i++)
+                    {
+                        InvntryMngr.RemoveItemByID(ingridient.ID);
+                    }
+                }
+                // add all crafted items to inventory
+                for (int i = 0; i < MyRecipe.CraftedItem.count; i++)
+                {
+                    if (!InvntryMngr.AddItem(MyRecipe.CraftedItem.ID))
+                    {
+                        // no inventory space
+                        Debug.Log("Can't craft item, missing inventory space");
 
-        // public string PlayerName;
-        // public int ConnectionID;
-        // public ulong PlayerSteamID;
-        // private bool AvatarRecieived;
+                        // remove all items created
+                        // i = 0 meaning there are no items crafted, it will not enter here in that case.
+                        for (int j = i - 1; j >= 0; j--)
+                        {
+                            InvntryMngr.RemoveItemByID(MyRecipe.CraftedItem.ID);
+                        }
 
-        // public Text PlayerNameText;
-        // public RawImage PlayerIcon;
-        // public Text PlayerReadyText;
-        // public bool IsReady;
+                        // add all ingridients back to inventory.
+                        foreach (InventoryManager.ItemInsideInventory ingridient in MyRecipe.Ingridients)
+                        {
+                            for (int j = 0; j < ingridient.count; j++)
+                            {
+                                InvntryMngr.AddItem(ingridient.ID);
+                            }
+                        }
 
-        // protected Callback<AvatarImageLoaded_t> ImageLoaded;
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("Can't craft item, missing ingridients");
 
-        // public void ChangeReadyStatus()
-        // {
-        //     // ready
-        //     if (IsReady)
-        //     {
-        //         PlayerReadyText.text = "Ready";
-        //         PlayerReadyText.color = Color.green;
-        //     }
-        //     // not ready
-        //     else
-        //     {
-        //         PlayerReadyText.text = "Unready";
-        //         PlayerReadyText.color = Color.red;
-        //     }
-        // }
+                // TODO add list of missing ingridients?
+            }
 
-        // private void Start()
-        // {
-        //     ImageLoaded = Callback<AvatarImageLoaded_t>.Create(OnImageLoaded);
-        // }
-
-        // public void SetPlayerValues()
-        // {
-        //     PlayerNameText.text = PlayerName;
-        //     ChangeReadyStatus();
-        //     if (!AvatarRecieived)
-        //     {
-        //         GetPlayerIcon();
-        //     }
-        // }
-
-        // void GetPlayerIcon()
-        // {
-        //     int ImageID = SteamFriends.GetLargeFriendAvatar((CSteamID)PlayerSteamID);
-        //     if (ImageID == -1)
-        //     {
-        //         return;
-        //     }
-        //     PlayerIcon.texture = GetSteamImageAsTexture(ImageID);
-        // }
-
-        // private Texture2D GetSteamImageAsTexture(int iImage)
-        // {
-        //     Texture2D texture = null;
-
-        //     bool isValid = SteamUtils.GetImageSize(iImage, out uint width, out uint height);
-        //     if (isValid)
-        //     {
-        //         byte[] image = new byte[width * height * 4];
-
-        //         isValid = SteamUtils.GetImageRGBA(iImage, image, (int)(width * height * 4));
-
-        //         if (isValid)
-        //         {
-        //             texture = new Texture2D((int)width, (int)height, TextureFormat.RGBA32, false, true);
-        //             texture.LoadRawTextureData(image);
-        //             texture.Apply();
-        //         }
-        //     }
-        //     AvatarRecieived = true;
-        //     return texture;
-        // }
-
-        // private void OnImageLoaded(AvatarImageLoaded_t callback)
-        // {
-        //     if (callback.m_steamID.m_SteamID == PlayerSteamID)
-        //     {
-        //         PlayerIcon.texture = GetSteamImageAsTexture(callback.m_iImage);
-        //     }
-        //     else //another player
-        //     {
-        //         return;
-        //     }
-        // }
+        }
     }
 }
