@@ -19,6 +19,7 @@ namespace Inventory
         [SerializeField] private int maxStack = 10;
         [Tooltip("The picture that will show in canvas in a sprite format")]
         [SerializeField] private Sprite sprite;
+        [SerializeField] private GameObject itemPrefab;
 
         // enum health hunger
         // list of enum above what can the consumable rise
@@ -43,6 +44,11 @@ namespace Inventory
         public List<ConsumableStats> GetRestorationList()
         {
             return RestorationList;
+        }
+
+        public GameObject GetItemPrefab()
+        {
+            return itemPrefab;
         }
     }
 }

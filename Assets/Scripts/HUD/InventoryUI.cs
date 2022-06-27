@@ -151,6 +151,7 @@ namespace HeadsUpDisplay
             }
             else
             {
+                InventoryManager.SpawnItem(ItemsDisplayed.IndexOf(obj));
                 InventoryManager.RemoveItemStack(ItemsDisplayed.IndexOf(obj));
             }
             Destroy(mouseItem.obj);

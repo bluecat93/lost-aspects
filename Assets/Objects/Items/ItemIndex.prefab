@@ -50,14 +50,17 @@ MonoBehaviour:
     RestorationList: []
     maxStack: 1
     sprite: {fileID: 0}
+    itemPrefab: {fileID: 0}
   - name: Cube
     RestorationList: []
     maxStack: 64
     sprite: {fileID: 21300000, guid: 10bcd1f883e64d446865130d96e831ce, type: 3}
+    itemPrefab: {fileID: 9202601427476189734, guid: 5160070601d3f24438fc8aa33819b00f, type: 3}
   - name: Sphere
     RestorationList: []
     maxStack: 2
     sprite: {fileID: 21300000, guid: d3b48a06a2d12544c9d91e5fbd1b20c8, type: 3}
+    itemPrefab: {fileID: 9202601427476189734, guid: 1a203143431dc5546b53b440cfbbef75, type: 3}
   - name: CraftedSphere
     RestorationList:
     - restorationType: 0
@@ -66,6 +69,7 @@ MonoBehaviour:
       amount: 1
     maxStack: 1
     sprite: {fileID: 21300000, guid: 10bcd1f883e64d446865130d96e831ce, type: 3}
+    itemPrefab: {fileID: 9202601427476189734, guid: e49f04bcf9cad1a4ca5ba647c4e4a0a5, type: 3}
 --- !u!114 &-2239784033207682305
 MonoBehaviour:
   m_ObjectHideFlags: 0

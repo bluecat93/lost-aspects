@@ -246,6 +246,19 @@ namespace Inventory
             }
             return false;
         }
+
+        public void SpawnItem(int index)
+        {
+            int id = Items[index].ID;
+            if (id == 0)
+                return;
+            Object.ItemSpawn itemSpawner = FindObjectOfType<Object.ItemSpawn>();
+
+            GameObject itemPrefab = InventoryIndexList.GetItemByID(id).GetItemPrefab();
+
+            Vector3 ItemPosition = this.transform.position + new Vector3(UnityEngine.Random.value * 2f, 0.5f, UnityEngine.Random.value * 2f);
+            itemSpawner.SpawnItem(itemPrefab, ItemPosition, this.transform.rotation);
+        }
     }
 
 }

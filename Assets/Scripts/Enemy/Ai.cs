@@ -213,7 +213,7 @@ namespace Enemy
             {
                 for (int i = 0; i < item.amount; i++)
                 {
-                    Vector3 ItemPosition = this.transform.position + new Vector3(UnityEngine.Random.value * 2f, 0f, UnityEngine.Random.value * 2f);
+                    Vector3 ItemPosition = this.transform.position + new Vector3(UnityEngine.Random.value * 2f, 0.5f, UnityEngine.Random.value * 2f);
                     itemSpawner.SpawnItem(item.itemPrefab, ItemPosition, this.transform.rotation);
                 }
             }
