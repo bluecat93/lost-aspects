@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 
 
 namespace Inventory
 {
-    public class InventoryManager : MonoBehaviour
+    public class InventoryManager : NetworkBehaviour
     {
         [System.Serializable]
         public class ItemInsideInventory
@@ -249,13 +250,12 @@ namespace Inventory
 
         public void SpawnItem(int index)
         {
+            Object.ItemSpawn itemSpawner = FindObjectOfType<Object.ItemSpawn>();
             int id = Items[index].ID;
             if (id == 0)
                 return;
             for (int i = 0; i < Items[index].count; i++)
             {
-                Object.ItemSpawn itemSpawner = FindObjectOfType<Object.ItemSpawn>();
-
                 GameObject itemPrefab = InventoryIndexList.GetItemByID(id).GetItemPrefab();
 
                 Vector3 ItemPosition = this.transform.position + new Vector3(UnityEngine.Random.value * 2f, 0.5f, UnityEngine.Random.value * 2f);
@@ -267,11 +267,18 @@ namespace Inventory
                 {
                     itemSpawner.SpawnItem(itemPrefab, ItemPosition, this.transform.rotation);
                 }
-                else if (stats.isClient && stats.hasAuthority)
+                else if (stats.isClient && hasAuthority)
                 {
-                    itemSpawner.CMDSpawnItem(itemPrefab, ItemPosition, this.transform.rotation);
+                    CMDSpawnItem(itemPrefab, ItemPosition, this.transform.rotation, itemSpawner);
                 }
             }
+        }
+
+
+        [Command]
+        public void CMDSpawnItem(GameObject itemPrefab, Vector3 location, Quaternion rotation, Object.ItemSpawn itemSpawner)
+        {
+            itemSpawner.SpawnItem(itemPrefab, location, rotation);
         }
     }
 

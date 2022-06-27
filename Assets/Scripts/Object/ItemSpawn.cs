@@ -17,11 +17,5 @@ namespace Object
             // make server spawn object for all clients and gives the object a network id.
             NetworkServer.Spawn(obj);
         }
-
-        [Command]
-        public void CMDSpawnItem(GameObject itemPrefab, Vector3 location, Quaternion rotation)
-        {
-            SpawnItem(itemPrefab, location, rotation);
-        }
     }
 }
