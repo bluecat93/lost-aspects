@@ -4,10 +4,9 @@ using UnityEngine;
 using Mirror;
 
 
-
 namespace Inventory
 {
-    public class InventoryManager : NetworkBehaviour
+    public class InventoryManager : Mirror.NetworkBehaviour
     {
         [System.Serializable]
         public class ItemInsideInventory
@@ -269,7 +268,7 @@ namespace Inventory
                 }
                 else if (stats.isClient && hasAuthority)
                 {
-                    GameObject obj = Instantiate(itemPrefab, ItemPosition, this.transform.rotation);
+                    GameObject obj = Instantiate(itemPrefab, ItemPosition, this.transform.rotation) as GameObject;
                     CMDSpawnItem(obj, itemSpawner);
                 }
             }
