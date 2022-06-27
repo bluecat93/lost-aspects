@@ -259,7 +259,18 @@ namespace Inventory
                 GameObject itemPrefab = InventoryIndexList.GetItemByID(id).GetItemPrefab();
 
                 Vector3 ItemPosition = this.transform.position + new Vector3(UnityEngine.Random.value * 2f, 0.5f, UnityEngine.Random.value * 2f);
-                itemSpawner.SpawnItem(itemPrefab, ItemPosition, this.transform.rotation);
+
+                Player.Stats stats = GetComponent<Player.Stats>();
+
+
+                if (stats.isServer)
+                {
+                    itemSpawner.SpawnItem(itemPrefab, ItemPosition, this.transform.rotation);
+                }
+                else if (stats.isClient && stats.hasAuthority)
+                {
+                    itemSpawner.CMDSpawnItem(itemPrefab, ItemPosition, this.transform.rotation);
+                }
             }
         }
     }
