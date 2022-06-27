@@ -252,12 +252,15 @@ namespace Inventory
             int id = Items[index].ID;
             if (id == 0)
                 return;
-            Object.ItemSpawn itemSpawner = FindObjectOfType<Object.ItemSpawn>();
+            for (int i = 0; i < Items[index].count; i++)
+            {
+                Object.ItemSpawn itemSpawner = FindObjectOfType<Object.ItemSpawn>();
 
-            GameObject itemPrefab = InventoryIndexList.GetItemByID(id).GetItemPrefab();
+                GameObject itemPrefab = InventoryIndexList.GetItemByID(id).GetItemPrefab();
 
-            Vector3 ItemPosition = this.transform.position + new Vector3(UnityEngine.Random.value * 2f, 0.5f, UnityEngine.Random.value * 2f);
-            itemSpawner.SpawnItem(itemPrefab, ItemPosition, this.transform.rotation);
+                Vector3 ItemPosition = this.transform.position + new Vector3(UnityEngine.Random.value * 2f, 0.5f, UnityEngine.Random.value * 2f);
+                itemSpawner.SpawnItem(itemPrefab, ItemPosition, this.transform.rotation);
+            }
         }
     }
 
