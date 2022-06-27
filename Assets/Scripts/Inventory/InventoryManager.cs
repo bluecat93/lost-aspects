@@ -269,7 +269,8 @@ namespace Inventory
                 }
                 else if (stats.isClient && hasAuthority)
                 {
-                    CMDSpawnItem(itemPrefab, ItemPosition, this.transform.rotation, itemSpawner);
+                    GameObject obj = Instantiate(itemPrefab, ItemPosition, this.transform.rotation);
+                    CMDSpawnItem(obj, itemSpawner);
                 }
             }
         }
@@ -279,6 +280,11 @@ namespace Inventory
         public void CMDSpawnItem(GameObject itemPrefab, Vector3 location, Quaternion rotation, Object.ItemSpawn itemSpawner)
         {
             itemSpawner.SpawnItem(itemPrefab, location, rotation);
+        }
+        [Command]
+        public void CMDSpawnItem(GameObject obj, Object.ItemSpawn itemSpawner)
+        {
+            itemSpawner.SpawnItem(obj);
         }
     }
 
