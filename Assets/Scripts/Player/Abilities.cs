@@ -75,7 +75,6 @@ namespace Player
         {
             // give authority of the item to the client who picks up the item.
             itemPickupScript.netIdentity.AssignClientAuthority(client);
-            itemPickupScript.IsPickedUp = true;
             itemPickupScript.RPCDestroyObjectForEveryone();
 
         }
