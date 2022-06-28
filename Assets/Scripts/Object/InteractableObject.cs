@@ -28,8 +28,7 @@ namespace Object
                     }
                     else if (isClient)
                     {
-                        NetworkIdentity myIdentity = other.GetComponent<NetworkIdentity>();
-                        other.GetComponent<Player.Abilities>().CmdItemPickup(myIdentity, this);
+                        other.GetComponent<Player.Abilities>().CmdItemPickup(this);
                     }
                 }
             }
@@ -54,7 +53,6 @@ namespace Object
             {
                 if (isServer)
                 {
-                    IsPickedup = true;
                     RPCDestroyObjectForEveryone();
                 }
                 else if (isClient && !IsClientPickedup)
