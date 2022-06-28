@@ -70,6 +70,17 @@ namespace Player
             }
         }
 
+        // client asks server if item was picked up by anyone and the server will send only one client a positive answer.
+        [Command]
+        public void CmdItemPickup(NetworkIdentity identity, InteractableObject itemPickupScript)
+        {
+            if (!itemPickupScript.IsPickedup)
+            {
+                itemPickupScript.IsPickedup = true;
+                itemPickupScript.TargetItemPickup(identity);
+            }
+        }
+
         [Command]
         public void CMDRequestAuthority(InteractableObject itemPickupScript, NetworkConnectionToClient client)
         {

@@ -8,7 +8,7 @@ namespace Object
     public class InteractableObject : NetworkBehaviour
     {
         [SerializeField] int ID;
-        [SyncVar] private bool IsPickedup = false;
+        [SyncVar][HideInInspector] public bool IsPickedup = false;
         private bool IsClientPickedup = false;
         private Collider LastPlayerCollider;
         void OnTriggerStay(Collider other)
@@ -29,26 +29,17 @@ namespace Object
                     else if (isClient)
                     {
                         NetworkIdentity myIdentity = other.GetComponent<NetworkIdentity>();
-                        CmdItemPickup(myIdentity);
+                        other.GetComponent<Player.Abilities>().CmdItemPickup(myIdentity, this);
                     }
                 }
             }
         }
 
-        // client asks server if item was picked up by anyone and the server will send only one client a positive answer.
-        [Command]
-        private void CmdItemPickup(NetworkIdentity identity)
-        {
-            if (!IsPickedup)
-            {
-                IsPickedup = true;
-                TargetItemPickup(identity);
-            }
-        }
+
 
         // server sends the okay to pick up item for a specific client
         [TargetRpc]
-        private void TargetItemPickup(NetworkIdentity identity)
+        public void TargetItemPickup(NetworkIdentity identity)
         {
             HandleItemPickup(LastPlayerCollider);
         }
@@ -78,8 +69,7 @@ namespace Object
             else
             {
                 // item was not picked up (maybe inventory was full or something else happened).
-                // TODO IsPickedUp needs to be reset to false for everyone again.
-
+                // reset item pickup for all clients and host
                 if (isServer)
                 {
                     IsPickedup = false;
