@@ -11,6 +11,7 @@ namespace Object
         [SyncVar][HideInInspector] public bool IsPickedup = false;
         private bool IsClientPickedup = false;
         private Collider LastPlayerCollider;
+        [HideInInspector][SyncVar] public NetworkIdentity ClientIdentity;
         void OnTriggerStay(Collider other)
         {
             if (other.tag == Finals.PLAYER && Input.GetAxis(Finals.USE) != 0 && !IsPickedup)
@@ -37,11 +38,17 @@ namespace Object
 
 
         // server sends the okay to pick up item for a specific client
-        [TargetRpc]
-        public void TargetItemPickup(NetworkIdentity identity)
+        [ClientRpc]
+        public void RpcItemPickup()
         {
-            Debug.Log("im in targetRPC");
-            HandleItemPickup(LastPlayerCollider);
+            // if we got an approved client (just in case) + this is the correct client + this is my client
+            if (ClientIdentity != null &&
+            ClientIdentity == LastPlayerCollider.GetComponent<NetworkIdentity>() &&
+            LastPlayerCollider.GetComponent<Player.Abilities>().hasAuthority)
+            {
+                Debug.Log(" woohoo ");
+                HandleItemPickup(LastPlayerCollider);
+            }
         }
 
         // item pickup after checking if item was picked up.
