@@ -40,6 +40,7 @@ namespace Object
         [TargetRpc]
         public void TargetItemPickup(NetworkIdentity identity)
         {
+            Debug.Log("im in targetRPC");
             HandleItemPickup(LastPlayerCollider);
         }
 
