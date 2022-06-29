@@ -11,7 +11,7 @@ namespace Object
         [SyncVar][HideInInspector] public bool IsPickedup = false;
         private bool IsClientPickedup = false;
         private Collider LastPlayerCollider;
-        [HideInInspector][SyncVar] public Player.Abilities ClientAbility;
+        [HideInInspector] public Player.Abilities ClientAbility;
         void OnTriggerStay(Collider other)
         {
             if (other.tag == Finals.PLAYER && Input.GetAxis(Finals.USE) != 0 && !IsPickedup)
@@ -35,22 +35,29 @@ namespace Object
             }
         }
 
-
+        // syncvar did not work for some reason so testing clientRpc
+        [ClientRpc]
+        public void RpcChangeClientAbility(Player.Abilities ability)
+        {
+            this.ClientAbility = ability;
+        }
 
         // server sends the okay to pick up item for a specific client
         [ClientRpc]
         public void RpcItemPickup()
         {
-            Debug.Log("ClientIdentity = " + ClientAbility + "\tLastPlayerCollider = " + LastPlayerCollider);
             // if we got an approved client (just in case)
+            Debug.Log("ClientIdentity = " + ClientAbility + "\tLastPlayerCollider = " + LastPlayerCollider);
             if (ClientAbility != null && LastPlayerCollider != null)
-                Debug.Log("LastPlayerCollider's network identity = " + LastPlayerCollider.GetComponent<NetworkIdentity>() + "\tLastPlayer'sCollider.hasAuthority = " + LastPlayerCollider.GetComponent<Player.Abilities>().hasAuthority);
-            // if this is the correct client + this is my client
-            if (ClientAbility.GetComponent<NetworkIdentity>() == LastPlayerCollider.GetComponent<NetworkIdentity>() &&
-            LastPlayerCollider.GetComponent<Player.Abilities>().hasAuthority)
             {
-                Debug.Log(" woohoo ");
-                HandleItemPickup(LastPlayerCollider);
+                Debug.Log("LastPlayerCollider's network identity = " + LastPlayerCollider.GetComponent<NetworkIdentity>() + "\tLastPlayer'sCollider.hasAuthority = " + LastPlayerCollider.GetComponent<Player.Abilities>().hasAuthority);
+                // if this is the correct client + this is my client
+                if (ClientAbility.GetComponent<NetworkIdentity>() == LastPlayerCollider.GetComponent<NetworkIdentity>() &&
+                LastPlayerCollider.GetComponent<Player.Abilities>().hasAuthority)
+                {
+                    Debug.Log(" woohoo ");
+                    HandleItemPickup(LastPlayerCollider);
+                }
             }
         }
 

@@ -74,10 +74,12 @@ namespace Player
         [Command]
         public void CmdItemPickup(InteractableObject itemPickupScript)
         {
+            Debug.Log(itemPickupScript);
             if (!itemPickupScript.IsPickedup)
             {
                 itemPickupScript.IsPickedup = true;
                 itemPickupScript.ClientAbility = this;
+                itemPickupScript.RpcChangeClientAbility(this);
 
                 itemPickupScript.RpcItemPickup();
             }
