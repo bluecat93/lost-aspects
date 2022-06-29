@@ -77,7 +77,7 @@ namespace Player
             if (!itemPickupScript.IsPickedup)
             {
                 itemPickupScript.IsPickedup = true;
-                itemPickupScript.ClientIdentity = GetComponent<NetworkIdentity>();
+                itemPickupScript.ClientAbility = this;
 
                 itemPickupScript.RpcItemPickup();
             }

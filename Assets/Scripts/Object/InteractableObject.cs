@@ -11,7 +11,7 @@ namespace Object
         [SyncVar][HideInInspector] public bool IsPickedup = false;
         private bool IsClientPickedup = false;
         private Collider LastPlayerCollider;
-        [HideInInspector][SyncVar] public NetworkIdentity ClientIdentity;
+        [HideInInspector][SyncVar] public Player.Abilities ClientAbility;
         void OnTriggerStay(Collider other)
         {
             if (other.tag == Finals.PLAYER && Input.GetAxis(Finals.USE) != 0 && !IsPickedup)
@@ -41,12 +41,12 @@ namespace Object
         [ClientRpc]
         public void RpcItemPickup()
         {
-            Debug.Log("ClientIdentity = " + ClientIdentity + "\tLastPlayerCollider = " + LastPlayerCollider);
+            Debug.Log("ClientIdentity = " + ClientAbility + "\tLastPlayerCollider = " + LastPlayerCollider);
             // if we got an approved client (just in case)
-            if (ClientIdentity != null && LastPlayerCollider != null)
+            if (ClientAbility != null && LastPlayerCollider != null)
                 Debug.Log("LastPlayerCollider's network identity = " + LastPlayerCollider.GetComponent<NetworkIdentity>() + "\tLastPlayer'sCollider.hasAuthority = " + LastPlayerCollider.GetComponent<Player.Abilities>().hasAuthority);
             // if this is the correct client + this is my client
-            if (ClientIdentity == LastPlayerCollider.GetComponent<NetworkIdentity>() &&
+            if (ClientAbility.GetComponent<NetworkIdentity>() == LastPlayerCollider.GetComponent<NetworkIdentity>() &&
             LastPlayerCollider.GetComponent<Player.Abilities>().hasAuthority)
             {
                 Debug.Log(" woohoo ");
