@@ -35,7 +35,7 @@ namespace Object
             }
         }
 
-        // syncvar did not work for some reason so testing clientRpc
+        // syncvar did not work for some reason so clientRpc to change a single variable it is.
         [ClientRpc]
         public void RpcChangeClientAbility(Player.Abilities ability)
         {
@@ -47,15 +47,12 @@ namespace Object
         public void RpcItemPickup()
         {
             // if we got an approved client (just in case)
-            Debug.Log("ClientIdentity = " + ClientAbility + "\tLastPlayerCollider = " + LastPlayerCollider);
             if (ClientAbility != null && LastPlayerCollider != null)
             {
-                Debug.Log("LastPlayerCollider's network identity = " + LastPlayerCollider.GetComponent<NetworkIdentity>() + "\tLastPlayer'sCollider.hasAuthority = " + LastPlayerCollider.GetComponent<Player.Abilities>().hasAuthority);
                 // if this is the correct client + this is my client
                 if (ClientAbility.GetComponent<NetworkIdentity>() == LastPlayerCollider.GetComponent<NetworkIdentity>() &&
                 LastPlayerCollider.GetComponent<Player.Abilities>().hasAuthority)
                 {
-                    Debug.Log(" woohoo ");
                     HandleItemPickup(LastPlayerCollider);
                 }
             }
@@ -81,6 +78,8 @@ namespace Object
                     // only then do from server as normal (see above).
                     other.GetComponent<Player.Abilities>().GiveAuthorityForItemPickup(this);
                 }
+
+                // TODO add piuckup animations here
             }
             else
             {
@@ -111,7 +110,6 @@ namespace Object
         }
         private void DestroyObjectForEveryone()
         {
-            // TODO add piuckup animations here
             Destroy(this.gameObject, Finals.ITEM_PICKUP_TIME);
         }
     }
