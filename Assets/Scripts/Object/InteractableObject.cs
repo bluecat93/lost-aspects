@@ -41,14 +41,15 @@ namespace Object
         [ClientRpc]
         public void RpcItemPickup()
         {
-            // if we got an approved client (just in case) + this is the correct client + this is my client
-            if (ClientIdentity != null &&
-            ClientIdentity == LastPlayerCollider.GetComponent<NetworkIdentity>() &&
-            LastPlayerCollider.GetComponent<Player.Abilities>().hasAuthority)
-            {
-                Debug.Log(" woohoo ");
-                HandleItemPickup(LastPlayerCollider);
-            }
+            // if we got an approved client (just in case)
+            if (ClientIdentity != null && LastPlayerCollider != null)
+                // if this is the correct client + this is my client
+                if (ClientIdentity == LastPlayerCollider.GetComponent<NetworkIdentity>() &&
+                LastPlayerCollider.GetComponent<Player.Abilities>().hasAuthority)
+                {
+                    Debug.Log(" woohoo ");
+                    HandleItemPickup(LastPlayerCollider);
+                }
         }
 
         // item pickup after checking if item was picked up.
