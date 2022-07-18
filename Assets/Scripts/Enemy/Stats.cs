@@ -43,6 +43,9 @@ namespace Enemy
         [SyncVar(hook = nameof(LogCheck))] private int currentHealth;
         private float invulnerabilityFrame = 0f;
 
+
+
+
         // Start is called before the first frame update
         void Start()
         {
@@ -108,6 +111,28 @@ namespace Enemy
         {
             this.currentHealth += heal;
             this.currentHealth = this.currentHealth > this.maxHealth ? this.maxHealth : this.currentHealth;
+        }
+
+        public void Knockbacked(float x, float y, float z)
+        {
+            if (isServer)
+            {
+                KnockbackedFromServer(x, y, z);
+            }
+            else if (isClient)
+            {
+                CmdKnockbacked(x, y, z);
+            }
+        }
+        [Command]
+        private void CmdKnockbacked(float x, float y, float z)
+        {
+            KnockbackedFromServer(x, y, z);
+        }
+        private void KnockbackedFromServer(float x, float y, float z)
+        {
+            Debug.Log("got to here with vector 3 = " + new Vector3(x, 0, z));
+            GetComponent<Rigidbody>().AddForce(new Vector3(x, 0, z), ForceMode.VelocityChange);
         }
 
         public float GetDeathTimer()

@@ -19,6 +19,10 @@ namespace Object
         [Tooltip("The damage modifiers of each weapon attack. If you have X attacks this array has to be in the size of X.")]
         [SerializeField] private float[] attackDamageModifier;
 
+        [Header("Knockback")]
+        [Tooltip("The knockback range")]
+        [SerializeField] private float knockback;
+
 
         private bool isAttacking;
         private int currentAttackIndex;
@@ -95,6 +99,14 @@ namespace Object
                 Enemy.Stats enemyStats = enemy.GetComponent<Enemy.Stats>();
                 int finalDamage = (int)(this.weaponBaseAttackDamage * this.attackDamageModifier[this.currentAttackIndex]);
                 enemyStats.TakeDamage(finalDamage);
+
+                if (knockback != 0)
+                {
+                    Vector3 targetPoint = (enemy.position - EvntHndlr.transform.position).normalized * knockback;
+                    // Debug.Log("My Vector3 position is: " + EvntHndlr.transform.position + "\tand enemy vector3 is: " + enemy.position);
+                    //TODO add knockback for enemy
+                    enemyStats.Knockbacked(targetPoint.x, targetPoint.y, targetPoint.z);
+                }
 
                 // Debug.Log("enemy hit with attack number: " + GetComponentInParent<Player.Abilities>().attackNumber);
             }
