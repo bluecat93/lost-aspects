@@ -24,6 +24,7 @@ namespace Projectile
         [SerializeField] List<Type> destructionOnHitList;
 
         private int damage = 0;
+        private float knockback = 0;
         //used when something special happens that makes the projectile not destroy itself.
         private bool evadeDestruction = false;
         private bool attackOnlyOnce = false;
@@ -51,6 +52,7 @@ namespace Projectile
                         if (tag.Equals(Finals.PLAYER))
                         {
                             other.GetComponent<Player.Stats>().TakeDamage(damage);
+                            other.GetComponent<Player.ThirdPersonMovement>().PushPlayer(knockback, transform.forward);
                         }
                         else if (tag.Equals(Finals.ENEMY))
                         {
@@ -89,6 +91,11 @@ namespace Projectile
         public void setDamage(int damage)
         {
             this.damage = damage;
+        }
+
+        public void setKnockback(float knockback)
+        {
+            this.knockback = knockback;
         }
     }
 }

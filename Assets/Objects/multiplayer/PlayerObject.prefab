@@ -320,6 +320,8 @@ MonoBehaviour:
   FallTimeout: 0.15
   TerminalVelocity: -50
   minumumFallForDamage: -20
+  Drag: 3
+  HardStop: 1
   animationGroundOffset: 0.4
   SceneName: GameMultiplayerTutorial
   CameraAndHUD: {fileID: 6972008256323951258}

@@ -24,6 +24,7 @@ namespace Enemy
             if (other.gameObject.tag == Finals.PLAYER && this.attackOnlyOnce && isAttacking)
             {
                 this.EnmyAi.getPlayerStats().TakeDamage((int)(this.EnmyStts.GetAttackDamage() * damageModifier));
+                this.EnmyAi.getPlayerStats().GetComponent<Player.ThirdPersonMovement>().PushPlayer(knockback, this.EnmyAi.transform.forward);
                 this.attackOnlyOnce = false;
             }
         }

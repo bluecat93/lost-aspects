@@ -43,6 +43,7 @@ namespace Enemy
                     // Add damage to the projectile
                     int damage = (int)(this.EnmyStts.GetAttackDamage() * damageModifier);
                     currentProjectile.GetComponent<Projectile.HandleHitsAndDamage>().setDamage(damage);
+                    currentProjectile.GetComponent<Projectile.HandleHitsAndDamage>().setKnockback(knockback);
                 }
             }
         }

@@ -11,6 +11,8 @@ namespace Enemy
         [SerializeField] protected int attackNumber = 1;
         [Tooltip("The attack damage modifier")]
         [SerializeField] protected float damageModifier = 1f;
+        [Tooltip("Knockback range")]
+        [SerializeField] protected float knockback = 0;
         private Stats _enemyStats;
         protected Stats EnmyStts
         {

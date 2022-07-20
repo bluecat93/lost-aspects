@@ -5,6 +5,7 @@ using UnityEngine;
 using HeadsUpDisplay;
 using UnityEngine.SceneManagement;
 using Mirror;
+using System;
 
 namespace Player
 {
@@ -41,6 +42,12 @@ namespace Player
         [SerializeField] private float TerminalVelocity = -53.0f;
         [Tooltip("Minumum falling speed it takes to start taking fall damage (should allways be a negative number that is lower than -2)")]
         [SerializeField] private float minumumFallForDamage = -10.0f;
+
+        [Header("Knockback variables")]
+        [Tooltip("How hard the object will stop moving verticaly when pushed. MUST BE HIGHER THAN 1")]
+        [SerializeField] private float Drag = 1.5f;
+        [Tooltip("When the player will be stoped from knockback")]
+        [SerializeField] private float HardStop = 1f;
 
         [Header("Animation Variables")]
         [Tooltip("When to start landing animation")]
@@ -154,15 +161,20 @@ namespace Player
         #endregion
 
         #region movemment changes
+        private Vector3 KnockbackVector { get; set; }
         private float VerticalVelocity { get; set; }
         private float TargetRotation { get; set; }
         private Vector3 TargetDirection { get; set; }
+        [HideInInspector] public float Knockback { get; set; }
         #endregion
         #endregion
 
         // Start is called before the first frame update
         void Start()
         {
+
+            KnockbackVector = Vector3.zero;
+            Knockback = 0;
             this.OriginalStepOffset = controller.stepOffset;
             this.PlayerStartHeight = controller.height;
             this.ColliderStartHeight = controller.center.y;
@@ -204,18 +216,31 @@ namespace Player
                 // Used only in places you want that the client controls itself.
                 if (hasAuthority)
                 {
-                    // TODO only active that in single player
-                    // if (!HeadsUpDisplay.PauseMenu.isGamePaused)
                     if (this.PlyrStats.IsAlive())
                     {
                         this.HandleCrouchInput();
                         this.HandleJump();
                         this.GroundedCheck();
                         this.HandleDodgeInput();
+                        this.HandleKnockback();
                         this.HandleMovement();
                     }
                 }
             }
+        }
+
+        private void HandleKnockback()
+        {
+            if (Knockback > HardStop)
+            {
+                Knockback -= (Knockback * Drag) * Time.deltaTime;
+            }
+            else
+            {
+                Knockback = 0;
+                KnockbackVector = Vector3.zero;
+            }
+
         }
 
         private void HandleMovement()
@@ -282,7 +307,7 @@ namespace Player
 
             // move the player
             if (!this.IsRolling)
-                controller.Move(TargetDirection.normalized * (speed * Time.deltaTime) + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime);
+                controller.Move(TargetDirection.normalized * (speed * Time.deltaTime) + new Vector3(0.0f, VerticalVelocity, 0.0f) * Time.deltaTime + KnockbackVector * Knockback * Time.deltaTime);
 
             // update animator if using character
             // if (_hasAnimator)
@@ -457,6 +482,22 @@ namespace Player
 
 
             this.IsRolling = false;
+        }
+
+        [Server]
+        public void PushPlayer(float amount, Vector3 normalizedVector)
+        {
+            CmdPushPlayer(amount, normalizedVector);
+        }
+
+        [Command]
+        private void CmdPushPlayer(float amount, Vector3 normalizedVector)
+        {
+            if (hasAuthority)
+            {
+                Knockback = amount;
+                KnockbackVector = normalizedVector;
+            }
         }
     }
 }

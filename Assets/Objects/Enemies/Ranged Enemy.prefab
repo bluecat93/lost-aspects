@@ -45,6 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackNumber: 1
   damageModifier: 1
+  knockback: 5
   projectilePrefab: {fileID: 509834522125225636, guid: ea2a3799477063b4d9287137cbe91019, type: 3}
   projectileSpeed: 20
 --- !u!1 &7087518947717071653

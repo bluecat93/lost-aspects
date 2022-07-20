@@ -1359,6 +1359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackNumber: 1
   damageModifier: 1
+  knockback: 5
 --- !u!1 &7087518948809189306
 GameObject:
   m_ObjectHideFlags: 0
