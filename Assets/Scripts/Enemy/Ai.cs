@@ -183,8 +183,8 @@ namespace Enemy
         [ClientRpc]
         private void RpcKillEnemy()
         {
-            // TODO maybe destory this later instead of inactive.
-            transform.gameObject.SetActive(false);
+            Destroy(this);
+            // transform.gameObject.SetActive(false);
         }
         private void HandleDeath()
         {

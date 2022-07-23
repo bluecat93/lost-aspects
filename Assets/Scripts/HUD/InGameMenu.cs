@@ -49,6 +49,7 @@ namespace HeadsUpDisplay
         private void Crafting()
         {
             InCrafting = !InCrafting;
+            SetCursorLock(true);
             if (InCrafting)
             {
                 GetComponent<Crafting.KnownRecipes>().UpdateRecipes();
@@ -59,7 +60,7 @@ namespace HeadsUpDisplay
         private void Inventory()
         {
             InInventory = !InInventory;
-
+            SetCursorLock(true);
             this.InventoryMenuUI.SetActive(InInventory);
         }
 
@@ -70,6 +71,7 @@ namespace HeadsUpDisplay
             InPauseMenu = !InPauseMenu;
             this.pauseMenuUI.SetActive(InPauseMenu);
             SetGamePause(InPauseMenu);
+            SetCursorLock(true);
         }
 
         private void SetGamePause(bool setPause)
@@ -78,8 +80,21 @@ namespace HeadsUpDisplay
             {
                 Time.timeScale = setPause ? 0f : 1f;
             }
+        }
 
-            // Cursor.lockState = setPause ? CursorLockMode.None : CursorLockMode.Locked;
+        private void SetCursorLock(bool isLockingCursor)
+        {
+            if (CurserLocker.isCursorLocked)
+            {
+                if (isLockingCursor && !InInventory && !InCrafting && !InPauseMenu)
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                }
+                else
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                }
+            }
         }
 
         // used with UI button
@@ -109,6 +124,7 @@ namespace HeadsUpDisplay
             {
                 InPauseMenu = false;
                 SetGamePause(InPauseMenu);
+                SetCursorLock(InPauseMenu);
 
                 PlayerObjectController playerObjectController = GetComponentInParent<PlayerObjectController>();
                 playerObjectController.LeaveLobby();

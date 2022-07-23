@@ -179,9 +179,6 @@ namespace Player
             this.PlayerStartHeight = controller.height;
             this.ColliderStartHeight = controller.center.y;
             this.CapsuleColliderStartingHeight = this.CpslCollider.height;
-
-            // Locking cursor to not show it while moving.
-            // Cursor.lockState = CursorLockMode.Locked;
         }
 
         // Update is called once per frame
@@ -199,7 +196,10 @@ namespace Player
                         CameraAndHUD.SetActive(true);
 
                         // Locking cursor to not show it while moving.
-                        // Cursor.lockState = CursorLockMode.Locked;
+                        if (CurserLocker.isCursorLocked)
+                        {
+                            Cursor.lockState = CursorLockMode.Locked;
+                        }
 
 
                         // TODO add player cosmetic setup when we will have one.

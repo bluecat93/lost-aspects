@@ -82,8 +82,7 @@ namespace Player
             this.leftPressed = Input.GetAxis(Finals.HORIZONTAL_MOVEMENT) < 0;
             this.rightPressed = Input.GetAxis(Finals.HORIZONTAL_MOVEMENT) > 0;
             this.backPressed = Input.GetAxis(Finals.VERTICAL_MOVEMENT) < 0;
-            // TODO change from Keycode to the actual name of sprint
-            this.dashPressed = Input.GetKey(KeyCode.LeftShift);
+            this.dashPressed = Input.GetAxis("Dash") != 0;
         }
         private void MovementChecks(float currentMaxVelocity)
         {

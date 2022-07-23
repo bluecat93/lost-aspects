@@ -23,7 +23,11 @@ namespace Object
         [Tooltip("The knockback range")]
         [SerializeField] private float knockback;
 
+        [Header("Timers")]
+        [SerializeField] private float attackResetTime = 2f;
 
+
+        private float AttackTimer;
         private bool isAttacking;
         private int currentAttackIndex;
 
@@ -88,6 +92,12 @@ namespace Object
                 this.NetworkAnim.SetTrigger(Finals.ATTACK_PLAYER);
                 // this.Anmtor.SetTrigger("Attack");
             }
+
+            // Reset Combo 
+            if (Time.time - AttackTimer > attackResetTime)
+            {
+                currentAttackIndex = 0;
+            }
         }
 
         private void OnTriggerEnter(Collider other)
@@ -104,7 +114,6 @@ namespace Object
                 {
                     Vector3 targetPoint = (enemy.position - EvntHndlr.transform.position).normalized * knockback;
                     // Debug.Log("My Vector3 position is: " + EvntHndlr.transform.position + "\tand enemy vector3 is: " + enemy.position);
-                    //TODO add knockback for enemy
                     enemyStats.Knockbacked(targetPoint.x, targetPoint.y, targetPoint.z);
                 }
 
@@ -115,8 +124,10 @@ namespace Object
         public void SetAttackParamaters(bool isAttacking)
         {
             this.isAttacking = isAttacking;
+            // Attack Started
             if (!isAttacking)
             {
+                AttackTimer = Time.time;
                 currentAttackIndex = currentAttackIndex >= attackDamageModifier.Length - 1 ? 0 : currentAttackIndex + 1;
             }
             // Debug.Log("attack started? " + isAttacking + "\tattack number right after the change: " + currentAttackIndex);

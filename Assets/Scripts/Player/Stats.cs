@@ -158,8 +158,10 @@ namespace Player
 
                 this.gameOverUI.SetActive(true);
 
-                // TODO restore cursor locks
-                // Cursor.lockState = CursorLockMode.None;
+                if (CurserLocker.isCursorLocked)
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                }
             }
 
         }
@@ -175,7 +177,10 @@ namespace Player
                 Eat(maxHunger);
                 this.thirdPersonCamera.SetActive(true);
                 this.isAlive = true;
-                // Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
+                if (CurserLocker.isCursorLocked)
+                {
+                    Cursor.lockState = CursorLockMode.Locked; // locking cursor to not show it while moving.
+                }
             }
         }
 

@@ -68,9 +68,11 @@ namespace HeadsUpDisplay
                 // normal item slot
                 if (ID > 0)
                 {
-                    // create background Image.
+                    // create background Image
                     slot.transform.GetComponentInChildren<Image>().sprite = InventoryManager.InventoryIndexList.GetItemByID(ID).GetSprite();
-                    slot.transform.GetComponentInChildren<Image>().color = new Color(1, 1, 1, 1); // TODO IDK why i need this but we will test it out
+
+                    // this is important to see the sprite and not make it invisible
+                    slot.transform.GetComponentInChildren<Image>().color = new Color(1, 1, 1, 1);
 
                     // create Text amount
                     slot.transform.GetComponentInChildren<Text>().text = InventoryManager.GetItems()[i].count.ToString();
